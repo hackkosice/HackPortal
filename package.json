@@ -23,6 +23,7 @@
     "@storybook/addon-essentials": "^7.0.4",
     "@storybook/addon-interactions": "^7.0.4",
     "@storybook/addon-links": "^7.0.4",
+    "@storybook/addon-styling": "^1.0.0",
     "@storybook/blocks": "^7.0.4",
     "@storybook/nextjs": "^7.0.4",
     "@storybook/react": "^7.0.4",
@@ -37,6 +38,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-storybook": "^0.6.11",
+    "postcss-loader": "^7.2.4",
     "prettier": "^2.8.7",
     "storybook": "^7.0.4"
   }
