@@ -7,11 +7,6 @@ const meta: Meta<typeof Button> = {
   title: "Example/Button",
   component: Button,
   tags: ["autodocs"],
-  argTypes: {
-    backgroundColor: {
-      control: "color",
-    },
-  },
 };
 
 export default meta;
@@ -22,6 +17,7 @@ export const Primary: Story = {
   args: {
     primary: true,
     label: "Button",
+    size: "large",
   },
 };
 

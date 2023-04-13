@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 
+type Size = "small" | "medium" | "large";
 interface ButtonProps {
   /**
    * Is this the principal call to action on the page?
    */
   primary?: boolean;
   /**
-   * What background color to use
-   */
-  backgroundColor?: string;
-  /**
    * How large should the button be?
    */
-  size?: "small" | "medium" | "large";
+  size?: Size;
   /**
    * Button contents
    */
@@ -23,20 +20,48 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
+const getSizeClasses = (size: Size) => {
+  switch (size) {
+    case "small": {
+      return "px-4 py-2.5";
+    }
+    case "large": {
+      return "px-6 py-3";
+    }
+    default: {
+      return "px-5 py-2.5";
+    }
+  }
+};
+
+const getModeClasses = (isPrimary: boolean) =>
+  isPrimary
+    ? "text-white bg-hkOrange"
+    : "text-slate-700 bg-transparent border-slate-700 dark:text-white dark:border-white";
+
+const BASE_BUTTON_CLASSES =
+  "cursor-pointer rounded-md font-bold leading-none inline-block";
+
 /**
  * Primary UI component for user interaction
  */
 export const Button = ({
   primary = false,
   size = "medium",
-  backgroundColor,
   label,
   onClick,
 }: ButtonProps) => {
+  const computedClasses = useMemo(() => {
+    const modeClass = getModeClasses(primary);
+    const sizeClass = getSizeClasses(size);
+
+    return [modeClass, sizeClass].join(" ");
+  }, [primary, size]);
+
   return (
     <button
       type="button"
-      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
       onClick={onClick}
     >
       {label}
