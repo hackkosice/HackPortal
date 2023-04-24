@@ -1,8 +1,9 @@
-import React, { PropsWithChildren } from "react";
-import { Size } from "@/components/types";
+import React, { PropsWithChildren, useMemo } from "react";
+import { Size, Spacing } from "@/components/types";
 
 export type TextProps = PropsWithChildren<{
   size?: Size;
+  spaceAfter?: Spacing;
 }>;
 
 const getSizeClasses = (size: Size | undefined) => {
@@ -19,6 +20,30 @@ const getSizeClasses = (size: Size | undefined) => {
   }
 };
 
-export const Text = ({ children, size }: TextProps) => {
-  return <p className={getSizeClasses(size)}>{children}</p>;
+const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
+  switch (spaceAfter) {
+    case "small": {
+      return "mb-1";
+    }
+    case "medium": {
+      return "mb-3";
+    }
+    case "large": {
+      return "mb-5";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
+export const Text = ({ children, size, spaceAfter }: TextProps) => {
+  const computedClasses = useMemo(() => {
+    const sizeClasses = getSizeClasses(size);
+    const spaceAfterClasses = getSpaceAfterClasses(spaceAfter);
+
+    return [sizeClasses, spaceAfterClasses].join(" ");
+  }, [size, spaceAfter]);
+
+  return <p className={computedClasses}>{children}</p>;
 };
