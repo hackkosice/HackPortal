@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
+import { Size } from "@/components/types";
 
-type Size = "small" | "medium" | "large";
-interface ButtonProps {
+export type ButtonProps = {
   /**
    * Is this the principal call to action on the page?
    */
@@ -18,7 +18,7 @@ interface ButtonProps {
    * Optional click handler
    */
   onClick?: () => void;
-}
+};
 
 const getSizeClasses = (size: Size) => {
   switch (size) {
@@ -37,7 +37,7 @@ const getSizeClasses = (size: Size) => {
 const getModeClasses = (isPrimary: boolean) =>
   isPrimary
     ? "text-white bg-hkOrange"
-    : "text-slate-700 bg-transparent border-slate-700 dark:text-white dark:border-white";
+    : "text-hkOrange border-2 border-hkOrange";
 
 const BASE_BUTTON_CLASSES =
   "cursor-pointer rounded-md font-bold leading-none inline-block";

@@ -4,7 +4,7 @@ import { Button } from "../components/Button";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta: Meta<typeof Button> = {
-  title: "Example/Button",
+  title: "UI Components/Button",
   component: Button,
   tags: ["autodocs"],
 };
@@ -16,27 +16,13 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   args: {
     primary: true,
-    label: "Button",
+    label: "Click me",
     size: "large",
   },
 };
 
 export const Secondary: Story = {
   args: {
-    label: "Button",
-  },
-};
-
-export const Large: Story = {
-  args: {
-    size: "large",
-    label: "Button",
-  },
-};
-
-export const Small: Story = {
-  args: {
-    size: "small",
-    label: "Button",
+    label: "Click me",
   },
 };
