@@ -1,7 +1,5 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { Size } from "@/components/types";
-
-type Direction = "row" | "column";
+import { Direction, Size } from "@/components/types";
 
 export type StackProps = PropsWithChildren<{
   spacing?: Size;
