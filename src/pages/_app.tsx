@@ -10,7 +10,7 @@ const roboto = Roboto({
 
 const leagueSpartan = League_Spartan({
   variable: "--font-league-spartan",
-  weight: "400",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
