@@ -18,6 +18,7 @@ export const Primary: Story = {
     primary: true,
     label: "Click me",
     size: "large",
+    fullWidth: false,
   },
 };
 

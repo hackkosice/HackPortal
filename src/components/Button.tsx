@@ -18,6 +18,7 @@ export type ButtonProps = {
    * Optional click handler
    */
   onClick?: () => void;
+  fullWidth?: boolean;
 };
 
 const getSizeClasses = (size: Size) => {
@@ -39,6 +40,9 @@ const getModeClasses = (isPrimary: boolean) =>
     ? "text-white bg-hkOrange"
     : "text-hkOrange border-2 border-hkOrange";
 
+const getFullWidthClasses = (fullWidth: boolean) =>
+  fullWidth ? "w-full" : "w-fit";
+
 const BASE_BUTTON_CLASSES =
   "cursor-pointer rounded-md font-bold leading-none inline-block";
 
@@ -46,17 +50,19 @@ const BASE_BUTTON_CLASSES =
  * Primary UI component for user interaction
  */
 export const Button = ({
-  primary = false,
+  primary = true,
   size = "medium",
   label,
   onClick,
+  fullWidth = false,
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getModeClasses(primary);
     const sizeClass = getSizeClasses(size);
+    const fullWidthClass = getFullWidthClasses(fullWidth);
 
-    return [modeClass, sizeClass].join(" ");
-  }, [primary, size]);
+    return [modeClass, sizeClass, fullWidthClass].join(" ");
+  }, [primary, size, fullWidth]);
 
   return (
     <button
