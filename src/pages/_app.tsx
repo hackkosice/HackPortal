@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Roboto, League_Spartan } from "next/font/google";
+import Navbar from "@/components/Navbar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -17,8 +18,9 @@ const leagueSpartan = League_Spartan({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main
-      className={`${roboto.variable} ${leagueSpartan.variable} font-default`}
+      className={`${roboto.variable} ${leagueSpartan.variable} font-default bg-hkLightGray min-h-screen`}
     >
+      <Navbar />
       <Component {...pageProps} />
     </main>
   );

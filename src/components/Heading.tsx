@@ -8,7 +8,7 @@ export type HeadingProps = PropsWithChildren<{
 const getSizeClasses = (size: Size | undefined) => {
   switch (size) {
     case "small": {
-      return "text-2xl";
+      return "text-lg md:text-2xl";
     }
     case "large": {
       return "text-6xl";
