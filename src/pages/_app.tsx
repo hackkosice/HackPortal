@@ -18,10 +18,12 @@ const leagueSpartan = League_Spartan({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main
-      className={`${roboto.variable} ${leagueSpartan.variable} font-default bg-hkLightGray min-h-screen`}
+      className={`${roboto.variable} ${leagueSpartan.variable} font-default bg-hkLightGray relative`}
     >
       <Navbar />
-      <Component {...pageProps} />
+      <div className="grid items-center justify-center h-full min-h-screen">
+        <Component {...pageProps} />
+      </div>
     </main>
   );
 }

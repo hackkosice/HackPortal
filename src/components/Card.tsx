@@ -5,7 +5,7 @@ export type CardProps = PropsWithChildren<{
   padding?: Size;
 }>;
 
-const CARD_BASE_CLASSES = "bg-hkGray rounded-lg p-10";
+const CARD_BASE_CLASSES = "bg-hkGray rounded-lg p-10 h-fit w-fit";
 
 const getPaddingClasses = (padding: Size | undefined) => {
   switch (padding) {
