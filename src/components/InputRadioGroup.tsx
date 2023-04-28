@@ -35,10 +35,10 @@ export const InputRadioGroup = ({
   }, [direction]);
   return (
     <>
-      <Text spaceAfter="small">
+      <span className={`${LABEL_BASE_CLASSES} mb-2`}>
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
-      </Text>
+      </span>
       <span className={`flex ${computedClassesRadios}`}>
         {options.map((option) => (
           <label className={LABEL_BASE_CLASSES} key={option}>
