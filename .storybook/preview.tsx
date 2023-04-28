@@ -25,6 +25,19 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    backgrounds: {
+      default: 'hk light gray',
+      values: [
+        {
+          name: 'hk light gray',
+          value: '#F9FAFD',
+        },
+        {
+          name: 'white',
+          value: '#FFFFFF',
+        },
+      ],
+    },
   },
 };
 
