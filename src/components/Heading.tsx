@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useMemo } from "react";
 import { Size } from "@/components/types";
 
-export type TextProps = PropsWithChildren<{
+export type HeadingProps = PropsWithChildren<{
   size?: Size;
 }>;
 
@@ -21,7 +21,7 @@ const getSizeClasses = (size: Size | undefined) => {
 
 const BASE_HEADING_CLASSES = "font-title font-bold text-hkPurple";
 
-export const Heading = ({ children, size }: TextProps) => {
+export const Heading = ({ children, size }: HeadingProps) => {
   const computedClasses = useMemo(() => {
     return getSizeClasses(size);
   }, [size]);
