@@ -19,6 +19,7 @@ export type ButtonProps = {
    */
   onClick?: () => void;
   fullWidth?: boolean;
+  type?: "button" | "submit";
 };
 
 const getSizeClasses = (size: Size) => {
@@ -55,6 +56,7 @@ export const Button = ({
   label,
   onClick,
   fullWidth = false,
+  type = "button",
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getModeClasses(primary);
@@ -63,6 +65,17 @@ export const Button = ({
 
     return [modeClass, sizeClass, fullWidthClass].join(" ");
   }, [primary, size, fullWidth]);
+
+  if (type === "submit") {
+    return (
+      <input
+        type="submit"
+        className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
+        value={label}
+        onClick={onClick}
+      />
+    );
+  }
 
   return (
     <button
