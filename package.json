@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:turbopack": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -11,6 +12,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.17",
     "autoprefixer": "10.4.14",
     "next": "13.3.0",
     "postcss": "8.4.21",
