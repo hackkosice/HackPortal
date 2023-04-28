@@ -13,6 +13,8 @@ module.exports = {
       colors: {
         hkPurple: "#5E2137",
         hkOrange: "#EF611E",
+        hkGray: "#F4F4F4",
+        hkLightGray: "#F9FAFD",
       },
       fontFamily: {
         default: ["var(--font-roboto)", ...fontFamily.mono],
