@@ -2,9 +2,14 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "./Heading";
+import { Text } from "./Text";
 import { useBreakpoints } from "../services/hooks/useBreakpoints";
+import { signOut, useSession } from "next-auth/react";
+import { Stack } from "@/components/Stack";
+import { Button } from "@/components/Button";
 const Navbar = () => {
   const { isMedium } = useBreakpoints();
+  const { data: session } = useSession();
   return (
     <nav className="fixed flex flex-row bg-hkLightGray w-full m-0 py-3 px-3 border-b-2 border-hkGray content-center md:py-6 md:px-5">
       <Link href={"/"} className="flex content-center">
@@ -18,6 +23,15 @@ const Navbar = () => {
       </Link>
       <div className="mx-5 bg-gray-300 w-0.5"></div>
       <Heading size="small">Application portal</Heading>
+      <div className="flex-grow"></div>
+      {session ? (
+        <Stack direction="row">
+          <Text>Welcome {session.user?.name}</Text>
+          <Button label="Sign out" size="small" onClick={signOut} />
+        </Stack>
+      ) : (
+        <Link href={"/login"}>Log in</Link>
+      )}
     </nav>
   );
 };

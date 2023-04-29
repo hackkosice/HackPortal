@@ -1,9 +1,10 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { Size, Spacing } from "@/components/types";
+import { ColorType, Size, Spacing } from "@/components/types";
 
 export type TextProps = PropsWithChildren<{
   size?: Size;
   spaceAfter?: Spacing;
+  type?: ColorType;
 }>;
 
 const getSizeClasses = (size: Size | undefined) => {
@@ -37,13 +38,34 @@ const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
   }
 };
 
-export const Text = ({ children, size, spaceAfter }: TextProps) => {
+const getTypeClasses = (type: ColorType | undefined) => {
+  switch (type) {
+    case "secondary": {
+      return "text-hkGray";
+    }
+    case "success": {
+      return "text-green-500";
+    }
+    case "warning": {
+      return "text-orange-500";
+    }
+    case "error": {
+      return "text-red-500";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
+export const Text = ({ children, size, spaceAfter, type }: TextProps) => {
   const computedClasses = useMemo(() => {
     const sizeClasses = getSizeClasses(size);
     const spaceAfterClasses = getSpaceAfterClasses(spaceAfter);
+    const typeClasses = getTypeClasses(type);
 
-    return [sizeClasses, spaceAfterClasses].join(" ");
-  }, [size, spaceAfter]);
+    return [sizeClasses, spaceAfterClasses, typeClasses].join(" ");
+  }, [size, spaceAfter, type]);
 
   return <p className={computedClasses}>{children}</p>;
 };
