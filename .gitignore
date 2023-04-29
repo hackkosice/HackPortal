@@ -35,3 +35,9 @@ yarn-error.log*
 next-env.d.ts
 
 .idea/
+
+.env
+
+prisma/migrations/
+prisma/dev.db
+prisma/dev.db-journal
