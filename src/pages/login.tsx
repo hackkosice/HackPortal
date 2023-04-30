@@ -10,13 +10,11 @@ export type LoginPageProps = InferGetServerSidePropsType<
 >;
 
 export default function Page({ providers }: LoginPageProps) {
-  return <LoginPage providers={providers} />;
+  return <LoginPage />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
-
-  console.log(session);
 
   // If the user is already logged in, redirect.
   if (session) {

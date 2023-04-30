@@ -24,6 +24,8 @@ export default function Page() {
       const result = await mutateAsync(data);
       if (result.status === 201) {
         router.push("/login");
+      } else if (result.status === 500) {
+        console.log(result.message);
       }
     },
     [mutateAsync, router]
@@ -36,14 +38,6 @@ export default function Page() {
       </Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="column">
-          <InputText
-            label="Full name"
-            type="text"
-            register={register}
-            name="name"
-            required
-            error={errors.name?.message}
-          />
           <InputText
             label="Email"
             type="email"
