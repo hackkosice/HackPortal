@@ -4,6 +4,7 @@ export type Spacing = "none" | "small" | "medium" | "large";
 export type ColorType =
   | "primary"
   | "secondary"
+  | "tertiary"
   | "warning"
   | "error"
   | "success";

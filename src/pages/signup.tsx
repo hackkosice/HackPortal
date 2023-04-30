@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { ISignUp } from "@/services/validation/auth";
+import { ISignUp } from "@/server/services/validation/auth";
 import { trpc } from "@/services/trpc";
 import React, { useCallback } from "react";
 import { Card } from "@/components/Card";

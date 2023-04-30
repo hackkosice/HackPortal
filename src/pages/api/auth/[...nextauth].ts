@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { loginSchema } from "@/services/validation/auth";
+import { loginSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 
@@ -34,7 +34,7 @@ export const authOptions = {
           return null;
         }
 
-        return { id: user.id, name: user.name, email: user.email } as never;
+        return { id: user.id, email: user.email } as never;
       },
     }),
   ],

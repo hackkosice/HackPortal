@@ -10,15 +10,16 @@ export type ButtonProps = {
   type?: "button" | "submit" | "buttonLink";
   colorType?: ColorType;
   href?: string;
+  icon?: React.ReactNode;
 };
 
 const getSizeClasses = (size: Size) => {
   switch (size) {
     case "small": {
-      return "px-4 py-2.5";
+      return "px-3.5 py-2 text-sm";
     }
     case "large": {
-      return "px-6 py-3";
+      return "px-6 py-3 text-lg";
     }
     default: {
       return "px-5 py-2.5";
@@ -30,6 +31,9 @@ const getColorTypeClasses = (colorType: ColorType) => {
   switch (colorType) {
     case "secondary": {
       return "text-hkOrange border-2 border-hkOrange";
+    }
+    case "tertiary": {
+      return "text-hkOrange";
     }
     case "success": {
       return "text-white bg-green-500";
@@ -49,7 +53,7 @@ const getFullWidthClasses = (fullWidth: boolean) =>
   fullWidth ? "w-full" : "w-fit";
 
 const BASE_BUTTON_CLASSES =
-  "cursor-pointer rounded-md font-bold leading-none inline-block";
+  "cursor-pointer rounded-md font-bold leading-none inline-block flex items-center";
 
 /**
  * Primary UI component for user interaction
@@ -62,6 +66,7 @@ export const Button = ({
   href,
   type = "button",
   colorType = "primary",
+  icon,
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getColorTypeClasses(colorType);
@@ -88,6 +93,7 @@ export const Button = ({
       className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
       onClick={onClick}
     >
+      {icon}
       {label}
     </button>
   );
