@@ -14,7 +14,7 @@ const Navbar = () => {
     <nav className="fixed flex flex-row bg-hkLightGray w-full m-0 py-3 px-3 border-b-2 border-hkGray content-center md:py-6 md:px-5">
       <Link href={"/"} className="flex content-center">
         <Image
-          src="hk-logo.svg"
+          src="/hk-logo.svg"
           alt="Hack Kosice logo"
           width={isMedium ? "200" : "150"}
           height="200"
