@@ -1,5 +1,5 @@
 import { procedure } from "@/server/trpc";
-import { loginSchema } from "@/services/validation/auth";
+import { loginSchema } from "@/server/services/validation/auth";
 import { hash } from "argon2";
 
 const signup = procedure.input(loginSchema).mutation(async ({ input, ctx }) => {
