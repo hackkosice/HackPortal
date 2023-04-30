@@ -1,30 +1,17 @@
 import React from "react";
-import { Card } from "@/components/Card";
-import { Heading } from "@/components/Heading";
-import { Text } from "@/components/Text";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
+import { trpc } from "@/services/trpc";
+import DashboardOrganizer from "@/scenes/Dashboard/DashboardOrganizer/DashboardOrganizer";
+import DashboardHacker from "@/scenes/Dashboard/DashboardHacker/DashboardHacker";
 
 const Dashboard = () => {
-  const { data: session } = useSession();
+  const { data } = trpc.userInfo.useQuery();
+  const isOrganizer = Boolean(data?.data?.organizer);
 
-  return (
-    <Card>
-      <Heading spaceAfter="large" centered>
-        Dashboard
-      </Heading>
-      {session ? (
-        <Text>Welcome {session.user?.email}!</Text>
-      ) : (
-        <>
-          <Text>Not logged in</Text>
-          <Link href="/login" className="text-hkOrange">
-            Log in
-          </Link>
-        </>
-      )}
-    </Card>
-  );
+  if (isOrganizer) {
+    return <DashboardOrganizer />;
+  }
+
+  return <DashboardHacker />;
 };
 
 export default Dashboard;

@@ -5,8 +5,8 @@ import { Heading } from "./Heading";
 import { Text } from "./Text";
 import { useBreakpoints } from "../services/hooks/useBreakpoints";
 import { signOut, useSession } from "next-auth/react";
-import { Stack } from "@/components/Stack";
-import { Button } from "@/components/Button";
+import { Stack } from "../components/Stack";
+import { Button } from "../components/Button";
 const Navbar = () => {
   const { isMedium } = useBreakpoints();
   const { data: session } = useSession();

@@ -7,7 +7,6 @@ import { Text } from "@/components/Text";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import React from "react";
 
 type LoginForm = {
@@ -74,9 +73,12 @@ const LoginPage = () => {
         </Stack>
       </form>
       <br />
-      <Link href="/signup">
-        <Button label="Sign up" primary={false} />
-      </Link>
+      <Button
+        label="Sign up"
+        colorType="secondary"
+        type="buttonLink"
+        href="/signup"
+      />
     </Card>
   );
 };

@@ -14,7 +14,7 @@ const LandingPage = () => {
       </Heading>
       <Stack direction="column">
         <Text>Welcome to application portal of Hack Kosice 2023!</Text>
-        <Link href="/dashboard">
+        <Link href="/dashboard/index">
           <Button label="Dashboard" />
         </Link>
       </Stack>

@@ -1,25 +1,15 @@
 import React, { useMemo } from "react";
-import { Size } from "@/components/types";
+import { ColorType, Size } from "@/components/types";
+import Link from "next/link";
 
 export type ButtonProps = {
-  /**
-   * Is this the principal call to action on the page?
-   */
-  primary?: boolean;
-  /**
-   * How large should the button be?
-   */
   size?: Size;
-  /**
-   * Button contents
-   */
   label: string;
-  /**
-   * Optional click handler
-   */
   onClick?: () => void;
   fullWidth?: boolean;
-  type?: "button" | "submit";
+  type?: "button" | "submit" | "buttonLink";
+  colorType?: ColorType;
+  href?: string;
 };
 
 const getSizeClasses = (size: Size) => {
@@ -36,11 +26,25 @@ const getSizeClasses = (size: Size) => {
   }
 };
 
-const getModeClasses = (isPrimary: boolean) =>
-  isPrimary
-    ? "text-white bg-hkOrange"
-    : "text-hkOrange border-2 border-hkOrange";
-
+const getColorTypeClasses = (colorType: ColorType) => {
+  switch (colorType) {
+    case "secondary": {
+      return "text-hkOrange border-2 border-hkOrange";
+    }
+    case "success": {
+      return "text-white bg-green-500";
+    }
+    case "warning": {
+      return "text-white bg-amber-500";
+    }
+    case "error": {
+      return "text-white bg-red-500";
+    }
+    default: {
+      return "text-white bg-hkOrange";
+    }
+  }
+};
 const getFullWidthClasses = (fullWidth: boolean) =>
   fullWidth ? "w-full" : "w-fit";
 
@@ -51,20 +55,21 @@ const BASE_BUTTON_CLASSES =
  * Primary UI component for user interaction
  */
 export const Button = ({
-  primary = true,
   size = "medium",
   label,
   onClick,
   fullWidth = false,
+  href,
   type = "button",
+  colorType = "primary",
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
-    const modeClass = getModeClasses(primary);
+    const modeClass = getColorTypeClasses(colorType);
     const sizeClass = getSizeClasses(size);
     const fullWidthClass = getFullWidthClasses(fullWidth);
 
     return [modeClass, sizeClass, fullWidthClass].join(" ");
-  }, [primary, size, fullWidth]);
+  }, [colorType, size, fullWidth]);
 
   if (type === "submit") {
     return (
@@ -77,7 +82,7 @@ export const Button = ({
     );
   }
 
-  return (
+  const buttonComponent = (
     <button
       type="button"
       className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
@@ -86,4 +91,10 @@ export const Button = ({
       {label}
     </button>
   );
+
+  if (type === "buttonLink") {
+    return <Link href={href as string}>{buttonComponent}</Link>;
+  }
+
+  return buttonComponent;
 };
