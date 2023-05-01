@@ -10,7 +10,7 @@ export type LoginPageProps = InferGetServerSidePropsType<
 >;
 
 export default function Page({ providers }: LoginPageProps) {
-  return <LoginPage />;
+  return <LoginPage providers={providers} />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

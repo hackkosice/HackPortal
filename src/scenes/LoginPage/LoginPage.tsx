@@ -1,3 +1,4 @@
+import React from "react";
 import { Stack } from "@/components/Stack";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
@@ -7,14 +8,14 @@ import { Text } from "@/components/Text";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import React from "react";
+import { LoginPageProps } from "@/pages/login";
 
 type LoginForm = {
   email: string;
   password: string;
 };
 
-const LoginPage = () => {
+const LoginPage = ({ providers }: LoginPageProps) => {
   const {
     register,
     handleSubmit,
