@@ -69,7 +69,7 @@ model ApplicationStatus {
 
 model ApplicationFormStep {
   id         Int         @id @default(autoincrement())
-  title      String      @unique
+  title      String
   stepNumber Int
   formFields FormField[]
 }
