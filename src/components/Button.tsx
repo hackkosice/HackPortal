@@ -87,7 +87,21 @@ export const Button = ({
     );
   }
 
-  const buttonComponent = (
+  if (type === "buttonLink") {
+    return (
+      <Link href={href as string} onClick={onClick}>
+        <button
+          type="button"
+          className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
+        >
+          {icon}
+          {label}
+        </button>
+      </Link>
+    );
+  }
+
+  return (
     <button
       type="button"
       className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
@@ -97,10 +111,4 @@ export const Button = ({
       {label}
     </button>
   );
-
-  if (type === "buttonLink") {
-    return <Link href={href as string}>{buttonComponent}</Link>;
-  }
-
-  return buttonComponent;
 };
