@@ -7,7 +7,7 @@ export type ModalProps = PropsWithChildren<{
 }>;
 
 const MODAL_BASE_CLASSES =
-  "bg-hkGray rounded-lg shadow-lg p-4 w-fit absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2";
+  "bg-hkGray rounded-lg shadow-lg p-4 w-fit absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50";
 
 export const Modal = ({
   children,
@@ -40,8 +40,11 @@ export const Modal = ({
   }
 
   return (
-    <div className={MODAL_BASE_CLASSES} ref={ref}>
-      {children}
-    </div>
+    <>
+      <div className={MODAL_BASE_CLASSES} ref={ref}>
+        {children}
+      </div>
+      <div className="absolute top-0 left-0 w-screen h-screen bg-gray-900 opacity-50 z-40"></div>
+    </>
   );
 };

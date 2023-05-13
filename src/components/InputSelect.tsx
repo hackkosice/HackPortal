@@ -1,9 +1,16 @@
 import React from "react";
 import { RegisterOptions, UseFormRegister } from "react-hook-form";
 
+type OptionType =
+  | {
+      value: string;
+      label: string;
+    }
+  | string;
+
 export type InputSelectProps = {
   label: string;
-  options: string[];
+  options: OptionType[];
   error?: string;
   required?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,11 +51,20 @@ export const InputSelect = ({
         className={`${INPUT_BASE_CLASSES} ${getFocusClasses(error)}`}
         {...registerProps}
       >
-        {options.map((option) => (
-          <option value={option} key={option}>
-            {option}
-          </option>
-        ))}
+        {options.map((option) => {
+          if (typeof option === "string") {
+            return (
+              <option value={option} key={option}>
+                {option}
+              </option>
+            );
+          }
+          return (
+            <option value={option.value} key={option.value}>
+              {option.label}
+            </option>
+          );
+        })}
       </select>
       {error && <span className="block text-red-500 mt-1">{error}</span>}
     </label>

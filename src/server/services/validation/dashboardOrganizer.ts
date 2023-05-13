@@ -9,5 +9,18 @@ export const deleteStepSchema = z.object({
   id: z.number().int().positive(),
 });
 
+export const stepInfoSchema = z.object({
+  id: z.number().int().positive(),
+});
+
+export const newFormFieldSchema = z.object({
+  stepId: z.number().int().positive(),
+  label: z.string().nonempty(),
+  name: z.string().nonempty(),
+  typeId: z.number().int().positive(),
+  required: z.boolean(),
+});
+
 export type IEditStepSchema = z.infer<typeof editStepSchema>;
 export type IDeleteStepSchema = z.infer<typeof deleteStepSchema>;
+export type IStepInfoSchema = z.infer<typeof stepInfoSchema>;
