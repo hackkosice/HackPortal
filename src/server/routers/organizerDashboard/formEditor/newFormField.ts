@@ -9,6 +9,17 @@ const newFormField = procedure
 
     const { stepId, typeId, label, name, required } = input;
 
+    const lastFormField = await ctx.prisma.formField.findFirst({
+      where: {
+        stepId,
+      },
+      orderBy: {
+        formFieldNumber: "desc",
+      },
+    });
+
+    const newFormFieldNumber = (lastFormField?.formFieldNumber ?? 0) + 1;
+
     const result = await ctx.prisma.formField.create({
       data: {
         stepId,
@@ -16,6 +27,7 @@ const newFormField = procedure
         label,
         name,
         required,
+        formFieldNumber: newFormFieldNumber,
       },
     });
 
