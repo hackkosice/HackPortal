@@ -1,16 +1,17 @@
-import React, { useMemo } from "react";
-import { ColorType, Size } from "@/components/types";
+import React, { useMemo, MouseEvent } from "react";
+import { ColorType, Size, Spacing } from "@/components/types";
 import Link from "next/link";
 
 export type ButtonProps = {
   size?: Size;
   label: string;
-  onClick?: () => void;
+  onClick?: ((e: MouseEvent<HTMLElement>) => void) | (() => void);
   fullWidth?: boolean;
   type?: "button" | "submit" | "buttonLink";
   colorType?: ColorType;
   href?: string;
   icon?: React.ReactNode;
+  spaceAfter?: Spacing;
 };
 
 const getSizeClasses = (size: Size) => {
@@ -52,6 +53,23 @@ const getColorTypeClasses = (colorType: ColorType) => {
 const getFullWidthClasses = (fullWidth: boolean) =>
   fullWidth ? "w-full" : "w-fit";
 
+const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
+  switch (spaceAfter) {
+    case "small": {
+      return "mb-1";
+    }
+    case "medium": {
+      return "mb-3";
+    }
+    case "large": {
+      return "mb-5";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
 const BASE_BUTTON_CLASSES =
   "cursor-pointer rounded-md font-bold leading-none inline-block flex items-center";
 
@@ -67,14 +85,16 @@ export const Button = ({
   type = "button",
   colorType = "primary",
   icon,
+  spaceAfter,
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getColorTypeClasses(colorType);
     const sizeClass = getSizeClasses(size);
     const fullWidthClass = getFullWidthClasses(fullWidth);
+    const spaceAfterClass = getSpaceAfterClasses(spaceAfter);
 
-    return [modeClass, sizeClass, fullWidthClass].join(" ");
-  }, [colorType, size, fullWidth]);
+    return [modeClass, sizeClass, fullWidthClass, spaceAfterClass].join(" ");
+  }, [colorType, size, fullWidth, spaceAfter]);
 
   if (type === "submit") {
     return (
@@ -89,7 +109,7 @@ export const Button = ({
 
   if (type === "buttonLink") {
     return (
-      <Link href={href as string} onClick={onClick}>
+      <Link href={href as string} onClick={onClick} className="block w-fit">
         <button
           type="button"
           className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}

@@ -17,13 +17,12 @@ export const Primary: Story = {
   args: {
     colorType: "primary",
     label: "Click me",
-    size: "large",
-    fullWidth: false,
   },
 };
 
 export const Secondary: Story = {
   args: {
     label: "Click me",
+    colorType: "secondary",
   },
 };
