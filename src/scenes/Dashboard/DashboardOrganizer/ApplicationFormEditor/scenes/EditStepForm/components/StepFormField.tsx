@@ -3,12 +3,13 @@ import React from "react";
 export type Props = {
   label: string;
   type: string;
+  formFieldNumber: number;
 };
 
-const StepFormField = ({ label, type }: Props) => {
+const StepFormField = ({ label, type, formFieldNumber }: Props) => {
   return (
     <div>
-      {label} ({type})
+      {formFieldNumber}. {label} ({type})
     </div>
   );
 };

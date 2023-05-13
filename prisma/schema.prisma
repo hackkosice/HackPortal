@@ -76,6 +76,7 @@ model ApplicationFormStep {
 
 model FormField {
   id              Int                         @id @default(autoincrement())
+  formFieldNumber Int
   label           String
   name            String
   required        Boolean

@@ -19,6 +19,9 @@ const stepInfo = procedure
           include: {
             type: true,
           },
+          orderBy: {
+            formFieldNumber: "asc",
+          },
         },
       },
     });

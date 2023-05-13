@@ -80,9 +80,16 @@ const EditStepForm = ({ stepId }: Props) => {
           Form fields
         </Heading>
         <Stack direction="column" spacing="small">
-          {data?.data.formFields.map(({ id, label, type: { value } }) => (
-            <StepFormField key={id} label={label} type={value} />
-          ))}
+          {data?.data.formFields.map(
+            ({ id, label, formFieldNumber, type: { value } }) => (
+              <StepFormField
+                key={id}
+                label={label}
+                type={value}
+                formFieldNumber={formFieldNumber}
+              />
+            )
+          )}
         </Stack>
         <Heading size="small" spaceAfter="medium">
           Create new field
@@ -107,7 +114,7 @@ const EditStepForm = ({ stepId }: Props) => {
                 name="typeId"
               />
             )}
-            <Button label="Add new step" spaceAfter="large" type="submit" />
+            <Button label="Add new field" spaceAfter="large" type="submit" />
           </Stack>
         </form>
         <Button
