@@ -129,4 +129,6 @@ model ApplicationFormFieldValue {
   fileId        Int?        @unique
   option        Option?     @relation(fields: [optionId], references: [id])
   optionId      Int?
+
+  @@unique([applicationId, fieldId])
 }
