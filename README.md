@@ -1,38 +1,79 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Requirements
 
-## Getting Started
+**System requirements**
 
-First, run the development server:
+- [Node.js 16.8](https://nodejs.org/) or later
+- Node package manage - [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- macOS, Windows (including WSL), and Linux are supported
+
+**Hardware requirements**
+
+- no minimum hardware requirements are needed. We recommend estimating traffic, the number of records and the number of saved files for your specific deployment and choosing hardware for your server accordingly.
+
+## Installation and configuration
+
+1. Use git to clone this repository:
+
+```bash
+git clone https://github.com/hackkosice/HackPortal.git
+```
+
+Alternatively you can download the code from Github using “Download ZIP” option if your system doesn’t have git installed (not recommended).
+
+1. Use Node package manager to install all required dependencies by running:
+
+```bash
+npm install
+```
+
+1. Prepare `.env` file containing required environment variables by copying the provided template and filling the values.
+
+```bash
+cp .env.template .env
+```
+
+Env variables:
+
+- NEXT_AUTH_SECRET - secret key for generating the JWT tokens used by NextAuth for handling user sessions. You can obtain strong secret key on Unix by running `openssl rand -base64 32`
+- DATABASE_URL - connection string used by Prisma ORM to connect to your database. Checkout Prisma docs to see what database are supported. Example value if you want to use SQLite database from local file: `file:./portal.db`
+
+1. Run database migrations to generate required tables and seed the database with initial values (mostly enums):
+- In production environment:
+
+```bash
+npm run prisma:migrate-prod
+npm run prisma:seed
+```
+
+- In development environment:
+
+```bash
+npm run prisma:migrate-dev
+```
+
+## Running the server
+
+### Dev environment
+
+A development server will start after using the `npm run dev` command. This server will compile the pages on the fly and includes the hot-reload feature. **You** **shouldn’t ever use this in the production environment**.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production environment
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Starting a production server requires two steps - building and compiling files (`npm run build`), serving those compiled files (`npm run start`). After every update of the source files you have to run both commands in order to correctly restart the server.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+npm run build
+npm run start
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Specifying port
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You can export the PORT environment variable to specify on which port the server will listen (both for development and production server). Example command on Unix based systems:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+export PORT=3003 && npm run start
+```
