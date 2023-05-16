@@ -14,16 +14,16 @@ export type ButtonProps = {
   spaceAfter?: Spacing;
 };
 
-const getSizeClasses = (size: Size) => {
+const getSizeClasses = (size: Size, colorType: ColorType) => {
   switch (size) {
     case "small": {
-      return "px-3.5 py-2 text-sm";
+      return `px-3.5 text-sm ${colorType === "secondary" ? "py-1.5" : "py-2"}`;
     }
     case "large": {
-      return "px-6 py-3 text-lg";
+      return `px-6 text-lg ${colorType === "secondary" ? "py-2.5" : "py-3"}`;
     }
     default: {
-      return "px-5 py-2.5";
+      return `px-5 ${colorType === "secondary" ? "py-2" : "py-2.5"}`;
     }
   }
 };
@@ -31,7 +31,7 @@ const getSizeClasses = (size: Size) => {
 const getColorTypeClasses = (colorType: ColorType) => {
   switch (colorType) {
     case "secondary": {
-      return "text-hkOrange border-2 border-hkOrange";
+      return "text-hkOrange border-2 border-hkOrange box-border";
     }
     case "tertiary": {
       return "text-hkOrange";
@@ -89,11 +89,11 @@ export const Button = ({
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getColorTypeClasses(colorType);
-    const sizeClass = getSizeClasses(size);
+    const sizeClass = getSizeClasses(size, colorType);
     const fullWidthClass = getFullWidthClasses(fullWidth);
     const spaceAfterClass = getSpaceAfterClasses(spaceAfter);
 
-    return [modeClass, sizeClass, fullWidthClass, spaceAfterClass].join(" ");
+    return [sizeClass, fullWidthClass, spaceAfterClass, modeClass].join(" ");
   }, [colorType, size, fullWidth, spaceAfter]);
 
   if (type === "submit") {

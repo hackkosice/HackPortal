@@ -1,7 +1,7 @@
 import React from "react";
 import { RegisterOptions, UseFormRegister } from "react-hook-form";
 
-type OptionType =
+export type OptionType =
   | {
       value: string;
       label: string;

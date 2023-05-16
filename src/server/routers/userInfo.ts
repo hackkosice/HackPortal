@@ -8,7 +8,9 @@ const userInfo = procedure.query(async ({ ctx }) => {
   const { prisma, session } = ctx;
   const user = await prisma.user.findUnique({
     where: { id: session.id },
-    include: {
+    select: {
+      id: true,
+      email: true,
       hacker: true,
       organizer: true,
     },
