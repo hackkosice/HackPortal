@@ -1,10 +1,11 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { Direction, Size } from "@/components/types";
+import { Direction, Size, Spacing } from "@/components/types";
 
 export type StackProps = PropsWithChildren<{
   spacing?: Size;
   direction?: Direction;
   alignItems?: "center" | "start" | "end" | "baseline" | "stretch";
+  spaceAfter?: Size;
 }>;
 
 const getDirectionClasses = (direction?: Direction) => {
@@ -42,6 +43,23 @@ const getAlignItemsClasses = (alignItems?: string) => {
   }
 };
 
+const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
+  switch (spaceAfter) {
+    case "small": {
+      return "mb-1";
+    }
+    case "medium": {
+      return "mb-3";
+    }
+    case "large": {
+      return "mb-5";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
 const STACK_BASE_CLASSES = "flex";
 
 export const Stack = ({
@@ -49,14 +67,21 @@ export const Stack = ({
   direction,
   spacing,
   alignItems = "start",
+  spaceAfter,
 }: StackProps) => {
   const computedClasses = useMemo(() => {
     const directionClasses = getDirectionClasses(direction);
     const spacingClasses = getSpacingClasses(spacing);
     const alignContentClasses = getAlignItemsClasses(alignItems);
+    const spaceAfterClasses = getSpaceAfterClasses(spaceAfter);
 
-    return [directionClasses, spacingClasses, alignContentClasses].join(" ");
-  }, [direction, spacing, alignItems]);
+    return [
+      directionClasses,
+      spacingClasses,
+      alignContentClasses,
+      spaceAfterClasses,
+    ].join(" ");
+  }, [direction, spacing, alignItems, spaceAfter]);
   return (
     <div className={`${STACK_BASE_CLASSES} ${computedClasses}`}>{children}</div>
   );

@@ -1,50 +1,47 @@
-import React, { PropsWithChildren, useEffect, useRef } from "react";
+import React, { PropsWithChildren, Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 export type ModalProps = PropsWithChildren<{
   isOpened: boolean;
-  onClose?: () => void;
-  closeOnOutsideClick?: boolean;
+  onClose: () => void;
+  title?: string;
 }>;
 
-const MODAL_BASE_CLASSES =
-  "bg-hkGray rounded-lg shadow-lg p-4 w-fit absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50";
-
-export const Modal = ({
-  children,
-  isOpened,
-  onClose,
-  closeOnOutsideClick = false,
-}: ModalProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!closeOnOutsideClick) {
-      return;
-    }
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        ref.current &&
-        !ref.current.contains(event.target as Node) &&
-        onClose
-      ) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [closeOnOutsideClick, onClose, ref]);
-
-  if (!isOpened) {
-    return null;
-  }
-
+export const Modal = ({ children, isOpened, onClose, title }: ModalProps) => {
   return (
-    <>
-      <div className={MODAL_BASE_CLASSES} ref={ref}>
-        {children}
-      </div>
-      <div className="absolute top-0 left-0 w-screen h-screen bg-gray-900 opacity-50 z-40"></div>
-    </>
+    <Transition appear show={isOpened} as={Fragment}>
+      <Dialog as="div" className="relative z-10 font-default" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-150"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-100"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black bg-opacity-25" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-150"
+              enterFrom="opacity-50 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-100"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-50 scale-95"
+            >
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-hkGray rounded-lg shadow-lg py-5 px-6 text-left align-middle shadow-xl transition-all">
+                {title && <Dialog.Title>{title}</Dialog.Title>}
+                {children}
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
   );
 };

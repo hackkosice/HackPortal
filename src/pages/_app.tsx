@@ -20,17 +20,23 @@ const leagueSpartan = League_Spartan({
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <main
-        className={`${roboto.variable} ${leagueSpartan.variable} font-default bg-hkLightGray relative`}
-      >
-        <Navbar />
-        <div className="grid items-center justify-center h-full min-h-screen">
-          <Component {...pageProps} />
-        </div>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </main>
-    </SessionProvider>
+    <>
+      <style jsx global>{`
+        :root {
+          --font-roboto: ${roboto.style.fontFamily};
+          --font-league-spartan: ${leagueSpartan.style.fontFamily};
+        }
+      `}</style>
+      <SessionProvider session={session}>
+        <main className={`font-default bg-hkLightGray relative`}>
+          <Navbar />
+          <div className="grid items-center justify-center h-full min-h-screen">
+            <Component {...pageProps} />
+          </div>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </main>
+      </SessionProvider>
+    </>
   );
 }
 
