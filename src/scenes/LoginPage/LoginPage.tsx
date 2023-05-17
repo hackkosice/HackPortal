@@ -67,7 +67,7 @@ const LoginPage = ({ providers }: LoginPageProps) => {
             required
             error={errors.password?.message}
             registerOptions={{
-              maxLength: { value: 10, message: "Max length is 10" },
+              minLength: { value: 6, message: "Min length is 6" },
             }}
           />
           <Button label="Log in" type="submit" />

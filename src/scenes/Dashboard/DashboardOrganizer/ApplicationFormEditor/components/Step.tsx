@@ -26,8 +26,11 @@ const Step = ({ title, stepNumber, stepId }: StepProps) => {
   };
 
   return (
-    <Link href={`/dashboard/form-editor/step/${stepId}/edit`}>
-      <div className="border-2 border-hkOrange p-4 mb-1 rounded-md">
+    <Link
+      href={`/dashboard/form-editor/step/${stepId}/edit`}
+      className="w-full"
+    >
+      <div className="border-2 border-hkOrange p-4 rounded-md">
         <Stack alignItems="center">
           <Text>{stepNumber}.</Text>
           <Text>{title}</Text>

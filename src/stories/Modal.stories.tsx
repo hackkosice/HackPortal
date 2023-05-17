@@ -25,6 +25,5 @@ export const Default: Story = {
   args: {
     children: ModalChildren,
     isOpened: true,
-    closeOnOutsideClick: true,
   },
 };
