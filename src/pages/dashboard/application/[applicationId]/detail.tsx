@@ -1,12 +1,12 @@
-import FormStepEditor, {
-  Props,
-} from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
 import { GetServerSidePropsContext } from "next";
 import requireAuthServerSideProps from "@/services/helpers/requireAuthServerSideProps";
 import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";
+import ApplicationDetail, {
+  Props,
+} from "@/scenes/Dashboard/DashboardOrganizer/ApplicationDetail/ApplicationDetail";
 
 export default function Page(props: Props) {
-  return <FormStepEditor {...props} />;
+  return <ApplicationDetail {...props} />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -18,10 +18,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/dashboard" } };
   }
 
-  const { stepId } = context.query;
+  const { applicationId } = context.query;
   return {
     props: {
-      stepId: Number(stepId),
+      applicationId: Number(applicationId),
     },
   };
 }

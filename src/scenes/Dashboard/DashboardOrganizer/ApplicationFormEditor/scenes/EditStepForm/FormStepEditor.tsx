@@ -13,7 +13,7 @@ export type Props = {
   stepId: number;
 };
 
-const EditStepForm = ({ stepId }: Props) => {
+const FormStepEditor = ({ stepId }: Props) => {
   const { data } = trpc.stepInfo.useQuery({ id: stepId });
 
   const [isEditTileModalOpened, setIsEditTileModalOpened] = useState(false);
@@ -67,7 +67,7 @@ const EditStepForm = ({ stepId }: Props) => {
           onClick={() => setIsNewFieldModalOpened(true)}
         />
         <Button
-          label="Back to dashboard"
+          label="Back to steps"
           type="buttonLink"
           href="/dashboard/form-editor"
           colorType="secondary"
@@ -78,4 +78,4 @@ const EditStepForm = ({ stepId }: Props) => {
   );
 };
 
-export default EditStepForm;
+export default FormStepEditor;
