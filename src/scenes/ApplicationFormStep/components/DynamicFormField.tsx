@@ -4,6 +4,7 @@ import { InputText } from "@/components/InputText";
 import { RegisterOptions, UseFormRegister } from "react-hook-form";
 import { InputSelect, OptionType } from "@/components/InputSelect";
 import { InputTextarea } from "@/components/InputTextarea";
+import { InputCheckbox } from "@/components/InputCheckbox";
 
 export type Props = {
   label: string;
@@ -54,6 +55,17 @@ const DynamicFormField = ({
         <InputSelect
           label={label}
           options={options ?? []}
+          name={name}
+          register={register}
+          registerOptions={registerOptions}
+          error={error}
+          required={required}
+        />
+      );
+    case "checkbox":
+      return (
+        <InputCheckbox
+          label={label}
           name={name}
           register={register}
           registerOptions={registerOptions}

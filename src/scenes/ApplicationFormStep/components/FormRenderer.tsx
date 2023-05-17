@@ -15,7 +15,13 @@ const FormRenderer = ({ actionButtons, formFields, onSubmit }: Props) => {
   useEffect(() => {
     formFields.forEach((formField: any) => {
       if (formField.initialValue) {
-        setValue(String(formField.id), formField.initialValue);
+        switch (formField.type.value) {
+          case "checkbox":
+            setValue(String(formField.id), formField.initialValue === "true");
+            break;
+          default:
+            setValue(String(formField.id), formField.initialValue);
+        }
       }
     });
   }, [formFields, setValue]);

@@ -2,6 +2,8 @@ import { procedure } from "@/server/trpc";
 import { stepInfoSchema } from "@/server/services/validation/dashboardOrganizer";
 import { requireOrganizer } from "@/server/services/requireOrganizer";
 import { TRPCError } from "@trpc/server";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
 const stepInfo = procedure
   .input(stepInfoSchema)
@@ -20,7 +22,7 @@ const stepInfo = procedure
             type: true,
           },
           orderBy: {
-            formFieldNumber: "asc",
+            formFieldNumber: SortOrder.asc,
           },
         },
       },
