@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "./Heading";
-import { Text } from "./Text";
 import { useBreakpoints } from "../services/hooks/useBreakpoints";
 import { signOut, useSession } from "next-auth/react";
 import { Stack } from "../components/Stack";
@@ -26,11 +25,10 @@ const Navbar = () => {
       <div className="flex-grow"></div>
       {session ? (
         <Stack direction="row">
-          <Text>Welcome {session.user?.name}</Text>
           <Button label="Sign out" size="small" onClick={signOut} />
         </Stack>
       ) : (
-        <Link href={"/login"}>Log in</Link>
+        <Button type="buttonLink" href={"/login"} label="Log in" />
       )}
     </nav>
   );
