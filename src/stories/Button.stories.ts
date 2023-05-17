@@ -26,3 +26,10 @@ export const Secondary: Story = {
     colorType: "secondary",
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    label: "Click me",
+    disabled: true,
+  },
+};
