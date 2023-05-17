@@ -18,10 +18,14 @@ const ApplicationFormStep = ({ stepId }: Props) => {
   const { mutateAsync: saveFields } = trpc.saveFieldValues.useMutation();
 
   const onFormSubmit = async (data: any) => {
-    const payload = Object.keys(data).map((key) => ({
-      fieldId: Number(key),
-      value: data[key] as string,
-    }));
+    const payload = Object.keys(data)
+      .map((key) => {
+        return {
+          fieldId: Number(key),
+          value: data[key] as string,
+        };
+      })
+      .filter((fieldValue) => fieldValue.value);
     await saveFields(payload);
 
     push("/dashboard");
