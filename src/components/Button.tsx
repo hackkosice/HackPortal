@@ -12,6 +12,7 @@ export type ButtonProps = {
   href?: string;
   icon?: React.ReactNode;
   spaceAfter?: Spacing;
+  disabled?: boolean;
 };
 
 const getSizeClasses = (size: Size, colorType: ColorType) => {
@@ -70,6 +71,13 @@ const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
   }
 };
 
+const getDisabledClassed = (disabled: boolean | undefined) => {
+  if (disabled) {
+    return "cursor-not-allowed opacity-60";
+  }
+  return "";
+};
+
 const BASE_BUTTON_CLASSES =
   "cursor-pointer rounded-md font-bold leading-none inline-block flex items-center";
 
@@ -86,15 +94,23 @@ export const Button = ({
   colorType = "primary",
   icon,
   spaceAfter,
+  disabled,
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getColorTypeClasses(colorType);
     const sizeClass = getSizeClasses(size, colorType);
     const fullWidthClass = getFullWidthClasses(fullWidth);
     const spaceAfterClass = getSpaceAfterClasses(spaceAfter);
+    const disabledClass = getDisabledClassed(disabled);
 
-    return [sizeClass, fullWidthClass, spaceAfterClass, modeClass].join(" ");
-  }, [colorType, size, fullWidth, spaceAfter]);
+    return [
+      sizeClass,
+      fullWidthClass,
+      spaceAfterClass,
+      modeClass,
+      disabledClass,
+    ].join(" ");
+  }, [colorType, size, fullWidth, spaceAfter, disabled]);
 
   if (type === "submit") {
     return (
@@ -103,6 +119,7 @@ export const Button = ({
         className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
         value={label}
         onClick={onClick}
+        disabled={disabled}
       />
     );
   }
@@ -113,6 +130,7 @@ export const Button = ({
         <button
           type="button"
           className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
+          disabled={disabled}
         >
           {icon}
           {label}
@@ -126,6 +144,7 @@ export const Button = ({
       type="button"
       className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon}
       {label}

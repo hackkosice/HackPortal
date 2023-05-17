@@ -1,6 +1,8 @@
 import { procedure } from "@/server/trpc";
 import { requireOrganizer } from "@/server/services/requireOrganizer";
 import { newFormFieldSchema } from "@/server/services/validation/dashboardOrganizer";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
 const newFormField = procedure
   .input(newFormFieldSchema)
@@ -14,7 +16,7 @@ const newFormField = procedure
         stepId,
       },
       orderBy: {
-        formFieldNumber: "desc",
+        formFieldNumber: SortOrder.desc,
       },
     });
 

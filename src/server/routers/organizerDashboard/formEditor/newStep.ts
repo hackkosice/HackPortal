@@ -1,12 +1,14 @@
 import { procedure } from "@/server/trpc";
 import { requireOrganizer } from "@/server/services/requireOrganizer";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
 const newStep = procedure.mutation(async ({ ctx }) => {
   await requireOrganizer(ctx);
 
   const lastStep = await ctx.prisma.applicationFormStep.findFirst({
     orderBy: {
-      stepNumber: "desc",
+      stepNumber: SortOrder.desc,
     },
   });
 

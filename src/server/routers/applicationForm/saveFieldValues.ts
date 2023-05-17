@@ -1,8 +1,8 @@
 import { procedure } from "@/server/trpc";
 import { saveFieldValuesSchema } from "@/server/services/validation/applicationForm";
 import { TRPCError } from "@trpc/server";
-import { requireHacker } from "@/server/services/requireHacker";
 import { PrismaClient } from "@prisma/client";
+import { requireApplication } from "@/server/services/requireApplication";
 
 const saveValue = async (
   prisma: PrismaClient,
@@ -47,36 +47,7 @@ const saveValue = async (
 const saveFieldValues = procedure
   .input(saveFieldValuesSchema)
   .mutation(async ({ ctx, input }) => {
-    await requireHacker(ctx);
-
-    const hacker = await ctx.prisma.hacker.findUnique({
-      where: {
-        userId: ctx.session.id,
-      },
-    });
-
-    if (!hacker) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Hacker not found",
-      });
-    }
-
-    const application = await ctx.prisma.application.findUnique({
-      select: {
-        id: true,
-      },
-      where: {
-        hackerId: hacker.id,
-      },
-    });
-
-    if (!application) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Application not found",
-      });
-    }
+    const applicationId = await requireApplication(ctx);
 
     for (const fieldValue of input) {
       const fieldType = await ctx.prisma.formField.findUnique({
@@ -99,8 +70,9 @@ const saveFieldValues = procedure
       }
       switch (fieldType.type.value) {
         case "text":
-        case "textarea": {
-          await saveValue(ctx.prisma, application.id, fieldValue.fieldId, {
+        case "textarea":
+        case "checkbox": {
+          await saveValue(ctx.prisma, applicationId, fieldValue.fieldId, {
             value: fieldValue.value,
           });
           break;
@@ -121,7 +93,7 @@ const saveFieldValues = procedure
                 "Provided value in select (optionId) not found in database",
             });
           }
-          await saveValue(ctx.prisma, application.id, fieldValue.fieldId, {
+          await saveValue(ctx.prisma, applicationId, fieldValue.fieldId, {
             optionId: option.id,
           });
           break;

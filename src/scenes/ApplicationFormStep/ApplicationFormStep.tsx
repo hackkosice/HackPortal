@@ -22,7 +22,7 @@ const ApplicationFormStep = ({ stepId }: Props) => {
       .map((key) => {
         return {
           fieldId: Number(key),
-          value: data[key] as string,
+          value: data[key].toString(),
         };
       })
       .filter((fieldValue) => fieldValue.value);
