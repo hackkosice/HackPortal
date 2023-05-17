@@ -49,12 +49,14 @@ const EditStepForm = ({ stepId }: Props) => {
         </Heading>
         <Stack direction="column" spacing="small" spaceAfter="medium">
           {data?.data.formFields.map(
-            ({ id, label, formFieldNumber, type: { value } }) => (
+            ({ id, label, formFieldNumber, type: { value }, required }) => (
               <StepFormField
                 key={id}
+                formFieldId={id}
                 label={label}
                 type={value}
                 formFieldNumber={formFieldNumber}
+                required={required}
               />
             )
           )}

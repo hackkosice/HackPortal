@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
 import { Modal } from "@/components/Modal";
 import { Heading } from "@/components/Heading";
+import { InputCheckbox } from "@/components/InputCheckbox";
 
 export type Props = {
   stepId: number;
@@ -17,6 +18,7 @@ export type Props = {
 type NewFieldForm = {
   label: string;
   typeId: string;
+  required: boolean;
 };
 
 const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
@@ -29,13 +31,17 @@ const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
     },
   });
 
-  const onNewFieldSubmit = async ({ label, typeId }: NewFieldForm) => {
+  const onNewFieldSubmit = async ({
+    label,
+    typeId,
+    required,
+  }: NewFieldForm) => {
     await newFormField({
       label,
       stepId,
       name: label,
       typeId: Number(typeId),
-      required: true,
+      required,
     });
     onClose();
   };
@@ -60,6 +66,11 @@ const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
               name="typeId"
             />
           )}
+          <InputCheckbox
+            label="Required field"
+            name="required"
+            register={register}
+          />
           <Button label="Add new field" spaceAfter="large" type="submit" />
         </Stack>
       </form>

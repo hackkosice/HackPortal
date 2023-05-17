@@ -12,6 +12,7 @@ import stepsHacker from "@/server/routers/hackerDashboard/stepsHacker";
 import stepFormFields from "@/server/routers/applicationForm/stepFormFields";
 import application from "@/server/routers/hackerDashboard/application";
 import saveFieldValues from "@/server/routers/applicationForm/saveFieldValues";
+import deleteFormField from "@/server/routers/organizerDashboard/formEditor/deleteFormField";
 
 export const appRouter = router({
   signup,
@@ -27,6 +28,7 @@ export const appRouter = router({
   stepFormFields,
   application,
   saveFieldValues,
+  deleteFormField,
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

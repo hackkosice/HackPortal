@@ -1,15 +1,56 @@
 import { procedure } from "@/server/trpc";
 import { deleteStepSchema } from "@/server/services/validation/dashboardOrganizer";
 import { requireOrganizer } from "@/server/services/requireOrganizer";
+import { TRPCError } from "@trpc/server";
 
 const deleteStep = procedure
   .input(deleteStepSchema)
   .mutation(async ({ ctx, input }) => {
     await requireOrganizer(ctx);
 
+    const { id: stepId, force } = input;
+
+    const fields = await ctx.prisma.formField.findMany({
+      where: {
+        stepId,
+      },
+    });
+
+    if (fields.length > 0) {
+      const fieldsFilter = fields.map((field) => ({
+        fieldId: field.id,
+      }));
+
+      const fieldValues = await ctx.prisma.applicationFormFieldValue.findMany({
+        where: {
+          OR: fieldsFilter,
+        },
+      });
+
+      if (fieldValues.length > 0) {
+        if (force) {
+          await ctx.prisma.applicationFormFieldValue.deleteMany({
+            where: {
+              OR: fieldsFilter,
+            },
+          });
+        } else {
+          throw new TRPCError({
+            message: "This form field has some values and force is false",
+            code: "CONFLICT",
+          });
+        }
+      }
+      await ctx.prisma.formField.deleteMany({
+        where: {
+          stepId,
+        },
+      });
+    }
+
     const deletedStep = await ctx.prisma.applicationFormStep.delete({
       where: {
-        id: input.id,
+        id: stepId,
       },
     });
 
