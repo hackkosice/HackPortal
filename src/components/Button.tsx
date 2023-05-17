@@ -79,7 +79,7 @@ const getDisabledClassed = (disabled: boolean | undefined) => {
 };
 
 const BASE_BUTTON_CLASSES =
-  "cursor-pointer rounded-md font-bold leading-none inline-block flex items-center";
+  "cursor-pointer rounded-md leading-none inline-block flex items-center";
 
 /**
  * Primary UI component for user interaction

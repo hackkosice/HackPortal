@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const roboto = Roboto({
   variable: "--font-roboto",
-  weight: "400",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 

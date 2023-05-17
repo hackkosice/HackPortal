@@ -32,7 +32,18 @@ const ApplicationFormEditor = () => {
             <Step key={id} stepId={id} title={title} stepNumber={stepNumber} />
           ))}
         </Stack>
-        <Button label="Create new step" onClick={createNewStep} />
+        <Button
+          label="Create new step"
+          onClick={createNewStep}
+          spaceAfter="medium"
+        />
+        <Button
+          label="Back to dashboard"
+          type="buttonLink"
+          href="/dashboard"
+          colorType="secondary"
+          size="small"
+        />
       </Card>
     </>
   );
