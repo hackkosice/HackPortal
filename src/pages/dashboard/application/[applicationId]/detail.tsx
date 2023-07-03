@@ -3,7 +3,7 @@ import requireAuthServerSideProps from "@/services/helpers/requireAuthServerSide
 import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";
 import ApplicationDetail, {
   Props,
-} from "@/scenes/Dashboard/DashboardOrganizer/ApplicationDetail/ApplicationDetail";
+} from "@/scenes/Dashboard/ApplicationDetail/ApplicationDetail";
 
 export default function Page(props: Props) {
   return <ApplicationDetail {...props} />;

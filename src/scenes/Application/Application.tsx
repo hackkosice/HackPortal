@@ -6,9 +6,9 @@ import React, { useState } from "react";
 import { Stack } from "@/components/Stack";
 import { Button } from "@/components/Button";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
-import HackerApplicationStep from "@/scenes/Dashboard/DashboardHacker/components/HackerApplicationStep";
+import HackerApplicationStep from "@/scenes/Application/components/HackerApplicationStep";
 
-const DashboardHacker = () => {
+const Application = () => {
   const utils = trpc.useContext();
   const { data: dataSteps } = trpc.stepsHacker.useQuery();
   const { data: dataApplication } = trpc.application.useQuery();
@@ -71,4 +71,4 @@ const DashboardHacker = () => {
   );
 };
 
-export default DashboardHacker;
+export default Application;

@@ -1,6 +1,6 @@
 import FormStepEditor, {
   Props,
-} from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
+} from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
 import { GetServerSidePropsContext } from "next";
 import requireAuthServerSideProps from "@/services/helpers/requireAuthServerSideProps";
 import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";

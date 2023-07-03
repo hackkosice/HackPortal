@@ -18,7 +18,7 @@ const HackerApplicationStep = ({
   isCompleted,
 }: Props) => {
   return (
-    <Link href={`/form/step/${stepId}`} className="w-1/2">
+    <Link href={`/application/form/step/${stepId}`} className="w-1/2">
       <div
         className={`border-2 p-4 rounded-md ${
           isCompleted ? "border-green-500" : "border-hkOrange"

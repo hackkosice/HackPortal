@@ -1,16 +1,15 @@
 import React from "react";
-import Dashboard from "@/scenes/Dashboard/Dashboard";
-import { GetServerSidePropsContext } from "next";
+import Application from "@/scenes/Application/Application";
 import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";
+import { GetServerSidePropsContext } from "next";
 
 export default function Page() {
-  return <Dashboard />;
+  return <Application />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  if (!(await requireOrganizerServerSideProps(context))) {
-    return { redirect: { destination: "/login" } };
+  if (await requireOrganizerServerSideProps(context)) {
+    return { redirect: { destination: "/dashboard" } };
   }
-
   return { props: {} };
 }
