@@ -9,7 +9,11 @@ const LandingPage = () => {
     <Card>
       <Stack direction="column">
         <Text>Welcome to application portal for Hack Kosice 2023!</Text>
-        <Button label="Start application" type="buttonLink" href="/dashboard" />
+        <Button
+          label="Start application"
+          type="buttonLink"
+          href="/application"
+        />
       </Stack>
     </Card>
   );

@@ -18,7 +18,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // If the user is already logged in, redirect.
   if (session) {
-    return { redirect: { destination: "/dashboard" } };
+    return { redirect: { destination: "/application" } };
   }
 
   const providers = await getProviders();

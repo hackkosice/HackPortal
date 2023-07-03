@@ -4,10 +4,10 @@ import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { trpc } from "@/services/trpc";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import EditTitleModal from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleModal";
-import StepFormField from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
+import EditTitleModal from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleModal";
+import StepFormField from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
 import { Stack } from "@/components/Stack";
-import NewFieldModal from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldModal";
+import NewFieldModal from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldModal";
 
 export type Props = {
   stepId: number;

@@ -1,4 +1,4 @@
-import ApplicationFormEditor from "@/scenes/Dashboard/DashboardOrganizer/ApplicationFormEditor/ApplicationFormEditor";
+import ApplicationFormEditor from "@/scenes/Dashboard/ApplicationFormEditor/ApplicationFormEditor";
 import { GetServerSidePropsContext } from "next";
 import requireAuthServerSideProps from "@/services/helpers/requireAuthServerSideProps";
 import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";
