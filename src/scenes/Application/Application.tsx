@@ -10,8 +10,7 @@ import HackerApplicationStep from "@/scenes/Application/components/HackerApplica
 
 const Application = () => {
   const utils = trpc.useContext();
-  const { data: dataSteps } = trpc.stepsHacker.useQuery();
-  const { data: dataApplication } = trpc.application.useQuery();
+  const { data } = trpc.application.useQuery();
   const { mutateAsync: submitApplication } = trpc.submitApplication.useMutation(
     {
       onSuccess: () => {
@@ -37,35 +36,36 @@ const Application = () => {
         onClose={onSubmitConfirmationClose}
       />
       <Card>
-        <Heading spaceAfter="large" centered>
-          Welcome to Hack Kosice Application portal!
-        </Heading>
-        <Text spaceAfter="large">
-          Application status: {dataApplication?.data.status.name}
-        </Text>
-        {dataApplication?.data.status.name === "open" && (
-          <>
-            <Text spaceAfter="medium">
-              Complete steps below to finish your application:
+        <Stack direction="column">
+          <Heading centered>Welcome to Hack Kosice Application portal!</Heading>
+          {data && data.signedIn === false && (
+            <Text type="error" weight="bold">
+              You are not signed in.
             </Text>
-            <Stack direction="column" spaceAfter="medium" spacing="small">
-              {dataSteps?.data.steps.map((step) => (
-                <HackerApplicationStep
-                  key={step.id}
-                  stepId={step.id}
-                  title={step.title}
-                  stepNumber={step.stepNumber}
-                  isCompleted={step.isCompleted}
-                />
-              ))}
+          )}
+          <Text>Application status: {data?.data.application.status.name}</Text>
+          {data?.data.application.status.name === "open" && (
+            <Stack spacing="medium" direction="column">
+              <Text>Complete steps below to finish your application:</Text>
+              <Stack direction="column" spaceAfter="medium" spacing="small">
+                {data?.data.steps.map((step) => (
+                  <HackerApplicationStep
+                    key={step.id}
+                    stepId={step.id}
+                    title={step.title}
+                    stepNumber={step.stepNumber}
+                    isCompleted={step.isCompleted}
+                  />
+                ))}
+              </Stack>
+              <Button
+                label="Submit application"
+                disabled={!data?.data.canSubmit}
+                onClick={() => setSubmitConfirmationModalOpened(true)}
+              />
             </Stack>
-            <Button
-              label="Submit application"
-              disabled={!dataSteps?.data.canSubmit}
-              onClick={() => setSubmitConfirmationModalOpened(true)}
-            />
-          </>
-        )}
+          )}
+        </Stack>
       </Card>
     </>
   );

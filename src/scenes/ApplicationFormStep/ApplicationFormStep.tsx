@@ -43,7 +43,7 @@ const ApplicationFormStep = ({ stepId }: Props) => {
               <Button
                 label="Back"
                 type="buttonLink"
-                href="/dashboard"
+                href="/application"
                 colorType="secondary"
               />
               <Button label="Save" type="submit" />
