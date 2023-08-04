@@ -8,3 +8,4 @@ export type ColorType =
   | "warning"
   | "error"
   | "success";
+export type Weight = "normal" | "bold";
