@@ -1,17 +1,17 @@
 import React from "react";
 import { GetServerSidePropsContext } from "next";
-import requireAuthServerSideProps from "@/services/helpers/requireAuthServerSideProps";
 import ApplicationFormStep, {
   Props,
 } from "@/scenes/ApplicationFormStep/ApplicationFormStep";
+import requireOrganizerServerSideProps from "@/services/helpers/requireOrganizerServerSideProps";
 
 export default function Page(props: Props) {
   return <ApplicationFormStep {...props} />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  if (!(await requireAuthServerSideProps(context))) {
-    return { redirect: { destination: "/login" } };
+  if (await requireOrganizerServerSideProps(context)) {
+    return { redirect: { destination: "/dashboard" } };
   }
 
   const { stepId } = context.query;

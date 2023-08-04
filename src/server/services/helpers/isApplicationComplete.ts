@@ -8,14 +8,23 @@ type StepField = {
     value: string;
   };
 };
+
+/**
+ * Checks if all required fields in a step are completed - have a value in the database
+ * @param stepFields - fields in a step
+ * @param fieldValues - values of fields in an application
+ *
+ * @returns true if all required fields are completed, false otherwise
+ */
 export const isStepCompleted = (
   stepFields: StepField[],
   fieldValues: ApplicationFormFieldValue[]
 ): boolean => {
   for (const field of stepFields) {
-    if (!field.required) continue;
-    const value = fieldValues.find((value) => value.fieldId === field.id);
-    if (!value) {
+    if (
+      field.required &&
+      !fieldValues.find((value) => value.fieldId === field.id)
+    ) {
       return false;
     }
   }
