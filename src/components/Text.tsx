@@ -1,10 +1,11 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { ColorType, Size, Spacing } from "@/components/types";
+import { ColorType, Size, Spacing, Weight } from "@/components/types";
 
 export type TextProps = PropsWithChildren<{
   size?: Size;
   spaceAfter?: Spacing;
   type?: ColorType;
+  weight?: Weight;
 }>;
 
 const getSizeClasses = (size: Size | undefined) => {
@@ -58,14 +59,34 @@ const getTypeClasses = (type: ColorType | undefined) => {
   }
 };
 
-export const Text = ({ children, size, spaceAfter, type }: TextProps) => {
+const getWeightClasses = (weight: Weight | undefined) => {
+  switch (weight) {
+    case "bold": {
+      return "font-bold";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
+export const Text = ({
+  children,
+  size,
+  spaceAfter,
+  type,
+  weight,
+}: TextProps) => {
   const computedClasses = useMemo(() => {
     const sizeClasses = getSizeClasses(size);
     const spaceAfterClasses = getSpaceAfterClasses(spaceAfter);
     const typeClasses = getTypeClasses(type);
+    const weightClasses = getWeightClasses(weight);
 
-    return [sizeClasses, spaceAfterClasses, typeClasses].join(" ");
-  }, [size, spaceAfter, type]);
+    return [sizeClasses, spaceAfterClasses, typeClasses, weightClasses].join(
+      " "
+    );
+  }, [size, spaceAfter, type, weight]);
 
   return <p className={computedClasses}>{children}</p>;
 };

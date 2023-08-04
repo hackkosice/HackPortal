@@ -60,7 +60,7 @@ const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
   }
 };
 
-const STACK_BASE_CLASSES = "flex";
+const STACK_BASE_CLASSES = "flex w-full";
 
 export const Stack = ({
   children,
