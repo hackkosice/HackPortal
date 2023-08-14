@@ -9,10 +9,10 @@ import stepInfo from "@/server/routers/organizerDashboard/formEditor/stepInfo";
 import newFormField from "@/server/routers/organizerDashboard/formEditor/newFormField";
 import formFieldTypes from "@/server/routers/organizerDashboard/formEditor/formFieldTypes";
 import stepFormFields from "@/server/routers/applicationForm/stepFormFields";
-import application from "@/server/routers/hackerDashboard/application";
+import application from "@/server/routers/application/application";
 import saveFieldValues from "@/server/routers/applicationForm/saveFieldValues";
 import deleteFormField from "@/server/routers/organizerDashboard/formEditor/deleteFormField";
-import submitApplication from "@/server/routers/hackerDashboard/submitApplication";
+import submitApplication from "@/server/routers/application/submitApplication";
 import applicationsList from "@/server/routers/organizerDashboard/applicationsTable/applicationsList";
 import applicationInfo from "@/server/routers/organizerDashboard/applicationsTable/applicationInfo";
 

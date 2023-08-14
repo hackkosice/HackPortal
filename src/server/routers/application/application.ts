@@ -6,6 +6,8 @@ import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 
 const application = procedure.query(async ({ ctx }) => {
+  // Find all steps in the application form
+
   const stepsDb = await ctx.prisma.applicationFormStep.findMany({
     select: {
       id: true,
@@ -27,6 +29,8 @@ const application = procedure.query(async ({ ctx }) => {
       stepNumber: SortOrder.asc,
     },
   });
+
+  // User is not signed in
 
   if (!ctx.session?.id) {
     const steps = stepsDb.map((step) => ({
@@ -50,6 +54,8 @@ const application = procedure.query(async ({ ctx }) => {
     };
   }
 
+  // If user is signed in it must be a hacker
+
   await requireHacker(ctx);
 
   const hacker = await ctx.prisma.hacker.findUnique({
@@ -67,6 +73,8 @@ const application = procedure.query(async ({ ctx }) => {
       message: "Hacker not found",
     });
   }
+
+  // Find application or create one if it doesn't exist
 
   const applicationSelect = {
     id: true,
@@ -94,9 +102,11 @@ const application = procedure.query(async ({ ctx }) => {
     });
   }
 
+  // Find all application form field values in order to check which steps are completed
+
   const fieldValues = await ctx.prisma.applicationFormFieldValue.findMany({
     where: {
-      applicationId: applicationObject.id,
+      applicationId: applicationObject.id as number,
     },
   });
 
@@ -104,6 +114,8 @@ const application = procedure.query(async ({ ctx }) => {
     ...step,
     isCompleted: isStepCompleted(step.formFields, fieldValues),
   }));
+
+  // If all steps are completed, the application can be submitted
 
   const canSubmit = steps.every((step) => step.isCompleted);
 
