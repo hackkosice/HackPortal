@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { loginSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   pages: {
     signIn: "/login",
     signOut: "/signout",
@@ -14,7 +14,7 @@ export const authOptions = {
       type: "credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -34,22 +34,18 @@ export const authOptions = {
           return null;
         }
 
-        return { id: user.id, email: user.email } as never;
+        return { id: user.id, email: user.email };
       },
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = Number(user.id);
         token.email = user.email;
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     async session({ session, token }) {
       if (token) {
         session.id = token.id;
