@@ -1,11 +1,15 @@
 import { procedure } from "@/server/trpc";
 import { requireAuth } from "@/server/services/requireAuth";
 import { TRPCError } from "@trpc/server";
+import { Session } from "next-auth";
 
 const userInfo = procedure.query(async ({ ctx }) => {
   requireAuth(ctx);
 
-  const { prisma, session } = ctx;
+  // Safe to cast because of requireAuth above
+  const session = ctx.session as Session;
+  const { prisma } = ctx;
+
   const user = await prisma.user.findUnique({
     where: { id: session.id },
     select: {
