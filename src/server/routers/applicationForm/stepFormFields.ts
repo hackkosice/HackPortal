@@ -3,6 +3,32 @@ import { stepFormFieldsSchema } from "@/server/services/validation/applicationFo
 import { TRPCError } from "@trpc/server";
 import { requireHacker } from "@/server/services/requireHacker";
 
+type FieldValue =
+  | {
+      value: string | null;
+      option: { id: number; value: string } | null;
+      field: { type: { value: string }; id: number; stepId: number };
+    }
+  | undefined;
+
+const getInitialValue = (fieldValue: FieldValue) => {
+  if (!fieldValue) {
+    return null;
+  }
+
+  const { value, option } = fieldValue;
+
+  if (value) {
+    return value;
+  }
+
+  if (option) {
+    return option.id;
+  }
+
+  return null;
+};
+
 const stepFormFields = procedure
   .input(stepFormFieldsSchema)
   .query(async ({ ctx, input }) => {
@@ -132,8 +158,9 @@ const stepFormFields = procedure
 
     const resultFields = stepFormFields.formFields.map((field) => ({
       ...field,
-      initialValue:
-        fieldValues.find((value) => value.field.id === field.id)?.value ?? null,
+      initialValue: getInitialValue(
+        fieldValues.find((value) => value.field.id === field.id)
+      ),
       optionList: field.optionList?.options.map((option) => ({
         value: String(option.id),
         label: option.value,

@@ -13,26 +13,13 @@ const saveValue = async (
     optionId?: number;
   }
 ) => {
-  const existingFieldValue = await prisma.applicationFormFieldValue.findUnique({
-    where: {
-      applicationId_fieldId: {
-        applicationId,
-        fieldId,
-      },
+  await prisma.applicationFormFieldValue.upsert({
+    create: {
+      applicationId,
+      fieldId,
+      ...values,
     },
-  });
-  if (!existingFieldValue) {
-    await prisma.applicationFormFieldValue.create({
-      data: {
-        applicationId,
-        fieldId,
-        ...values,
-      },
-    });
-    return;
-  }
-  await prisma.applicationFormFieldValue.update({
-    data: {
+    update: {
       ...values,
     },
     where: {
