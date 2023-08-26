@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Text } from "./Text";
 import { Direction } from "@/components/types";
 
 export type InputRadioGroupProps = {

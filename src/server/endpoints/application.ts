@@ -1,14 +1,39 @@
-import { procedure } from "@/server/trpc";
-import { requireHacker } from "@/server/services/requireHacker";
-import { TRPCError } from "@trpc/server";
-import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete";
+import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
-import SortOrder = Prisma.SortOrder;
+import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-const application = procedure.query(async ({ ctx }) => {
+export type ApplicationData = {
+  message: string;
+  signedIn: boolean;
+  data: {
+    application: {
+      status: string;
+    };
+    steps: {
+      id: number;
+      title: string;
+      stepNumber: number;
+      isCompleted: boolean;
+      formFields: {
+        id: number;
+        required: boolean;
+        type: {
+          value: string;
+        };
+      }[];
+    }[];
+    canSubmit: boolean;
+  };
+};
+
+const getApplicationData = async (): Promise<ApplicationData> => {
   // Find all steps in the application form
 
-  const stepsDb = await ctx.prisma.applicationFormStep.findMany({
+  const session = await getServerSession(authOptions);
+
+  const stepsDb = await prisma.applicationFormStep.findMany({
     select: {
       id: true,
       title: true,
@@ -26,13 +51,13 @@ const application = procedure.query(async ({ ctx }) => {
       },
     },
     orderBy: {
-      stepNumber: SortOrder.asc,
+      stepNumber: Prisma.SortOrder.asc,
     },
   });
 
   // User is not signed in
 
-  if (!ctx.session?.id) {
+  if (!session?.id) {
     const steps = stepsDb.map((step) => ({
       ...step,
       isCompleted: false,
@@ -43,10 +68,7 @@ const application = procedure.query(async ({ ctx }) => {
       signedIn: false,
       data: {
         application: {
-          id: null,
-          status: {
-            name: "open",
-          },
+          status: "open",
         },
         steps,
         canSubmit: false,
@@ -56,22 +78,19 @@ const application = procedure.query(async ({ ctx }) => {
 
   // If user is signed in it must be a hacker
 
-  await requireHacker(ctx);
+  // await requireHacker(ctx);
 
-  const hacker = await ctx.prisma.hacker.findUnique({
+  const hacker = await prisma.hacker.findUnique({
     select: {
       id: true,
     },
     where: {
-      userId: ctx.session.id,
+      userId: session.id,
     },
   });
 
   if (!hacker) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Hacker not found",
-    });
+    throw new Error("Hacker not found");
   }
 
   // Find application or create one if it doesn't exist
@@ -85,7 +104,7 @@ const application = procedure.query(async ({ ctx }) => {
     },
   };
 
-  let applicationObject = await ctx.prisma.application.findUnique({
+  let applicationObject = await prisma.application.findUnique({
     select: applicationSelect,
     where: {
       hackerId: hacker.id,
@@ -93,7 +112,7 @@ const application = procedure.query(async ({ ctx }) => {
   });
 
   if (!applicationObject) {
-    applicationObject = await ctx.prisma.application.create({
+    applicationObject = await prisma.application.create({
       data: {
         hackerId: hacker.id,
         statusId: 1,
@@ -104,9 +123,9 @@ const application = procedure.query(async ({ ctx }) => {
 
   // Find all application form field values in order to check which steps are completed
 
-  const fieldValues = await ctx.prisma.applicationFormFieldValue.findMany({
+  const fieldValues = await prisma.applicationFormFieldValue.findMany({
     where: {
-      applicationId: applicationObject.id as number,
+      applicationId: applicationObject.id,
     },
   });
 
@@ -123,11 +142,13 @@ const application = procedure.query(async ({ ctx }) => {
     message: "Application found",
     signedIn: true,
     data: {
-      application: applicationObject,
+      application: {
+        status: applicationObject.status.name,
+      },
       steps,
       canSubmit,
     },
   };
-});
+};
 
-export default application;
+export default getApplicationData;

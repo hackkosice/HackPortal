@@ -1,11 +1,12 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heading } from "./Heading";
-import { useBreakpoints } from "../services/hooks/useBreakpoints";
 import { signOut, useSession } from "next-auth/react";
-import { Stack } from "../components/Stack";
-import { Button } from "../components/Button";
+import { useBreakpoints } from "@/services/hooks/useBreakpoints";
+import { Heading } from "@/components/Heading";
+import { Button } from "@/components/Button";
 const Navbar = () => {
   const { isMedium } = useBreakpoints();
   const { data: session } = useSession();
@@ -24,9 +25,7 @@ const Navbar = () => {
       <Heading size="small">Application portal</Heading>
       <div className="flex-grow"></div>
       {session ? (
-        <Stack direction="row">
-          <Button label="Sign out" size="small" onClick={signOut} />
-        </Stack>
+        <Button label="Sign out" size="small" onClick={signOut} />
       ) : (
         <Button type="buttonLink" href={"/login"} label="Log in" />
       )}

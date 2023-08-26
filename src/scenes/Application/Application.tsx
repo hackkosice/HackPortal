@@ -1,3 +1,5 @@
+"use client";
+
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Text } from "@/components/Text";
@@ -7,14 +9,19 @@ import { Stack } from "@/components/Stack";
 import { Button } from "@/components/Button";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import HackerApplicationStep from "@/scenes/Application/components/HackerApplicationStep";
+import { ApplicationData } from "@/server/endpoints/application";
+import { useRouter } from "next/navigation";
 
-const Application = () => {
-  const utils = trpc.useContext();
-  const { data } = trpc.application.useQuery();
+type ApplicationProps = {
+  data: ApplicationData;
+};
+
+const Application = ({ data }: ApplicationProps) => {
+  const router = useRouter();
   const { mutateAsync: submitApplication } = trpc.submitApplication.useMutation(
     {
       onSuccess: () => {
-        utils.application.invalidate();
+        router.refresh();
       },
     }
   );
@@ -38,17 +45,17 @@ const Application = () => {
       <Card>
         <Stack direction="column">
           <Heading centered>Welcome to Hack Kosice Application portal!</Heading>
-          {data && data.signedIn === false && (
+          {!data.signedIn && (
             <Text type="error" weight="bold">
               You are not signed in.
             </Text>
           )}
-          <Text>Application status: {data?.data.application.status.name}</Text>
-          {data?.data.application.status.name === "open" && (
+          <Text>Application status: {data.data.application.status}</Text>
+          {data.data.application.status === "open" && (
             <Stack spacing="medium" direction="column">
               <Text>Complete steps below to finish your application:</Text>
               <Stack direction="column" spaceAfter="medium" spacing="small">
-                {data?.data.steps.map((step) => (
+                {data.data.steps.map((step) => (
                   <HackerApplicationStep
                     key={step.id}
                     stepId={step.id}
@@ -60,7 +67,7 @@ const Application = () => {
               </Stack>
               <Button
                 label="Submit application"
-                disabled={!data?.data.canSubmit}
+                disabled={!data.data.canSubmit}
                 onClick={() => setSubmitConfirmationModalOpened(true)}
               />
             </Stack>

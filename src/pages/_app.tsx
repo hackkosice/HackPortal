@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Roboto, League_Spartan } from "next/font/google";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/common/Navbar/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { trpc } from "@/services/trpc";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
