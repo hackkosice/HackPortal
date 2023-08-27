@@ -11,12 +11,7 @@ export type Props = {
   isCompleted: boolean;
 };
 
-const HackerApplicationStep = ({
-  stepId,
-  stepNumber,
-  title,
-  isCompleted,
-}: Props) => {
+const ApplicationStep = ({ stepId, stepNumber, title, isCompleted }: Props) => {
   return (
     <Link href={`/application/form/step/${stepId}`} className="w-1/2">
       <div
@@ -36,4 +31,4 @@ const HackerApplicationStep = ({
     </Link>
   );
 };
-export default HackerApplicationStep;
+export default ApplicationStep;
