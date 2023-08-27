@@ -28,22 +28,24 @@ const getInitialValue = (fieldValue: FieldValue) => {
   return null;
 };
 
+export type FormFieldData = {
+  id: number;
+  formFieldNumber: number;
+  name: string;
+  label: string;
+  type: { value: string };
+  initialValue: string | null | number;
+  optionList: { value: string; label: string }[] | undefined;
+  required: boolean;
+};
+
 export type ApplicationFormStepData = {
   message: string;
   signedIn: boolean;
   data: {
     title: string;
     stepNumber: number;
-    formFields: {
-      id: number;
-      formFieldNumber: number;
-      name: string;
-      label: string;
-      type: { value: string };
-      initialValue: string | null | number;
-      optionList: { value: string; label: string }[] | undefined;
-      required: boolean;
-    }[];
+    formFields: FormFieldData[];
   };
 };
 

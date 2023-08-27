@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationFormStep from "@/scenes/ApplicationFormStep/ApplicationFormStep";
 import { redirect } from "next/navigation";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
-import getApplicationFormStep from "@/server/endpoints/applicationFormStep";
+import getApplicationFormStep from "@/server/getters/applicationFormStep";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

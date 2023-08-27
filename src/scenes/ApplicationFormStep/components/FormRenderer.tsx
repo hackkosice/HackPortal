@@ -3,28 +3,40 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
 import { Stack } from "@/components/Stack";
+import getLocalApplicationFieldData from "@/services/helpers/localData/getLocalApplicationFieldData";
+import { FormFieldData } from "@/server/getters/applicationFormStep";
 
 export type Props = {
   onSubmit: (data: any) => void;
   actionButtons: React.ReactNode;
-  formFields: any;
+  formFields: FormFieldData[];
+  shouldUseLocalInitialValues?: boolean;
 };
 
-const FormRenderer = ({ actionButtons, formFields, onSubmit }: Props) => {
+const FormRenderer = ({
+  actionButtons,
+  formFields,
+  onSubmit,
+  shouldUseLocalInitialValues,
+}: Props) => {
   const { handleSubmit, register, setValue } = useForm();
   useEffect(() => {
-    formFields.forEach((formField: any) => {
-      if (formField.initialValue) {
-        switch (formField.type.value) {
-          case "checkbox":
-            setValue(String(formField.id), formField.initialValue === "true");
-            break;
-          default:
-            setValue(String(formField.id), formField.initialValue);
-        }
+    // Fill initial values for form fields - either from localStorage or from the server
+    formFields.forEach((formField) => {
+      const initialValue = shouldUseLocalInitialValues
+        ? getLocalApplicationFieldData(formField.id)?.value
+        : formField.initialValue;
+      if (!initialValue) return;
+
+      switch (formField.type.value) {
+        case "checkbox":
+          setValue(String(formField.id), initialValue === "true");
+          break;
+        default:
+          setValue(String(formField.id), initialValue);
       }
     });
-  }, [formFields, setValue]);
+  }, [formFields, setValue, shouldUseLocalInitialValues]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
