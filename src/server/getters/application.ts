@@ -4,6 +4,20 @@ import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
+export type ApplicationStepData = {
+  id: number;
+  title: string;
+  stepNumber: number;
+  isCompleted: boolean;
+  formFields: {
+    id: number;
+    required: boolean;
+    type: {
+      value: string;
+    };
+  }[];
+};
+
 export type ApplicationData = {
   message: string;
   signedIn: boolean;
@@ -11,19 +25,7 @@ export type ApplicationData = {
     application: {
       status: string;
     };
-    steps: {
-      id: number;
-      title: string;
-      stepNumber: number;
-      isCompleted: boolean;
-      formFields: {
-        id: number;
-        required: boolean;
-        type: {
-          value: string;
-        };
-      }[];
-    }[];
+    steps: ApplicationStepData[];
     canSubmit: boolean;
   };
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Heading } from "@/components/Heading";
 import { Text } from "@/components/Text";
-import getTeam from "@/server/endpoints/team";
+import getTeam from "@/server/getters/team";
 
 const TeamManager = async () => {
   const teamData = await getTeam();

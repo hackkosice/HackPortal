@@ -1,48 +1,49 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React from "react";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
 import { Button } from "@/components/Button";
-import { useRouter } from "next/navigation";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
-import { trpc } from "@/services/trpc";
-import { ApplicationFormStepData } from "@/server/endpoints/applicationFormStep";
+import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
+import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
+import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
+import { useRouter } from "next/navigation";
 
 export type Props = {
   data: ApplicationFormStepData;
 };
 
 const ApplicationFormStep = ({ data }: Props) => {
-  const { push, refresh } = useRouter();
-  const { mutateAsync: saveFields } = trpc.saveFieldValues.useMutation();
-
-  const onFormSubmit = async (data: any) => {
-    const payload = Object.keys(data)
+  const { push } = useRouter();
+  const onFormSubmit = async (formData: Record<string, string>) => {
+    const payload = Object.keys(formData)
       .map((key) => {
         return {
           fieldId: Number(key),
-          value: data[key].toString(),
+          value: formData[key].toString(),
         };
       })
       .filter((fieldValue) => fieldValue.value);
-    await saveFields(payload);
 
+    // If user is signedIn we can save the field values to the DB
+    if (data.signedIn) {
+      saveApplicationStepForm(payload);
+      return;
+    }
+
+    // For unsigned users we will save the data to localStorage for later upload
+    updateLocalApplicationData(payload);
     push("/application");
   };
-
-  // Refresh page to get updated data - implement server action to refresh data instead
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
 
   return (
     <Card>
       <Heading>{data?.data.title}</Heading>
       {data && (
         <FormRenderer
+          shouldUseLocalInitialValues={!data.signedIn}
           formFields={data.data.formFields}
           onSubmit={onFormSubmit}
           actionButtons={

@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "@/components/Text";
 import { Stack } from "@/components/Stack";
 import ApplicationStep from "@/scenes/Application/components/ApplicationSteps/components/ApplicationStep";
-import getApplicationData from "@/server/endpoints/application";
+import getApplicationData from "@/server/getters/application";
 import ApplicationSubmitButton from "@/scenes/Application/components/ApplicationSteps/components/ApplicationSubmitButton";
 
 const ApplicationSteps = async () => {
@@ -22,10 +22,8 @@ const ApplicationSteps = async () => {
             {data.data.steps.map((step) => (
               <ApplicationStep
                 key={step.id}
-                stepId={step.id}
-                title={step.title}
-                stepNumber={step.stepNumber}
-                isCompleted={step.isCompleted}
+                step={step}
+                shouldUseLocalIsCompleted={!data.signedIn}
               />
             ))}
           </Stack>

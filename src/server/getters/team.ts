@@ -14,8 +14,6 @@ export type TeamData = {
 };
 
 const getTeam = async (): Promise<TeamData> => {
-  await new Promise((r) => setTimeout(r, 2000));
-
   const session = await getServerSession(authOptions);
 
   if (!session?.id) {
