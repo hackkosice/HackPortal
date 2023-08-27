@@ -1,9 +1,9 @@
 import React from "react";
-import { Heading } from "@/components/Heading";
 import { Metadata } from "next";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
 import Application from "@/scenes/Application/Application";
 import getApplicationData from "@/server/endpoints/application";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Application",
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 const ApplicationPage = async () => {
   if (await requireOrganizerApp()) {
-    return <Heading>Organizer</Heading>;
+    redirect("/dashboard");
+    return;
   }
   const applicationData = await getApplicationData();
   return <Application data={applicationData} />;
