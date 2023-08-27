@@ -8,7 +8,6 @@ import deleteStep from "@/server/routers/organizerDashboard/formEditor/deleteSte
 import stepInfo from "@/server/routers/organizerDashboard/formEditor/stepInfo";
 import newFormField from "@/server/routers/organizerDashboard/formEditor/newFormField";
 import formFieldTypes from "@/server/routers/organizerDashboard/formEditor/formFieldTypes";
-import stepFormFields from "@/server/routers/applicationForm/stepFormFields";
 import saveFieldValues from "@/server/routers/applicationForm/saveFieldValues";
 import deleteFormField from "@/server/routers/organizerDashboard/formEditor/deleteFormField";
 import submitApplication from "@/server/routers/application/submitApplication";
@@ -25,7 +24,6 @@ export const appRouter = router({
   stepInfo,
   newFormField,
   formFieldTypes,
-  stepFormFields,
   saveFieldValues,
   deleteFormField,
   submitApplication,

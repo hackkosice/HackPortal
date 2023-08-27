@@ -1,20 +1,22 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useEffect } from "react";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
 import { Button } from "@/components/Button";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
 import { trpc } from "@/services/trpc";
+import { ApplicationFormStepData } from "@/server/endpoints/applicationFormStep";
 
 export type Props = {
-  stepId: number;
+  data: ApplicationFormStepData;
 };
 
-const ApplicationFormStep = ({ stepId }: Props) => {
-  const { push } = useRouter();
-  const { data } = trpc.stepFormFields.useQuery({ stepId });
+const ApplicationFormStep = ({ data }: Props) => {
+  const { push, refresh } = useRouter();
   const { mutateAsync: saveFields } = trpc.saveFieldValues.useMutation();
 
   const onFormSubmit = async (data: any) => {
@@ -28,8 +30,13 @@ const ApplicationFormStep = ({ stepId }: Props) => {
       .filter((fieldValue) => fieldValue.value);
     await saveFields(payload);
 
-    push("/dashboard");
+    push("/application");
   };
+
+  // Refresh page to get updated data - implement server action to refresh data instead
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   return (
     <Card>
