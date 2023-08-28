@@ -40,13 +40,13 @@ const deleteFormField = procedure
     // Update step numbers of all steps after the deleted step
     const fields = await ctx.prisma.formField.findMany();
     for (const field of fields) {
-      if (field.formFieldNumber > deletedField.formFieldNumber) {
+      if (field.position > deletedField.position) {
         await ctx.prisma.formField.update({
           where: {
             id: field.id,
           },
           data: {
-            formFieldNumber: field.formFieldNumber - 1,
+            position: field.position - 1,
           },
         });
       }

@@ -10,7 +10,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 export type Props = {
   label: string;
   type: string;
-  formFieldNumber: number;
+  position: number;
   formFieldId: number;
   required: boolean;
 };
@@ -18,7 +18,7 @@ export type Props = {
 const StepFormField = ({
   label,
   type,
-  formFieldNumber,
+  position,
   formFieldId,
   required,
 }: Props) => {
@@ -63,7 +63,7 @@ const StepFormField = ({
       />
       <Stack direction="row" alignItems="center">
         <Text>
-          {formFieldNumber}. {label} ({type})
+          {position}. {label} ({type})
           {required && <span className="text-red-500 ml-1">*</span>}
         </Text>
         <Button

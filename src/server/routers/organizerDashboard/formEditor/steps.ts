@@ -8,7 +8,7 @@ const steps = procedure.query(async ({ ctx }) => {
 
   const steps = await ctx.prisma.applicationFormStep.findMany({
     orderBy: {
-      stepNumber: SortOrder.asc,
+      position: SortOrder.asc,
     },
   });
 

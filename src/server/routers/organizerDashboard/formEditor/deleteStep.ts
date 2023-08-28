@@ -57,13 +57,13 @@ const deleteStep = procedure
     // Update step numbers of all steps after the deleted step
     const steps = await ctx.prisma.applicationFormStep.findMany();
     for (const step of steps) {
-      if (step.stepNumber > deletedStep.stepNumber) {
+      if (step.position > deletedStep.position) {
         await ctx.prisma.applicationFormStep.update({
           where: {
             id: step.id,
           },
           data: {
-            stepNumber: step.stepNumber - 1,
+            position: step.position - 1,
           },
         });
       }

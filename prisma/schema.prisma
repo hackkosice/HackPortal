@@ -22,6 +22,19 @@ model User {
   updatedAt DateTime   @updatedAt
 }
 
+model Hackathon {
+  id                   Int                   @id @default(autoincrement())
+  name                 String                @unique
+  description          String
+  eventStartDate       DateTime
+  eventEndDate         DateTime
+  applicationStartDate DateTime
+  applicationEndDate   DateTime
+  hackers              Hacker[]
+  sponsors             Sponsor[]
+  applicationFormSteps ApplicationFormStep[]
+}
+
 model Hacker {
   id          Int          @id @default(autoincrement())
   fullName    String?
@@ -29,14 +42,19 @@ model Hacker {
   user        User         @relation(fields: [userId], references: [id])
   userId      Int          @unique
   team        Team?        @relation(fields: [teamId], references: [id])
+  ownedTeam   Team?        @relation(name: "TeamOwner")
   teamId      Int?
   application Application?
+  hackathonId Int
+  hackathon   Hackathon    @relation(fields: [hackathonId], references: [id])
 }
 
 model Team {
   id      Int      @id @default(autoincrement())
   name    String   @unique
   code    String   @unique
+  ownerId Int      @unique
+  owner   Hacker   @relation(name: "TeamOwner", fields: [ownerId], references: [id])
   members Hacker[]
 }
 
@@ -47,10 +65,12 @@ model Organizer {
 }
 
 model Sponsor {
-  id      Int    @id @default(autoincrement())
-  company String
-  user    User   @relation(fields: [userId], references: [id])
-  userId  Int    @unique
+  id          Int       @id @default(autoincrement())
+  company     String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int       @unique
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathonId Int
 }
 
 model Application {
@@ -69,15 +89,17 @@ model ApplicationStatus {
 }
 
 model ApplicationFormStep {
-  id         Int         @id @default(autoincrement())
-  title      String
-  stepNumber Int
-  formFields FormField[]
+  id          Int         @id @default(autoincrement())
+  title       String
+  position    Int
+  formFields  FormField[]
+  hackathon   Hackathon   @relation(fields: [hackathonId], references: [id])
+  hackathonId Int
 }
 
 model FormField {
   id              Int                         @id @default(autoincrement())
-  formFieldNumber Int
+  position        Int
   label           String
   name            String
   required        Boolean

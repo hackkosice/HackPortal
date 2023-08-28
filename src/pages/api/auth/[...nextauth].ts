@@ -4,6 +4,8 @@ import { loginSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+import getActiveHackathonId from "@/services/helpers/database/getActiveHackathonId";
+import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
 
 export const authOptions: AuthOptions = {
   pages: {
@@ -69,24 +71,13 @@ export const authOptions: AuthOptions = {
     async signIn({ account, profile }) {
       if (account?.provider === "github") {
         const githubProfile = profile as GithubProfile;
-        const user = await prisma.user.findFirst({
-          where: { githubId: githubProfile.id },
-        });
-
-        if (!user) {
-          const newUser = await prisma.user.create({
-            data: {
-              githubId: githubProfile.id,
-              email: githubProfile.email ?? "",
-            },
-          });
-
-          await prisma.hacker.create({
-            data: {
-              userId: newUser.id,
-            },
-          });
-        }
+        await createHackerForActiveHackathon(
+          prisma,
+          githubProfile.email ?? "",
+          {
+            githubProfileId: githubProfile.id,
+          }
+        );
       }
 
       return true;

@@ -33,7 +33,7 @@ const ApplicationStep = ({ step, shouldUseLocalIsCompleted }: Props) => {
       >
         <Stack alignItems="center" spacing="small">
           <Text>
-            {step.stepNumber}. {step.title}
+            {step.position}. {step.title}
           </Text>
           {isCompleted && (
             <CheckCircleIcon className="w-5 h-5 text-green-500 inline" />

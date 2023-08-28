@@ -28,8 +28,8 @@ const ApplicationFormEditor = () => {
         </Heading>
         {isLoading && <Text>Loading...</Text>}
         <Stack direction="column" spaceAfter="medium" spacing="small">
-          {data?.data.map(({ title, id, stepNumber }) => (
-            <Step key={id} stepId={id} title={title} stepNumber={stepNumber} />
+          {data?.data.map(({ title, id, position }) => (
+            <Step key={id} stepId={id} title={title} position={position} />
           ))}
         </Stack>
         <Button

@@ -16,11 +16,11 @@ const newFormField = procedure
         stepId,
       },
       orderBy: {
-        formFieldNumber: SortOrder.desc,
+        position: SortOrder.desc,
       },
     });
 
-    const newFormFieldNumber = (lastFormField?.formFieldNumber ?? 0) + 1;
+    const newFormFieldNumber = (lastFormField?.position ?? 0) + 1;
 
     const result = await ctx.prisma.formField.create({
       data: {
@@ -29,7 +29,7 @@ const newFormField = procedure
         label,
         name,
         required,
-        formFieldNumber: newFormFieldNumber,
+        position: newFormFieldNumber,
       },
     });
 
