@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { loginSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
+import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 
 export const authOptions: AuthOptions = {
   pages: {
@@ -28,7 +29,10 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const isValidPassword = await verify(user.password, creds.password);
+        const isValidPassword = await verify(
+          user.password as string,
+          creds.password
+        );
 
         if (!isValidPassword) {
           return null;
@@ -37,13 +41,22 @@ export const authOptions: AuthOptions = {
         return { id: user.id, email: user.email };
       },
     }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID ?? "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = Number(user.id);
-        token.email = user.email;
+    async jwt({ token }) {
+      if (token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+        });
+        if (dbUser) {
+          token.id = Number(dbUser.id);
+        }
       }
+
       return token;
     },
     async session({ session, token }) {
@@ -52,6 +65,31 @@ export const authOptions: AuthOptions = {
       }
 
       return session;
+    },
+    async signIn({ account, profile }) {
+      if (account?.provider === "github") {
+        const githubProfile = profile as GithubProfile;
+        const user = await prisma.user.findFirst({
+          where: { githubId: githubProfile.id },
+        });
+
+        if (!user) {
+          const newUser = await prisma.user.create({
+            data: {
+              githubId: githubProfile.id,
+              email: githubProfile.email ?? "",
+            },
+          });
+
+          await prisma.hacker.create({
+            data: {
+              userId: newUser.id,
+            },
+          });
+        }
+      }
+
+      return true;
     },
   },
 };

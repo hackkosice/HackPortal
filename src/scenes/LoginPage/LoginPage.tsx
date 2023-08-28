@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { LoginPageProps } from "@/pages/login";
+import GithubButton from "./components/SocialButtons/GithubButton";
 
 type LoginForm = {
   email: string;
@@ -44,7 +45,7 @@ const LoginPage = ({ providers }: LoginPageProps) => {
         </Text>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="column">
+        <Stack direction="column" spaceAfter="medium">
           <InputText
             label="Email"
             type="email"
@@ -73,13 +74,17 @@ const LoginPage = ({ providers }: LoginPageProps) => {
           <Button label="Log in" type="submit" />
         </Stack>
       </form>
-      <br />
-      <Button
-        label="Sign up"
-        colorType="secondary"
-        type="buttonLink"
-        href="/signup"
-      />
+      <Stack direction="column">
+        <Button
+          label="Sign up"
+          colorType="secondary"
+          type="buttonLink"
+          href="/signup"
+        />
+        {Object.keys(providers).includes("github") && (
+          <GithubButton onClick={() => signIn("github")} />
+        )}
+      </Stack>
     </Card>
   );
 };
