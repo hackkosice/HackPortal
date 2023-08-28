@@ -11,10 +11,10 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 type StepProps = {
   stepId: number;
   title: string;
-  stepNumber: number;
+  position: number;
 };
 
-const Step = ({ title, stepNumber, stepId }: StepProps) => {
+const Step = ({ title, position, stepId }: StepProps) => {
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
     useState(false);
   const utils = trpc.useContext();
@@ -59,7 +59,7 @@ const Step = ({ title, stepNumber, stepId }: StepProps) => {
       >
         <div className="border-2 border-hkOrange p-4 rounded-md">
           <Stack alignItems="center">
-            <Text>{stepNumber}.</Text>
+            <Text>{position}.</Text>
             <Text>{title}</Text>
             <div className="flex-grow" />
             <Button

@@ -49,13 +49,13 @@ const FormStepEditor = ({ stepId }: Props) => {
         </Heading>
         <Stack direction="column" spacing="small" spaceAfter="medium">
           {data?.data.formFields.map(
-            ({ id, label, formFieldNumber, type: { value }, required }) => (
+            ({ id, label, position, type: { value }, required }) => (
               <StepFormField
                 key={id}
                 formFieldId={id}
                 label={label}
                 type={value}
-                formFieldNumber={formFieldNumber}
+                position={position}
                 required={required}
               />
             )

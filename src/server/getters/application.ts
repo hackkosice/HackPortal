@@ -7,7 +7,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 export type ApplicationStepData = {
   id: number;
   title: string;
-  stepNumber: number;
+  position: number;
   isCompleted: boolean;
   formFields: {
     id: number;
@@ -39,7 +39,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
     select: {
       id: true,
       title: true,
-      stepNumber: true,
+      position: true,
       formFields: {
         select: {
           id: true,
@@ -53,7 +53,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
       },
     },
     orderBy: {
-      stepNumber: Prisma.SortOrder.asc,
+      position: Prisma.SortOrder.asc,
     },
   });
 

@@ -2,34 +2,25 @@ import { procedure } from "@/server/trpc";
 import { signupSchema } from "@/server/services/validation/auth";
 import { hash } from "argon2";
 import saveFormFieldValue from "@/server/services/helpers/saveFormFieldValue";
+import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
 
 const signup = procedure
   .input(signupSchema)
   .mutation(async ({ input, ctx }) => {
     const { email, password, localApplicationData } = input;
 
-    const exists = await ctx.prisma.user.findFirst({
-      where: { email },
-    });
-
-    if (exists) {
-      return {
-        status: 500,
-        message: "User already exists",
-      };
-    }
-
     const hashedPassword = await hash(password);
 
-    const newUser = await ctx.prisma.user.create({
-      data: { email, password: hashedPassword },
-    });
+    const { userId: newUserId, hackerId: newHackerId } =
+      await createHackerForActiveHackathon(ctx.prisma, email, {
+        password: hashedPassword,
+      });
 
     const isOrganizer = email.endsWith("@hackkosice.com");
 
-    if (isOrganizer) {
+    if (isOrganizer && newUserId) {
       await ctx.prisma.organizer.create({
-        data: { userId: newUser.id },
+        data: { userId: newUserId },
       });
 
       return {
@@ -38,14 +29,10 @@ const signup = procedure
       };
     }
 
-    const hacker = await ctx.prisma.hacker.create({
-      data: { userId: newUser.id },
-    });
-
     if (localApplicationData && localApplicationData.length > 0) {
       const application = await ctx.prisma.application.create({
         data: {
-          hackerId: hacker.id,
+          hackerId: newHackerId,
           statusId: 1,
         },
       });

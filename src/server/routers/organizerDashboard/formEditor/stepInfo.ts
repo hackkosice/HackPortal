@@ -22,7 +22,7 @@ const stepInfo = procedure
             type: true,
           },
           orderBy: {
-            formFieldNumber: SortOrder.asc,
+            position: SortOrder.asc,
           },
         },
       },

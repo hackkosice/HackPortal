@@ -26,13 +26,13 @@ const applicationInfo = procedure
             {
               field: {
                 step: {
-                  stepNumber: SortOrder.asc,
+                  position: SortOrder.asc,
                 },
               },
             },
             {
               field: {
-                formFieldNumber: SortOrder.asc,
+                position: SortOrder.asc,
               },
             },
           ],

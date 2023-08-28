@@ -30,7 +30,7 @@ const getInitialValue = (fieldValue: FieldValue) => {
 
 export type FormFieldData = {
   id: number;
-  formFieldNumber: number;
+  position: number;
   name: string;
   label: string;
   type: { value: string };
@@ -44,7 +44,7 @@ export type ApplicationFormStepData = {
   signedIn: boolean;
   data: {
     title: string;
-    stepNumber: number;
+    position: number;
     formFields: FormFieldData[];
   };
 };
@@ -58,11 +58,11 @@ const getApplicationFormStep = async (
     select: {
       id: true,
       title: true,
-      stepNumber: true,
+      position: true,
       formFields: {
         select: {
           id: true,
-          formFieldNumber: true,
+          position: true,
           label: true,
           name: true,
           required: true,
@@ -180,7 +180,7 @@ const getApplicationFormStep = async (
     signedIn: true,
     data: {
       title: stepFormFields.title,
-      stepNumber: stepFormFields.stepNumber,
+      position: stepFormFields.position,
       formFields: resultFields,
     },
   };
