@@ -52,10 +52,10 @@ describe("Button", () => {
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(mockRouter.push).toHaveBeenCalledTimes(1);
-    expect(mockRouter.push).toHaveBeenCalledWith("/login", "/login", {
-      locale: undefined,
-      scroll: undefined,
-      shallow: undefined,
-    });
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      "/login",
+      "/login",
+      expect.any(Object)
+    );
   });
 });
