@@ -27,7 +27,7 @@ export const authOptions: AuthOptions = {
           where: { email: creds.email },
         });
 
-        if (!user) {
+        if (!user || user.password === null) {
           return null;
         }
 
