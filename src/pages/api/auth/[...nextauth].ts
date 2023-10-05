@@ -4,7 +4,6 @@ import { loginSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
-import getActiveHackathonId from "@/services/helpers/database/getActiveHackathonId";
 import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
 
 export const authOptions: AuthOptions = {
