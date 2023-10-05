@@ -1,23 +1,18 @@
 import { SaveApplicationStepFormInput } from "@/server/actions/saveApplicationStepForm";
-import {
-  LOCAL_STORAGE_APPLICATION_DATA,
-  LocalApplicationData,
-} from "@/services/helpers/localData/types";
+import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 
 const updateLocalApplicationData = (input: SaveApplicationStepFormInput) => {
-  const savedData = localStorage.getItem(LOCAL_STORAGE_APPLICATION_DATA);
-  const parsedData: LocalApplicationData = savedData
-    ? JSON.parse(savedData)
-    : [];
+  const localApplicationData = getLocalApplicationData();
+  const newData = localApplicationData ?? [];
   for (const field of input) {
-    const index = parsedData.findIndex((f) => f.fieldId === field.fieldId);
+    const index = newData.findIndex((f) => f.fieldId === field.fieldId);
     if (index === -1) {
-      parsedData.push(field);
+      newData.push(field);
     } else {
-      parsedData[index] = field;
+      newData[index] = field;
     }
   }
-  localStorage.setItem("applicationData", JSON.stringify(parsedData));
+  localStorage.setItem("applicationData", JSON.stringify(newData));
 };
 
 export default updateLocalApplicationData;

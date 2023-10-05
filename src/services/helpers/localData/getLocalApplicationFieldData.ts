@@ -1,23 +1,15 @@
-import {
-  LOCAL_STORAGE_APPLICATION_DATA,
-  LocalApplicationData,
-  LocalApplicationFieldData,
-} from "@/services/helpers/localData/types";
+import { LocalApplicationFieldData } from "@/services/helpers/localData/types";
+import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 
 const getLocalApplicationFieldData = (
   fieldId: number
 ): LocalApplicationFieldData | null => {
-  const localApplicationData = localStorage.getItem(
-    LOCAL_STORAGE_APPLICATION_DATA
-  );
+  const localApplicationData = getLocalApplicationData();
   if (!localApplicationData) {
     return null;
   }
 
-  const parsedApplicationData = JSON.parse(
-    localApplicationData
-  ) as LocalApplicationData;
-  const matchingField = parsedApplicationData.find(
+  const matchingField = localApplicationData.find(
     (field) => field.fieldId === fieldId
   );
   if (!matchingField) {

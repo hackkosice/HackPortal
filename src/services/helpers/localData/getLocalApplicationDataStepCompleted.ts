@@ -1,22 +1,19 @@
 import { ApplicationStepData } from "@/server/getters/application";
-import {
-  LOCAL_STORAGE_APPLICATION_DATA,
-  LocalApplicationData,
-} from "@/services/helpers/localData/types";
+import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 
 const getLocalApplicationDataStepCompleted = (
   step: ApplicationStepData
 ): boolean => {
-  const savedData = localStorage.getItem(LOCAL_STORAGE_APPLICATION_DATA);
-  if (!savedData) {
+  const localApplicationData = getLocalApplicationData();
+  if (!localApplicationData) {
     return false;
   }
 
-  const parsedData = JSON.parse(savedData) as LocalApplicationData;
-
   const requiredFields = step.formFields.filter((field) => field.required);
   for (const field of requiredFields) {
-    const matchingField = parsedData.find((f) => f.fieldId === field.id);
+    const matchingField = localApplicationData.find(
+      (f) => f.fieldId === field.id
+    );
     if (!matchingField?.value) {
       return false;
     }
