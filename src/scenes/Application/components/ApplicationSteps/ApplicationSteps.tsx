@@ -6,28 +6,28 @@ import getApplicationData from "@/server/getters/application";
 import ApplicationSubmitButton from "@/scenes/Application/components/ApplicationSteps/components/ApplicationSubmitButton";
 
 const ApplicationSteps = async () => {
-  const data = await getApplicationData();
+  const { data, signedIn } = await getApplicationData();
   return (
     <>
-      {!data.signedIn && (
+      {!signedIn && (
         <Text type="error" weight="bold">
           You are not signed in.
         </Text>
       )}
-      <Text>Application status: {data.data.application.status}</Text>
-      {data.data.application.status === "open" && (
+      <Text>Application status: {data.application.status}</Text>
+      {data.application.status === "open" && (
         <Stack spacing="medium" direction="column">
           <Text>Complete steps below to finish your application:</Text>
           <Stack direction="column" spaceAfter="medium" spacing="small">
-            {data.data.steps.map((step) => (
+            {data.steps.map((step) => (
               <ApplicationStep
                 key={step.id}
                 step={step}
-                shouldUseLocalIsCompleted={!data.signedIn}
+                shouldUseLocalIsCompleted={!signedIn}
               />
             ))}
           </Stack>
-          <ApplicationSubmitButton canSubmit={data.data.canSubmit} />
+          <ApplicationSubmitButton canSubmit={data.canSubmit} />
         </Stack>
       )}
     </>
