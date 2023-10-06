@@ -14,6 +14,7 @@ else
 fi
 
 if [[ "$*" == *"--copy-tests"* ]]; then
+    docker exec -it --user root hackportal-e2e rm -rf /app/e2e
     docker cp ./e2e/. hackportal-e2e:/app/e2e
     docker cp ./playwright.config.ts hackportal-e2e:/app/
     docker exec -it --user root hackportal-e2e chown -R nextjs:nodejs /app/e2e

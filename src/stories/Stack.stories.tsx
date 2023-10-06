@@ -19,7 +19,7 @@ const StackChildren = [
   // eslint-disable-next-line react/jsx-key
   <InputText label="Password" type="password" />,
   // eslint-disable-next-line react/jsx-key
-  <Button label={"Log in"} />,
+  <Button label={"Sign in"} />,
 ];
 
 export const Default: Story = {

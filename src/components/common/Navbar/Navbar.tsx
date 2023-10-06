@@ -36,7 +36,7 @@ const Navbar = () => {
         <Button label="Sign out" size="small" onClick={onSignOutClick} />
       ) : (
         !isLoginPage && (
-          <Button type="buttonLink" href={"/login"} label="Log in" />
+          <Button type="buttonLink" href={"/login"} label="Sign in" />
         )
       )}
     </nav>

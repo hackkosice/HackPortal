@@ -18,10 +18,10 @@ type Story = StoryObj<typeof Card>;
 const CardChildren = [
   // eslint-disable-next-line react/jsx-key
   <Stack direction="column">
-    <Heading>Log in</Heading>
+    <Heading>Sign in</Heading>
     <InputText label="Username" />
     <InputText label="Password" type="password" />
-    <Button label={"Log in"} />
+    <Button label={"Sign in"} />
   </Stack>,
 ];
 
