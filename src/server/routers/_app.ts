@@ -9,7 +9,6 @@ import stepInfo from "@/server/routers/organizerDashboard/formEditor/stepInfo";
 import newFormField from "@/server/routers/organizerDashboard/formEditor/newFormField";
 import formFieldTypes from "@/server/routers/organizerDashboard/formEditor/formFieldTypes";
 import deleteFormField from "@/server/routers/organizerDashboard/formEditor/deleteFormField";
-import submitApplication from "@/server/routers/application/submitApplication";
 import applicationsList from "@/server/routers/organizerDashboard/applicationsTable/applicationsList";
 import applicationInfo from "@/server/routers/organizerDashboard/applicationsTable/applicationInfo";
 
@@ -24,7 +23,6 @@ export const appRouter = router({
   newFormField,
   formFieldTypes,
   deleteFormField,
-  submitApplication,
   applicationsList,
   applicationInfo,
 });

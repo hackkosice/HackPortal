@@ -39,7 +39,6 @@ RUN echo "DATABASE_URL=\"file:./prod.db\"" >> .env
 RUN npm run prisma:generate
 RUN npm run prisma:migrate-prod
 RUN npm run prisma:seed
-RUN npm run prisma:prepare-for-e2e
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry

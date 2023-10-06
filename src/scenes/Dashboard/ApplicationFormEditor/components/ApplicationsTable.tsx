@@ -23,7 +23,7 @@ const ApplicationsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.data.map((application) => (
+          {data?.data.map((application, index) => (
             <tr className="bg-white border-b" key={application.id}>
               <th
                 scope="row"
@@ -34,7 +34,10 @@ const ApplicationsTable = () => {
               <td className="px-6 py-4">{application.values["School"]}</td>
               <td className="px-6 py-4">{application.status}</td>
               <td className="px-6 py-4">
-                <Link href={`/dashboard/application/${application.id}/detail`}>
+                <Link
+                  href={`/dashboard/application/${application.id}/detail`}
+                  aria-label={`Application detail ${index + 1}`}
+                >
                   <InformationCircleIcon className="w-5 h-5 text-hkOrange inline" />
                 </Link>
               </td>

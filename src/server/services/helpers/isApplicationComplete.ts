@@ -1,4 +1,4 @@
-import { Context } from "@/server/context";
+import { PrismaClient } from "@prisma/client";
 import { ApplicationFormFieldValue } from "@prisma/client";
 
 type StepField = {
@@ -32,16 +32,16 @@ export const isStepCompleted = (
 };
 
 const isApplicationComplete = async (
-  ctx: Context,
+  prisma: PrismaClient,
   applicationId: number
 ): Promise<boolean> => {
-  const fieldValues = await ctx.prisma.applicationFormFieldValue.findMany({
+  const fieldValues = await prisma.applicationFormFieldValue.findMany({
     where: {
       applicationId,
     },
   });
 
-  const stepsDb = await ctx.prisma.applicationFormStep.findMany({
+  const stepsDb = await prisma.applicationFormStep.findMany({
     select: {
       formFields: {
         select: {
