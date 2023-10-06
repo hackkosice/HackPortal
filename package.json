@@ -15,8 +15,10 @@
     "prisma:migrate-dev": "prisma migrate dev",
     "prisma:migrate-prod": "prisma migrate deploy",
     "prisma:seed": "prisma db seed",
+    "prisma:prepare-for-e2e": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' ./prisma/prepareDbForE2E.ts",
     "test:e2e": "playwright test",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "test:local-e2e-docker": "chmod +x ./scripts/runE2ELocally.sh && ./scripts/runE2ELocally.sh --copy-tests"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
