@@ -68,6 +68,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
               icon={<TrashIcon className="w-4 h-4 mr-1 text-hkOrange inline" />}
               colorType="tertiary"
               onClick={onStepDelete}
+              ariaLabel={`Delete step ${position}`}
             />
           </Stack>
         </div>

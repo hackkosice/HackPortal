@@ -1,10 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { hash } from "argon2";
 
-const prisma = new PrismaClient();
 const DAY = 1000 * 60 * 60 * 24;
 
-async function clearDb() {
+async function clearDb(prisma: PrismaClient) {
   await prisma.applicationFormFieldValue.deleteMany();
   await prisma.formField.deleteMany();
   await prisma.applicationFormStep.deleteMany();
@@ -15,8 +14,8 @@ async function clearDb() {
   await prisma.hackathon.deleteMany();
 }
 
-async function main() {
-  await clearDb();
+export async function main(prisma: PrismaClient) {
+  await clearDb(prisma);
 
   const { id: hackathonId } = await prisma.hackathon.create({
     data: {
@@ -83,8 +82,8 @@ async function main() {
     await prisma.formField.create({
       data: {
         stepId: applicationFormStepId,
-        label: "First name",
-        name: "firstName",
+        label: "Full name",
+        name: "fullName",
         required: true,
         position: 1,
         typeId: formFieldTypeText.id,
@@ -92,12 +91,5 @@ async function main() {
     });
   }
 }
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+
+export default main;

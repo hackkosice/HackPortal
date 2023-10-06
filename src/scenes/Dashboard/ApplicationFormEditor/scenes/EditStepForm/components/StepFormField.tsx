@@ -72,6 +72,7 @@ const StepFormField = ({
           icon={<TrashIcon className="w-4 h-4 mr-1 text-hkOrange inline" />}
           colorType="tertiary"
           onClick={onFormFieldDelete}
+          ariaLabel={`Delete field ${position}`}
         />
       </Stack>
     </>

@@ -2,22 +2,13 @@
 
 import React, { useState } from "react";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
-import { trpc } from "@/services/trpc";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
+import submitApplication from "@/server/actions/submitApplication";
 
 type ApplicationSubmitButtonProps = { canSubmit: boolean };
 const ApplicationSubmitButton = ({
   canSubmit,
 }: ApplicationSubmitButtonProps) => {
-  const { refresh } = useRouter();
-  const { mutateAsync: submitApplication } = trpc.submitApplication.useMutation(
-    {
-      onSuccess: () => {
-        refresh();
-      },
-    }
-  );
   const [submitConfirmationModalOpened, setSubmitConfirmationModalOpened] =
     useState(false);
   const onSubmitConfirmationClose = async (value: boolean) => {

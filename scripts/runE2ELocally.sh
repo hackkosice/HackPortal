@@ -8,9 +8,6 @@ else
     else
       docker start hackportal-e2e
     fi
-
-    echo "Preparing DB for e2e tests"
-    docker exec -it hackportal-e2e npm run prisma:prepare-for-e2e
 fi
 
 if [[ "$*" == *"--copy-tests"* ]]; then

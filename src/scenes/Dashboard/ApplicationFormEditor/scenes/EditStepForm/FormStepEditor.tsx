@@ -62,7 +62,7 @@ const FormStepEditor = ({ stepId }: Props) => {
           )}
         </Stack>
         <Button
-          label="Add new field"
+          label="Create new field"
           spaceAfter="large"
           onClick={() => setIsNewFieldModalOpened(true)}
         />

@@ -36,7 +36,9 @@ const ApplicationStep = ({ step, shouldUseLocalIsCompleted }: Props) => {
             {step.position}. {step.title}
           </Text>
           {isCompleted && (
-            <CheckCircleIcon className="w-5 h-5 text-green-500 inline" />
+            <span data-testid={`Step ${step.position} completed icon`}>
+              <CheckCircleIcon className="w-5 h-5 text-green-500 inline" />
+            </span>
           )}
         </Stack>
       </div>

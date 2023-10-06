@@ -26,7 +26,6 @@ jobs:
         npm run prisma:generate
         npm run prisma:migrate-prod
         npm run prisma:seed
-        npm run prisma:prepare-for-e2e
     - name: Build the Application
       run: npm run build
     - name: Run Playwright tests

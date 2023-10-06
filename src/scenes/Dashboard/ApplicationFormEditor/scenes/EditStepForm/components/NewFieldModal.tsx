@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack } from "@/components/Stack";
 import { InputText } from "@/components/InputText";
 import { InputSelect } from "@/components/InputSelect";
@@ -24,7 +24,7 @@ type NewFieldForm = {
 const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
   const utils = trpc.useContext();
   const { data: dataFieldTypes } = trpc.formFieldTypes.useQuery();
-  const { register, handleSubmit } = useForm<NewFieldForm>();
+  const { register, handleSubmit, reset } = useForm<NewFieldForm>();
   const { mutateAsync: newFormField } = trpc.newFormField.useMutation({
     onSuccess: () => {
       utils.stepInfo.invalidate();
@@ -45,6 +45,10 @@ const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
     });
     onClose();
   };
+
+  useEffect(() => {
+    reset();
+  }, [isOpened, reset]);
 
   return (
     <Modal isOpened={isOpened} onClose={onClose}>

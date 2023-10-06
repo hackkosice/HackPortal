@@ -13,6 +13,7 @@ export type ButtonProps = {
   icon?: React.ReactNode;
   spaceAfter?: Spacing;
   disabled?: boolean;
+  ariaLabel?: string;
 };
 
 const getSizeClasses = (size: Size, colorType: ColorType) => {
@@ -95,6 +96,7 @@ export const Button = ({
   icon,
   spaceAfter,
   disabled,
+  ariaLabel,
 }: ButtonProps) => {
   const computedClasses = useMemo(() => {
     const modeClass = getColorTypeClasses(colorType);
@@ -120,6 +122,7 @@ export const Button = ({
         value={label}
         onClick={onClick}
         disabled={disabled}
+        aria-label={ariaLabel}
       />
     );
   }
@@ -131,6 +134,7 @@ export const Button = ({
           type="button"
           className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
           disabled={disabled}
+          aria-label={ariaLabel}
         >
           {icon}
           {label}
@@ -145,6 +149,7 @@ export const Button = ({
       className={`${BASE_BUTTON_CLASSES} ${computedClasses}`}
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
     >
       {icon}
       {label}
