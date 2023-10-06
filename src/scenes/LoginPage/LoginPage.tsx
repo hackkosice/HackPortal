@@ -37,7 +37,7 @@ const LoginPage = ({ providers }: LoginPageProps) => {
   return (
     <Card>
       <Heading spaceAfter="large" centered>
-        Login
+        Sign in
       </Heading>
       {error && (
         <Text spaceAfter="medium" type="error">
@@ -71,7 +71,7 @@ const LoginPage = ({ providers }: LoginPageProps) => {
               minLength: { value: 6, message: "Min length is 6" },
             }}
           />
-          <Button label="Log in" type="submit" />
+          <Button label="Sign in" type="submit" />
         </Stack>
       </form>
       <Stack direction="column">
