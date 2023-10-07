@@ -1,11 +1,6 @@
 import { Button } from "@/components/Button";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import createMockRouter from "@/services/test/createMockRouter";
-import renderWithRouterProvider from "@/services/test/renderWithRouterProvider";
-
-const mockRouter = createMockRouter({});
-
 describe("Button", () => {
   it("should render the button with the correct text", () => {
     const { getByRole } = render(<Button label="Click me" />);
@@ -38,24 +33,18 @@ describe("Button", () => {
   });
   it("should behave as a Link when type is buttonLink", () => {
     const onClick = jest.fn();
-    const { getByRole } = renderWithRouterProvider(
+    const { getByRole } = render(
       <Button
         label="Click me"
         onClick={onClick}
         type="buttonLink"
         href="/login"
-      />,
-      { router: mockRouter }
+      />
     );
     const button = getByRole("link", { name: "Click me" });
     userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
-    expect(mockRouter.push).toHaveBeenCalledTimes(1);
-    expect(mockRouter.push).toHaveBeenCalledWith(
-      "/login",
-      "/login",
-      expect.any(Object)
-    );
+    expect(button).toHaveAttribute("href", "/login");
   });
 });
