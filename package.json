@@ -16,7 +16,8 @@
     "prisma:migrate-prod": "prisma migrate deploy",
     "prisma:seed": "prisma db seed",
     "test:e2e": "playwright test",
-    "test:unit": "jest",
+    "test:jest": "jest",
+    "test:jest:coverage": "jest --coverage",
     "test:local-e2e-docker": "chmod +x ./scripts/runE2ELocally.sh && ./scripts/runE2ELocally.sh --copy-tests"
   },
   "prisma": {
