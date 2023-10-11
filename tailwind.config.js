@@ -32,7 +32,8 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       colors: {
-        hkPurple: "#5E2137",
+        primaryTitle: "#5E2137",
+        primaryButton: "#EF611E",
         hkOrange: "#EF611E",
         hkGray: "#F4F4F4",
         hkLightGray: "#F9FAFD",
