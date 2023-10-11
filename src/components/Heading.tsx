@@ -45,7 +45,7 @@ const getCenteredClasses = (centered: boolean) => {
   return "";
 };
 
-const BASE_HEADING_CLASSES = "font-title font-bold text-hkPurple";
+const BASE_HEADING_CLASSES = "font-title font-bold text-primaryTitle";
 
 export const Heading = ({
   children,
