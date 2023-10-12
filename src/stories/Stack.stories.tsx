@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Stack } from "../components/Stack";
-import { InputText } from "../components/InputText";
+import { InputText } from "../components/ui/InputText";
 import { Button } from "../components/Button";
 
 const meta: Meta<typeof Stack> = {

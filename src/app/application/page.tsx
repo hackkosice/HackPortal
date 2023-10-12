@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 const ApplicationPage = async () => {
   if (await requireOrganizerApp()) {
     redirect("/dashboard");
-    return;
   }
   return <Application />;
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Stack } from "@/components/Stack";
-import { InputText } from "@/components/InputText";
+import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
 import { useForm } from "react-hook-form";

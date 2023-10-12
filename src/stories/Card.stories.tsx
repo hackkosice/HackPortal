@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Card } from "../components/Card";
 import { Stack } from "../components/Stack";
-import { InputText } from "../components/InputText";
+import { InputText } from "../components/ui/InputText";
 import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 

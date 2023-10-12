@@ -1,6 +1,6 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { loginSchema } from "@/server/services/validation/auth";
+import { signinSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
@@ -8,7 +8,7 @@ import createHackerForActiveHackathon from "@/services/helpers/database/createHa
 
 export const authOptions: AuthOptions = {
   pages: {
-    signIn: "/login",
+    signIn: "/signin",
     signOut: "/signout",
   },
   providers: [
@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const creds = await loginSchema.parseAsync(credentials);
+        const creds = await signinSchema.parseAsync(credentials);
 
         const user = await prisma.user.findFirst({
           where: { email: creds.email },

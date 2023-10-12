@@ -16,7 +16,6 @@ const ApplicationFormStepPage = async ({
 }) => {
   if (await requireOrganizerApp()) {
     redirect("/dashboard");
-    return;
   }
   const applicationFormStepData = await getApplicationFormStep(
     Number(params.stepId)

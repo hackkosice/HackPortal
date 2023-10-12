@@ -15,9 +15,9 @@ const Navbar = () => {
   const { data: session } = useSession();
   const onSignOutClick = () => {
     clearLocalApplicationData();
-    signOut({ callbackUrl: "/login" });
+    signOut({ callbackUrl: "/signin" });
   };
-  const isLoginPage = pathname === "/login";
+  const isSignInPage = pathname === "/signin";
   return (
     <nav className="fixed flex flex-row bg-hkLightGray w-full m-0 py-3 px-3 border-b-2 border-hkGray content-center md:py-6 md:px-5">
       <Link href={"/"} className="flex content-center">
@@ -35,8 +35,8 @@ const Navbar = () => {
       {session ? (
         <Button label="Sign out" size="small" onClick={onSignOutClick} />
       ) : (
-        !isLoginPage && (
-          <Button type="buttonLink" href={"/login"} label="Sign in" />
+        !isSignInPage && (
+          <Button type="buttonLink" href={"/signin"} label="Sign in" />
         )
       )}
     </nav>

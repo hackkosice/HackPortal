@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Modal } from "../components/Modal";
-import { InputText } from "../components/InputText";
+import { InputText } from "../components/ui/InputText";
 import { Button } from "../components/Button";
 import { Stack } from "../components/Stack";
 
