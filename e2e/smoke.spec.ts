@@ -25,7 +25,7 @@ test.describe("smoke tests", () => {
     await expect(page.getByText("You are not signed in")).toBeVisible();
   });
 
-  test("can login and logout as hacker", async ({ page }) => {
+  test("can sign in and sign out as hacker", async ({ page }) => {
     await page.goto("/");
 
     await page.getByRole("button", { name: "Sign in" }).click();
@@ -49,7 +49,7 @@ test.describe("smoke tests", () => {
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   });
 
-  test("can login and logout as organizer", async ({ page }) => {
+  test("can sign in and sign out as organizer", async ({ page }) => {
     await page.goto("/");
 
     await page.getByRole("button", { name: "Sign in" }).click();

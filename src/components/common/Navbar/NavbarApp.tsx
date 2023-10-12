@@ -14,7 +14,7 @@ const NavbarApp = ({ session }: { session: Session | null }) => {
       {session ? (
         <SignoutButton />
       ) : (
-        <Button type="buttonLink" href={"/login"} label="Sign in" />
+        <Button type="buttonLink" href={"/signin"} label="Sign in" />
       )}
     </nav>
   );

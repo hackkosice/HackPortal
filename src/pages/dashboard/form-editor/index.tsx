@@ -9,7 +9,7 @@ export default function Page() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!(await requireAuthServerSideProps(context))) {
-    return { redirect: { destination: "/login" } };
+    return { redirect: { destination: "/signin" } };
   }
 
   if (!(await requireOrganizerServerSideProps(context))) {

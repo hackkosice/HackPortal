@@ -38,13 +38,13 @@ describe("Button", () => {
         label="Click me"
         onClick={onClick}
         type="buttonLink"
-        href="/login"
+        href="/signin"
       />
     );
     const button = getByRole("link", { name: "Click me" });
     userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
-    expect(button).toHaveAttribute("href", "/login");
+    expect(button).toHaveAttribute("href", "/signin");
   });
 });

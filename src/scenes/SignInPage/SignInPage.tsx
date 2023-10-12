@@ -2,31 +2,31 @@ import React from "react";
 import { Stack } from "@/components/Stack";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
-import { InputText } from "@/components/InputText";
+import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { LoginPageProps } from "@/pages/login";
+import { SigninPageProps } from "@/pages/signin";
 import GithubButton from "./components/SocialButtons/GithubButton";
 
-type LoginForm = {
+type SignInForm = {
   email: string;
   password: string;
 };
 
-const LoginPage = ({ providers }: LoginPageProps) => {
+const SignInPage = ({ providers }: SigninPageProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>();
+  } = useForm<SignInForm>();
   const {
     query: { error },
   } = useRouter();
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (data: SignInForm) => {
     signIn("credentials", {
       email: data.email,
       password: data.password,
@@ -89,4 +89,4 @@ const LoginPage = ({ providers }: LoginPageProps) => {
   );
 };
 
-export default LoginPage;
+export default SignInPage;

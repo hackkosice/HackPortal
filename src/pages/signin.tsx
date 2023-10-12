@@ -1,16 +1,16 @@
 import React from "react";
-import LoginPage from "@/scenes/LoginPage/LoginPage";
+import SignInPage from "@/scenes/SignInPage/SignInPage";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getProviders } from "next-auth/react";
 
-export type LoginPageProps = InferGetServerSidePropsType<
+export type SigninPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
-export default function Page({ providers }: LoginPageProps) {
-  return <LoginPage providers={providers} />;
+export default function Page({ providers }: SigninPageProps) {
+  return <SignInPage providers={providers} />;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

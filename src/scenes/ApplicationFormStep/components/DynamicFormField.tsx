@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { InputText } from "@/components/InputText";
+import { InputText } from "@/components/ui/InputText";
 import { RegisterOptions, UseFormRegister } from "react-hook-form";
 import { InputSelect, OptionType } from "@/components/InputSelect";
 import { InputTextarea } from "@/components/InputTextarea";

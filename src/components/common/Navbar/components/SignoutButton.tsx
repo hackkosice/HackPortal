@@ -8,7 +8,7 @@ import clearLocalApplicationData from "@/services/helpers/localData/clearLocalAp
 const SignoutButton = () => {
   const onSignOutClick = () => {
     clearLocalApplicationData();
-    signOut({ callbackUrl: "/login" });
+    signOut({ callbackUrl: "/signin" });
   };
   return <Button label="Sign out" size="small" onClick={onSignOutClick} />;
 };

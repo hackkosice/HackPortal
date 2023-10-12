@@ -5,7 +5,7 @@ import { trpc } from "@/services/trpc";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
-import { InputText } from "@/components/InputText";
+import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/Button";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
