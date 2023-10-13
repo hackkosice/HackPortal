@@ -5,7 +5,7 @@ import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
 import { TRPCClientError } from "@trpc/client";
-import ConfirmationModal from "@/components/common/ConfirmationModal";
+import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 
 export type Props = {
   label: string;
@@ -54,12 +54,12 @@ const StepFormField = ({
 
   return (
     <>
-      <ConfirmationModal
+      <ConfirmationDialog
         question={
           "This field contains some already filled values. Deleting it will also delete those values. Do you want to proceed?"
         }
-        isOpened={isConfirmationModalOpened}
-        onClose={onConfirmClose}
+        isManuallyOpened={isConfirmationModalOpened}
+        onAnswer={onConfirmClose}
       />
       <Stack direction="row" alignItems="center">
         <Text>
