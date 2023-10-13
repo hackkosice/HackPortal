@@ -1,7 +1,7 @@
+/* eslint-disable react/jsx-key */
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Stack } from "../Stack";
-import { InputText } from "../ui/InputText";
 import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Stack> = {
@@ -13,18 +13,13 @@ const meta: Meta<typeof Stack> = {
 export default meta;
 type Story = StoryObj<typeof Stack>;
 
-const StackChildren = [
-  // eslint-disable-next-line react/jsx-key
-  <InputText label="Username" />,
-  // eslint-disable-next-line react/jsx-key
-  <InputText label="Password" type="password" />,
-  // eslint-disable-next-line react/jsx-key
-  <Button>Sign in</Button>,
-];
-
 export const Default: Story = {
   args: {
-    children: StackChildren,
+    children: [
+      <Button>Item 1</Button>,
+      <Button>Item 2</Button>,
+      <Button>Item 3</Button>,
+    ],
     spacing: "medium",
     direction: "column",
   },

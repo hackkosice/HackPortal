@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Stack } from "@/components/Stack";
-import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
@@ -15,10 +13,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-type TitleEditForm = {
-  title: string;
-};
+const titleEditFormSchema = z.object({
+  title: z.string(),
+});
+
+type TitleEditForm = z.infer<typeof titleEditFormSchema>;
 
 export type Props = {
   stepId: number;
@@ -33,11 +44,9 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
       utils.stepInfo.invalidate();
     },
   });
-  const {
-    register: registerTitleEdit,
-    handleSubmit,
-    setValue: setTitleEditValue,
-  } = useForm<TitleEditForm>();
+  const form = useForm<TitleEditForm>({
+    resolver: zodResolver(titleEditFormSchema),
+  });
 
   const onEditTitleModalSave = async ({ title }: TitleEditForm) => {
     await editStep({ id: stepId, title });
@@ -46,9 +55,9 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
 
   useEffect(() => {
     if (isOpened) {
-      setTitleEditValue("title", initialValue ?? "");
+      form.setValue("title", initialValue ?? "");
     }
-  }, [initialValue, setTitleEditValue, isOpened]);
+  }, [initialValue, form, isOpened]);
 
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
@@ -62,21 +71,26 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
         <DialogHeader>
           <DialogTitle>Edit title of the step</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onEditTitleModalSave)}>
-          <Stack direction="column">
-            <InputText
-              label="New title"
-              register={registerTitleEdit}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onEditTitleModalSave)}>
+            <FormField
+              control={form.control}
               name="title"
-              required
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New title</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Field label" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </Stack>
-          <DialogFooter>
-            <Button asChild>
-              <input type="submit" value="Save" />
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
