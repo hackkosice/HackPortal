@@ -1,28 +1,31 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Link from "next/link";
 describe("Button", () => {
   it("should render the button with the correct text", () => {
-    const { getByRole } = render(<Button label="Click me" />);
+    const { getByRole } = render(<Button>Click me</Button>);
 
     expect(getByRole("button", { name: "Click me" })).toBeVisible();
   });
 
   it("should call onClick callback on button click", () => {
     const onClick = jest.fn();
-    const { getByRole } = render(<Button label="Click me" onClick={onClick} />);
+    const { getByRole } = render(<Button onClick={onClick}>Click me</Button>);
     const button = getByRole("button", { name: "Click me" });
     userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it("should behave as a submit button when type is submit", () => {
+  it("should behave as a submit button when having input as child", () => {
     const onClick = jest.fn();
     const onSubmit = jest.fn((e) => e.preventDefault());
     const { getByRole } = render(
       <form onSubmit={onSubmit}>
-        <Button label="Click me" onClick={onClick} type="submit" />
+        <Button asChild onClick={onClick}>
+          <input type="submit" value="Click me" />
+        </Button>
       </form>
     );
     const button = getByRole("button", { name: "Click me" });
@@ -31,15 +34,12 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
-  it("should behave as a Link when type is buttonLink", () => {
+  it("should behave as a Link when having link as child", () => {
     const onClick = jest.fn();
     const { getByRole } = render(
-      <Button
-        label="Click me"
-        onClick={onClick}
-        type="buttonLink"
-        href="/signin"
-      />
+      <Button onClick={onClick}>
+        <Link href="/signin">Click me</Link>
+      </Button>
     );
     const button = getByRole("link", { name: "Click me" });
     userEvent.click(button);

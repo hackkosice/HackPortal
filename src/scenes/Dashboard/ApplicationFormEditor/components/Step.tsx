@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text } from "@/components/Text";
 import { Stack } from "@/components/Stack";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { trpc } from "@/services/trpc";
 import Link from "next/link";
@@ -23,7 +23,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
       utils.steps.invalidate();
     },
   });
-  const onStepDelete = async (e: React.MouseEvent<HTMLElement>) => {
+  const onStepDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     try {
@@ -63,13 +63,13 @@ const Step = ({ title, position, stepId }: StepProps) => {
             <Text>{title}</Text>
             <div className="flex-grow" />
             <Button
-              label=""
-              size="small"
-              icon={<TrashIcon className="w-4 h-4 mr-1 text-hkOrange inline" />}
-              colorType="tertiary"
+              size="icon"
+              variant="ghost"
               onClick={onStepDelete}
-              ariaLabel={`Delete step ${position}`}
-            />
+              aria-label={`Delete step ${position}`}
+            >
+              <TrashIcon className="w-4 h-4 text-hkOrange" />
+            </Button>
           </Stack>
         </div>
       </Link>

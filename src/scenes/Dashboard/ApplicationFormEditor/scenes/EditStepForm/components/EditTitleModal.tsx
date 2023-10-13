@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Stack } from "@/components/Stack";
 import { InputText } from "@/components/ui/InputText";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/Modal";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
@@ -51,7 +51,9 @@ const EditTitleModal = ({ isOpened, onClose, initialValue, stepId }: Props) => {
             name="title"
             required
           />
-          <Button type="submit" label={"Save"} />
+          <Button asChild>
+            <input type="submit" value="Save" />
+          </Button>
         </Stack>
       </form>
     </Modal>

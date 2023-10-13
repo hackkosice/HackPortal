@@ -14,7 +14,7 @@ test.describe("smoke tests", () => {
   test("can start application without signing in", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Start application" }).click();
+    await page.getByRole("link", { name: "Start application" }).click();
 
     await expect(
       page.getByRole("heading", {
@@ -28,7 +28,7 @@ test.describe("smoke tests", () => {
   test("can sign in and sign out as hacker", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-hacker@test.com");
@@ -41,9 +41,7 @@ test.describe("smoke tests", () => {
       })
     ).toBeVisible();
 
-    await expect(
-      page.getByRole("button", { name: "Sign in" })
-    ).not.toBeVisible();
+    await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
     await page.getByRole("button", { name: "Sign out" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
@@ -52,7 +50,7 @@ test.describe("smoke tests", () => {
   test("can sign in and sign out as organizer", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-org@hackkosice.com");
@@ -65,9 +63,7 @@ test.describe("smoke tests", () => {
       })
     ).toBeVisible();
 
-    await expect(
-      page.getByRole("button", { name: "Sign in" })
-    ).not.toBeVisible();
+    await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
     await page.getByRole("button", { name: "Sign out" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();

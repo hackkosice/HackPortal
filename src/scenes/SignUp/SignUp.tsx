@@ -6,7 +6,7 @@ import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
 import { InputText } from "@/components/ui/InputText";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 
@@ -65,7 +65,9 @@ const SignUp = () => {
             required
             error={errors.password?.message}
           />
-          <Button label="Sign up" type="submit" />
+          <Button asChild>
+            <input type="submit" value="Sign Up" />
+          </Button>
         </Stack>
       </form>
     </Card>

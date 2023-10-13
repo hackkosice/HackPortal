@@ -1,7 +1,8 @@
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import ApplicationsTable from "@/scenes/Dashboard/ApplicationFormEditor/components/ApplicationsTable";
+import Link from "next/link";
 
 const Dashboard = () => {
   return (
@@ -9,11 +10,9 @@ const Dashboard = () => {
       <Heading spaceAfter="large" centered>
         Dashboard Organizer
       </Heading>
-      <Button
-        label={"Edit application form"}
-        type="buttonLink"
-        href="/dashboard/form-editor"
-      />
+      <Button asChild>
+        <Link href="/dashboard/form-editor">Edit application form</Link>
+      </Button>
       <ApplicationsTable />
     </Card>
   );

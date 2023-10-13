@@ -6,7 +6,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useBreakpoints } from "@/services/hooks/useBreakpoints";
 import { Heading } from "@/components/Heading";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 import { usePathname } from "next/navigation";
 const Navbar = () => {
@@ -33,10 +33,14 @@ const Navbar = () => {
       <Heading size="small">Application portal</Heading>
       <div className="flex-grow"></div>
       {session ? (
-        <Button label="Sign out" size="small" onClick={onSignOutClick} />
+        <Button size="small" onClick={onSignOutClick}>
+          Sign out
+        </Button>
       ) : (
         !isSignInPage && (
-          <Button type="buttonLink" href={"/signin"} label="Sign in" />
+          <Button asChild>
+            <Link href="/signin">Sign in</Link>
+          </Button>
         )
       )}
     </nav>
