@@ -1,10 +1,11 @@
 import React from "react";
 import { Heading } from "@/components/Heading";
 import { Card } from "@/components/Card";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
 import { Stack } from "@/components/Stack";
+import Link from "next/link";
 
 export type Props = {
   applicationId: number;
@@ -25,13 +26,9 @@ const ApplicationDetail = ({ applicationId }: Props) => {
               </Text>
             ))}
         </Stack>
-        <Button
-          label="Back to dashboard"
-          type="buttonLink"
-          href="/dashboard"
-          size="small"
-          colorType="secondary"
-        />
+        <Button asChild size="small" variant="outline">
+          <Link href="/dashboard">Back to dashboard</Link>
+        </Button>
       </Stack>
     </Card>
   );

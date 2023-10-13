@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { Stack } from "@/components/Stack";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
@@ -67,13 +67,13 @@ const StepFormField = ({
           {required && <span className="text-red-500 ml-1">*</span>}
         </Text>
         <Button
-          label=""
-          size="small"
-          icon={<TrashIcon className="w-4 h-4 mr-1 text-hkOrange inline" />}
-          colorType="tertiary"
+          size="icon"
+          variant="ghost"
           onClick={onFormFieldDelete}
-          ariaLabel={`Delete field ${position}`}
-        />
+          aria-label={`Delete field ${position}`}
+        >
+          <TrashIcon className="w-4 h-4 text-hkOrange" />
+        </Button>
       </Stack>
     </>
   );

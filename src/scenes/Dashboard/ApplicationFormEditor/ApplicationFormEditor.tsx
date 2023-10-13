@@ -3,9 +3,10 @@ import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
 import { Stack } from "@/components/Stack";
+import Link from "next/link";
 
 const ApplicationFormEditor = () => {
   const { data, isLoading } = trpc.steps.useQuery();
@@ -32,18 +33,12 @@ const ApplicationFormEditor = () => {
             <Step key={id} stepId={id} title={title} position={position} />
           ))}
         </Stack>
-        <Button
-          label="Create new step"
-          onClick={createNewStep}
-          spaceAfter="medium"
-        />
-        <Button
-          label="Back to dashboard"
-          type="buttonLink"
-          href="/dashboard"
-          colorType="secondary"
-          size="small"
-        />
+        <Stack direction="column">
+          <Button onClick={createNewStep}>Create new step</Button>
+          <Button asChild size="small" variant="outline">
+            <Link href="/dashboard">Back to dashboard</Link>
+          </Button>
+        </Stack>
       </Card>
     </>
   );

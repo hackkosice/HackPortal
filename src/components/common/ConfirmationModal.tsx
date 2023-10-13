@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "@/components/Modal";
 import { Text } from "@/components/Text";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { Stack } from "@/components/Stack";
 
 type Props = {
@@ -15,12 +15,10 @@ const ConfirmationModal = ({ question, isOpened, onClose }: Props) => {
     <Modal isOpened={isOpened} onClose={() => onClose(false)}>
       <Text spaceAfter="medium">{question}</Text>
       <Stack direction="row">
-        <Button label="Yes" onClick={() => onClose(true)} />
-        <Button
-          label="No"
-          onClick={() => onClose(false)}
-          colorType="secondary"
-        />
+        <Button onClick={() => onClose(true)}>Yes</Button>
+        <Button onClick={() => onClose(false)} variant="outline">
+          No
+        </Button>
       </Stack>
     </Modal>
   );

@@ -3,13 +3,14 @@ import { Stack } from "@/components/Stack";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { InputText } from "@/components/ui/InputText";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { Text } from "@/components/Text";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { SigninPageProps } from "@/pages/signin";
 import GithubButton from "./components/SocialButtons/GithubButton";
+import Link from "next/link";
 
 type SignInForm = {
   email: string;
@@ -71,16 +72,15 @@ const SignInPage = ({ providers }: SigninPageProps) => {
               minLength: { value: 6, message: "Min length is 6" },
             }}
           />
-          <Button label="Sign in" type="submit" />
+          <Button asChild>
+            <input type="submit" value="Sign in" />
+          </Button>
         </Stack>
       </form>
       <Stack direction="column">
-        <Button
-          label="Sign up"
-          colorType="secondary"
-          type="buttonLink"
-          href="/signup"
-        />
+        <Button variant="outline" asChild>
+          <Link href="/signup">Sign up with email</Link>
+        </Button>
         {Object.keys(providers).includes("github") && (
           <GithubButton onClick={() => signIn("github")} />
         )}

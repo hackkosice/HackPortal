@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import submitApplication from "@/server/actions/submitApplication";
 
 type ApplicationSubmitButtonProps = { canSubmit: boolean };
@@ -27,10 +27,11 @@ const ApplicationSubmitButton = ({
         onClose={onSubmitConfirmationClose}
       />
       <Button
-        label="Submit application"
         disabled={!canSubmit}
         onClick={() => setSubmitConfirmationModalOpened(true)}
-      />
+      >
+        Submit application
+      </Button>
     </>
   );
 };

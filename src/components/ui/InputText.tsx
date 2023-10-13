@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { UseFormRegister, RegisterOptions } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,6 @@ export type InputTextTypes = "text" | "email" | "password";
 
 export type InputTextProps = {
   label?: string;
-  id?: string;
   placeholder?: string;
   required?: boolean;
   type?: InputTextTypes;
@@ -27,12 +26,12 @@ export const InputText = ({
   name,
   error,
   registerOptions,
-  id,
 }: InputTextProps) => {
   const registerProps =
     register && name
       ? register(name, { required, ...registerOptions })
       : undefined;
+  const id = useId();
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label htmlFor={id}>{label}</Label>

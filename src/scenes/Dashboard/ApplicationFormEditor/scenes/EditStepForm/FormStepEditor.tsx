@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { trpc } from "@/services/trpc";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import EditTitleModal from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleModal";
 import StepFormField from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
 import { Stack } from "@/components/Stack";
 import NewFieldModal from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldModal";
+import Link from "next/link";
 
 export type Props = {
   stepId: number;
@@ -35,15 +36,13 @@ const FormStepEditor = ({ stepId }: Props) => {
       <Card>
         <Heading>{data?.data.title}</Heading>
         <Button
-          label="Edit title"
-          colorType="secondary"
-          icon={
-            <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
-          }
+          variant="outline"
           size="small"
           onClick={() => setIsEditTileModalOpened(true)}
-          spaceAfter="large"
-        />
+        >
+          <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
+          Edit title
+        </Button>
         <Heading size="small" spaceAfter="medium">
           Form fields
         </Heading>
@@ -61,18 +60,14 @@ const FormStepEditor = ({ stepId }: Props) => {
             )
           )}
         </Stack>
-        <Button
-          label="Create new field"
-          spaceAfter="large"
-          onClick={() => setIsNewFieldModalOpened(true)}
-        />
-        <Button
-          label="Back to steps"
-          type="buttonLink"
-          href="/dashboard/form-editor"
-          colorType="secondary"
-          size="small"
-        />
+        <Stack direction="column">
+          <Button onClick={() => setIsNewFieldModalOpened(true)}>
+            Create new field
+          </Button>
+          <Button asChild variant="outline" size="small">
+            <Link href="/dashboard/form-editor">Back to steps</Link>
+          </Button>
+        </Stack>
       </Card>
     </>
   );

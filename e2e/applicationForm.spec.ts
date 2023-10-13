@@ -16,7 +16,7 @@ test.describe("application form", () => {
   test("editing application form", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-org@hackkosice.com");
@@ -24,7 +24,7 @@ test.describe("application form", () => {
 
     await page.getByRole("button", { name: /^Sign in$/ }).click();
 
-    await page.getByRole("button", { name: "Edit application form" }).click();
+    await page.getByRole("link", { name: "Edit application form" }).click();
 
     await expect(
       page.getByRole("heading", { name: "Application Form Editor" })
@@ -117,7 +117,7 @@ test.describe("application form", () => {
       page.getByText("3. I have been at the hackathon in the past. (checkbox)")
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Back to steps" }).click();
+    await page.getByRole("link", { name: "Back to steps" }).click();
     await expect(
       page.getByRole("heading", { name: "Application Form Editor" })
     ).toBeVisible();
@@ -127,7 +127,7 @@ test.describe("application form", () => {
   test("submitting application form (signed in hacker)", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-hacker@test.com");
@@ -156,7 +156,7 @@ test.describe("application form", () => {
 
     // Experience section
     await page.getByText("Experience").click();
-    await page.getByRole("button", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back" }).click();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -190,7 +190,7 @@ test.describe("application form", () => {
     await expect(
       page.getByLabel("I have been at the hackathon in the past.")
     ).toBeChecked();
-    await page.getByRole("button", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back" }).click();
 
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -215,7 +215,7 @@ test.describe("application form", () => {
   test("submitting application form (unsigned hacker)", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Start application" }).click();
+    await page.getByRole("link", { name: "Start application" }).click();
 
     await expect(page.getByText("You are not signed in")).toBeVisible();
     await expect(page.getByText("Application status: open")).toBeVisible();
@@ -239,7 +239,7 @@ test.describe("application form", () => {
 
     // Experience section
     await page.getByText("Experience").click();
-    await page.getByRole("button", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back" }).click();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -274,7 +274,7 @@ test.describe("application form", () => {
     await expect(
       page.getByLabel("I have been at the hackathon in the past.")
     ).not.toBeChecked();
-    await page.getByRole("button", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back" }).click();
 
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -287,7 +287,7 @@ test.describe("application form", () => {
   test("see submitted applications", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-org@hackkosice.com");

@@ -4,12 +4,13 @@ import React from "react";
 import { Card } from "@/components/Card";
 import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
 import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
 import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export type Props = {
   data: ApplicationFormStepData;
@@ -48,13 +49,12 @@ const ApplicationFormStep = ({ data }: Props) => {
           onSubmit={onFormSubmit}
           actionButtons={
             <Stack direction="row">
-              <Button
-                label="Back"
-                type="buttonLink"
-                href="/application"
-                colorType="secondary"
-              />
-              <Button label="Save" type="submit" />
+              <Button asChild variant="outline">
+                <Link href="/application">Back</Link>
+              </Button>
+              <Button asChild>
+                <input type="submit" value="Save" />
+              </Button>
             </Stack>
           }
         />

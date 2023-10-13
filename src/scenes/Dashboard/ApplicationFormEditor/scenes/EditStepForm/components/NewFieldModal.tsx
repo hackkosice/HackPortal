@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Stack } from "@/components/Stack";
 import { InputText } from "@/components/ui/InputText";
 import { InputSelect } from "@/components/InputSelect";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
 import { Modal } from "@/components/Modal";
@@ -75,7 +75,9 @@ const NewFieldModal = ({ stepId, onClose, isOpened }: Props) => {
             name="required"
             register={register}
           />
-          <Button label="Add new field" spaceAfter="large" type="submit" />
+          <Button asChild>
+            <input type="submit" value="Add new field" />
+          </Button>
         </Stack>
       </form>
     </Modal>
