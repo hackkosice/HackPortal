@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Card } from "../components/Card";
-import { Stack } from "../components/Stack";
-import { InputText } from "../components/ui/InputText";
-import { Button } from "../components/Button";
-import { Heading } from "../components/Heading";
+import { Card } from "../Card";
+import { Stack } from "../Stack";
+import { InputText } from "../ui/InputText";
+import { Button } from "../Button";
+import { Heading } from "../Heading";
 
 const meta: Meta<typeof Card> = {
   title: "Layout/Card",
