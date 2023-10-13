@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { Card } from "@/components/Card";
-import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
 import { Button } from "@/components/ui/button";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
@@ -11,6 +9,7 @@ import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export type Props = {
   data: ApplicationFormStepData;
@@ -41,24 +40,28 @@ const ApplicationFormStep = ({ data }: Props) => {
 
   return (
     <Card>
-      <Heading>{data?.data.title}</Heading>
-      {data && (
-        <FormRenderer
-          shouldUseLocalInitialValues={!data.signedIn}
-          formFields={data.data.formFields}
-          onSubmit={onFormSubmit}
-          actionButtons={
-            <Stack direction="row">
-              <Button asChild variant="outline">
-                <Link href="/application">Back</Link>
-              </Button>
-              <Button asChild>
-                <input type="submit" value="Save" />
-              </Button>
-            </Stack>
-          }
-        />
-      )}
+      <CardHeader>
+        <CardTitle>{data?.data.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {data && (
+          <FormRenderer
+            shouldUseLocalInitialValues={!data.signedIn}
+            formFields={data.data.formFields}
+            onSubmit={onFormSubmit}
+            actionButtons={
+              <Stack direction="row">
+                <Button asChild variant="outline">
+                  <Link href="/application">Back</Link>
+                </Button>
+                <Button asChild>
+                  <input type="submit" value="Save" />
+                </Button>
+              </Stack>
+            }
+          />
+        )}
+      </CardContent>
     </Card>
   );
 };

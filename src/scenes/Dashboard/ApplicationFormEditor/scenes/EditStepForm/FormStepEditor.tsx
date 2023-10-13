@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Card } from "@/components/Card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Heading } from "@/components/Heading";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/services/trpc";
@@ -34,40 +40,46 @@ const FormStepEditor = ({ stepId }: Props) => {
         isOpened={isNewFieldModalOpened}
       />
       <Card>
-        <Heading>{data?.data.title}</Heading>
-        <Button
-          variant="outline"
-          size="small"
-          onClick={() => setIsEditTileModalOpened(true)}
-        >
-          <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
-          Edit title
-        </Button>
-        <Heading size="small" spaceAfter="medium">
-          Form fields
-        </Heading>
-        <Stack direction="column" spacing="small" spaceAfter="medium">
-          {data?.data.formFields.map(
-            ({ id, label, position, type: { value }, required }) => (
-              <StepFormField
-                key={id}
-                formFieldId={id}
-                label={label}
-                type={value}
-                position={position}
-                required={required}
-              />
-            )
-          )}
-        </Stack>
-        <Stack direction="column">
-          <Button onClick={() => setIsNewFieldModalOpened(true)}>
-            Create new field
+        <CardHeader>
+          <CardTitle>{data?.data.title}</CardTitle>
+          <Button
+            variant="outline"
+            size="small"
+            onClick={() => setIsEditTileModalOpened(true)}
+          >
+            <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
+            Edit title
           </Button>
-          <Button asChild variant="outline" size="small">
-            <Link href="/dashboard/form-editor">Back to steps</Link>
-          </Button>
-        </Stack>
+        </CardHeader>
+        <CardContent>
+          <Heading size="small" spaceAfter="medium">
+            Form fields
+          </Heading>
+          <Stack direction="column" spacing="small" spaceAfter="medium">
+            {data?.data.formFields.map(
+              ({ id, label, position, type: { value }, required }) => (
+                <StepFormField
+                  key={id}
+                  formFieldId={id}
+                  label={label}
+                  type={value}
+                  position={position}
+                  required={required}
+                />
+              )
+            )}
+          </Stack>
+        </CardContent>
+        <CardFooter>
+          <Stack direction="column">
+            <Button onClick={() => setIsNewFieldModalOpened(true)}>
+              Create new field
+            </Button>
+            <Button asChild variant="outline" size="small">
+              <Link href="/dashboard/form-editor">Back to steps</Link>
+            </Button>
+          </Stack>
+        </CardFooter>
       </Card>
     </>
   );

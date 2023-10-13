@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Stack } from "../Stack";
 import { InputText } from "../ui/InputText";
-import { Button } from "../Button";
+import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Stack> = {
   title: "Layout/Stack",
@@ -19,7 +19,7 @@ const StackChildren = [
   // eslint-disable-next-line react/jsx-key
   <InputText label="Password" type="password" />,
   // eslint-disable-next-line react/jsx-key
-  <Button label={"Sign in"} />,
+  <Button>Sign in</Button>,
 ];
 
 export const Default: Story = {

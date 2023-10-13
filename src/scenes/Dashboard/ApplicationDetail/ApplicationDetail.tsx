@@ -1,11 +1,16 @@
 import React from "react";
-import { Heading } from "@/components/Heading";
-import { Card } from "@/components/Card";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
 import { Stack } from "@/components/Stack";
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export type Props = {
   applicationId: number;
@@ -15,8 +20,10 @@ const ApplicationDetail = ({ applicationId }: Props) => {
   const { data } = trpc.applicationInfo.useQuery({ id: applicationId });
   return (
     <Card>
-      <Stack direction="column">
-        <Heading>Application detail</Heading>
+      <CardHeader>
+        <CardTitle>Application detail</CardTitle>
+      </CardHeader>
+      <CardContent>
         <Stack direction="column" spacing="small">
           {data &&
             Object.keys(data.data.values).map((key) => (
@@ -26,10 +33,12 @@ const ApplicationDetail = ({ applicationId }: Props) => {
               </Text>
             ))}
         </Stack>
+      </CardContent>
+      <CardFooter>
         <Button asChild size="small" variant="outline">
           <Link href="/dashboard">Back to dashboard</Link>
         </Button>
-      </Stack>
+      </CardFooter>
     </Card>
   );
 };

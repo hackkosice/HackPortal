@@ -2,13 +2,12 @@ import React, { useCallback } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
-import { Card } from "@/components/Card";
-import { Heading } from "@/components/Heading";
 import { Stack } from "@/components/Stack";
 import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/ui/button";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type SignUpForm = {
   email: string;
@@ -44,32 +43,34 @@ const SignUp = () => {
 
   return (
     <Card>
-      <Heading spaceAfter="large" centered>
-        Sign Up
-      </Heading>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="column">
-          <InputText
-            label="Email"
-            type="email"
-            register={register}
-            name="email"
-            required
-            error={errors.email?.message}
-          />
-          <InputText
-            label="Password"
-            type="password"
-            register={register}
-            name="password"
-            required
-            error={errors.password?.message}
-          />
-          <Button asChild>
-            <input type="submit" value="Sign Up" />
-          </Button>
-        </Stack>
-      </form>
+      <CardHeader>
+        <CardTitle>Sign Up</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack direction="column">
+            <InputText
+              label="Email"
+              type="email"
+              register={register}
+              name="email"
+              required
+              error={errors.email?.message}
+            />
+            <InputText
+              label="Password"
+              type="password"
+              register={register}
+              name="password"
+              required
+              error={errors.password?.message}
+            />
+            <Button asChild>
+              <input type="submit" value="Sign Up" />
+            </Button>
+          </Stack>
+        </form>
+      </CardContent>
     </Card>
   );
 };
