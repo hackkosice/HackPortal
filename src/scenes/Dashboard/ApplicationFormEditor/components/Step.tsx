@@ -6,7 +6,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { trpc } from "@/services/trpc";
 import Link from "next/link";
 import { TRPCClientError } from "@trpc/client";
-import ConfirmationModal from "@/components/common/ConfirmationModal";
+import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 
 type StepProps = {
   stepId: number;
@@ -46,12 +46,12 @@ const Step = ({ title, position, stepId }: StepProps) => {
 
   return (
     <>
-      <ConfirmationModal
+      <ConfirmationDialog
         question={
           "This step contains fields, which have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
         }
-        isOpened={isConfirmationModalOpened}
-        onClose={onConfirmClose}
+        onAnswer={onConfirmClose}
+        isManuallyOpened={isConfirmationModalOpened}
       />
       <Link
         href={`/dashboard/form-editor/step/${stepId}/edit`}
