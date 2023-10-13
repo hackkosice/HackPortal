@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Modal } from "../components/Modal";
-import { InputText } from "../components/ui/InputText";
-import { Button } from "../components/Button";
-import { Stack } from "../components/Stack";
+import { Modal } from "../Modal";
+import { InputText } from "../ui/InputText";
+import { Button } from "../Button";
+import { Stack } from "../Stack";
 
 const meta: Meta<typeof Modal> = {
   title: "Layout/Modal",

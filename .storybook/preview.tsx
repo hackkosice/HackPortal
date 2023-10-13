@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react";
 import "../src/styles/globals.css";
 import { withThemeByDataAttribute } from "@storybook/addon-styling";
 import { Roboto, League_Spartan } from "next/font/google";
+import { JSX } from "react";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -48,9 +49,9 @@ export const decorators = [
       dark: 'dark',
     },
     defaultTheme: 'light',
-    attributeName: 'data-mode',
+    attributeName: 'data-theme',
   }),
-  (Story) => (<main className={`${roboto.variable} ${leagueSpartan.variable} font-default`}><Story /></main>),
+  (Story: keyof JSX.IntrinsicElements) => (<main className={`${roboto.variable} ${leagueSpartan.variable} font-default`}><Story /></main>),
 ];
 
 export default preview;
