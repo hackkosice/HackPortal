@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Modal } from "../Modal";
 import { InputText } from "../ui/InputText";
-import { Button } from "../Button";
+import { Button } from "@/components/ui/button";
 import { Stack } from "../Stack";
 
 const meta: Meta<typeof Modal> = {
@@ -18,7 +18,7 @@ const ModalChildren = [
   // eslint-disable-next-line react/jsx-key
   <Stack direction="column">
     <InputText label="New title" />
-    <Button label={"Save"} />
+    <Button>Save</Button>
   </Stack>,
 ];
 export const Default: Story = {

@@ -1,10 +1,16 @@
+/* eslint-disable react/jsx-key */
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Card } from "../Card";
-import { Stack } from "../Stack";
-import { InputText } from "../ui/InputText";
-import { Button } from "../Button";
-import { Heading } from "../Heading";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/Text";
+import React from "react";
 
 const meta: Meta<typeof Card> = {
   title: "Layout/Card",
@@ -15,18 +21,18 @@ const meta: Meta<typeof Card> = {
 export default meta;
 type Story = StoryObj<typeof Card>;
 
-const CardChildren = [
-  // eslint-disable-next-line react/jsx-key
-  <Stack direction="column">
-    <Heading>Sign in</Heading>
-    <InputText label="Username" />
-    <InputText label="Password" type="password" />
-    <Button label={"Sign in"} />
-  </Stack>,
-];
-
 export const Default: Story = {
   args: {
-    children: CardChildren,
+    children: [
+      <CardHeader>
+        <CardTitle>This is the Header</CardTitle>
+      </CardHeader>,
+      <CardContent>
+        <Text>This is content.</Text>
+      </CardContent>,
+      <CardFooter>
+        <Button>Button in footer</Button>
+      </CardFooter>,
+    ],
   },
 };

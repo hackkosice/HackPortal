@@ -1,25 +1,23 @@
-import { Card } from "@/components/Card";
-import { Heading } from "@/components/Heading";
 import React, { Suspense } from "react";
-import { Stack } from "@/components/Stack";
 import ApplicationSteps from "@/scenes/Application/components/ApplicationSteps/ApplicationSteps";
 import TeamManager from "@/scenes/Application/components/TeamManager/TeamManager";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Application = () => {
   return (
-    <>
-      <Card>
-        <Stack direction="column">
-          <Heading centered>Welcome to Hack Kosice Application portal!</Heading>
-          <Suspense fallback={<div>Loading...</div>}>
-            <ApplicationSteps />
-          </Suspense>
-          <Suspense fallback={<div>Loading...</div>}>
-            <TeamManager />
-          </Suspense>
-        </Stack>
-      </Card>
-    </>
+    <Card>
+      <CardHeader>
+        <CardTitle>Welcome to Hack Kosice Application portal!</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ApplicationSteps />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TeamManager />
+        </Suspense>
+      </CardContent>
+    </Card>
   );
 };
 
