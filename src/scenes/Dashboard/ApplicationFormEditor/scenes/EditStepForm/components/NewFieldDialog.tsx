@@ -38,9 +38,10 @@ export type Props = {
 };
 
 const newFieldFormSchema = z.object({
-  label: z.string(),
-  typeId: z.string(),
-  required: z.boolean(),
+  label: z.string().min(1),
+  name: z.string().min(1),
+  typeId: z.string().min(1),
+  required: z.boolean().optional(),
 });
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
@@ -60,15 +61,16 @@ const NewFieldDialog = ({ stepId }: Props) => {
 
   const onNewFieldSubmit = async ({
     label,
+    name,
     typeId,
     required,
   }: NewFieldForm) => {
     await newFormField({
       label,
+      name,
       stepId,
-      name: label,
       typeId: Number(typeId),
-      required,
+      required: Boolean(required),
     });
     setIsOpened(false);
   };
@@ -95,6 +97,21 @@ const NewFieldDialog = ({ stepId }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Label</FormLabel>
+                    <FormControl>
+                      <Input type="text" placeholder="Field label" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Name (has to be unique across the form)
+                    </FormLabel>
                     <FormControl>
                       <Input type="text" placeholder="Field label" {...field} />
                     </FormControl>
@@ -137,25 +154,27 @@ const NewFieldDialog = ({ stepId }: Props) => {
                 name="required"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={(checked) => {
-                          if (checked !== "indeterminate") {
-                            field.onChange(checked);
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormLabel>Required field</FormLabel>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Required
+                      </FormLabel>
+                    </span>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button asChild>
-                  <input type="submit" value="Add new field" />
-                </Button>
+                <Button type="submit">Create new field</Button>
               </DialogFooter>
             </Stack>
           </form>

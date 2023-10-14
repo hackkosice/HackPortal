@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormFieldTypeEnum } from "@/services/types/formFields";
 
 export type Props = {
   formField: FormFieldData;
@@ -31,7 +32,7 @@ export type Props = {
 const DynamicFormField = ({ form, formField }: Props) => {
   const { label, name, type, optionList, required } = formField;
   switch (type) {
-    case "text":
+    case FormFieldTypeEnum.text:
       return (
         <FormField
           control={form.control}
@@ -47,7 +48,7 @@ const DynamicFormField = ({ form, formField }: Props) => {
           )}
         />
       );
-    case "textarea":
+    case FormFieldTypeEnum.textarea:
       return (
         <FormField
           control={form.control}
@@ -67,7 +68,7 @@ const DynamicFormField = ({ form, formField }: Props) => {
           )}
         />
       );
-    case "select":
+    case FormFieldTypeEnum.select:
       return (
         <FormField
           control={form.control}
@@ -97,26 +98,31 @@ const DynamicFormField = ({ form, formField }: Props) => {
           )}
         />
       );
-    case "checkbox":
+    case FormFieldTypeEnum.checkbox:
       return (
         <FormField
           control={form.control}
           name={name}
           render={({ field }) => (
-            <FormItem className="flex items-center">
-              <FormControl>
-                <Checkbox
-                  checked={field.value as boolean}
-                  onCheckedChange={(checked) => {
-                    if (checked !== "indeterminate") {
-                      field.onChange(checked);
-                    }
-                  }}
-                />
-              </FormControl>
-              <FormLabel className="ml-1 !mt-0" required={required}>
-                {label}
-              </FormLabel>
+            <FormItem>
+              <span className="flex items-center">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value as boolean}
+                    onCheckedChange={(checked) => {
+                      if (checked !== "indeterminate") {
+                        field.onChange(checked);
+                      }
+                    }}
+                  />
+                </FormControl>
+                <FormLabel
+                  className="ml-1 !mt-0 cursor-pointer"
+                  required={required}
+                >
+                  {label}
+                </FormLabel>
+              </span>
               <FormMessage />
             </FormItem>
           )}

@@ -10,6 +10,7 @@ import { FormFieldData } from "@/server/getters/applicationFormStep";
 import { Form } from "@/components/ui/form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormFieldTypeEnum } from "@/services/types/formFields";
 
 export type Props = {
   onSubmit: (data: any) => void;
@@ -20,14 +21,14 @@ export type Props = {
 
 const mapToZodType = (formField: FormFieldData) => {
   switch (formField.type) {
-    case "text":
-    case "textarea":
-    case "select":
+    case FormFieldTypeEnum.text:
+    case FormFieldTypeEnum.textarea:
+    case FormFieldTypeEnum.select:
       if (!formField.required) {
         return z.string().nullable();
       }
       return z.string().min(1, { message: "This field is required" });
-    case "checkbox":
+    case FormFieldTypeEnum.checkbox:
       if (formField.required) {
         return z.literal(true, {
           errorMap: () => ({ message: "This field is required" }),
@@ -49,11 +50,11 @@ const getDefaultValues = (
         ? getLocalApplicationFieldData(formField.id)?.value ?? null
         : formField.initialValue;
       switch (formField.type) {
-        case "text":
-        case "textarea":
-        case "select":
+        case FormFieldTypeEnum.text:
+        case FormFieldTypeEnum.textarea:
+        case FormFieldTypeEnum.select:
           return [formField.name, initialValue ?? ""];
-        case "checkbox":
+        case FormFieldTypeEnum.checkbox:
           return [formField.name, initialValue ?? false];
         default:
           return [formField.name, initialValue ?? ""];
