@@ -1,78 +1,125 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { RegisterOptions, UseFormRegister } from "react-hook-form";
-import { InputSelect, OptionType } from "@/components/InputSelect";
-import { InputTextarea } from "@/components/InputTextarea";
-import { InputCheckbox } from "@/components/InputCheckbox";
+import { UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  FormFieldData,
+  FormFieldValueType,
+} from "@/server/getters/applicationFormStep";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export type Props = {
-  label: string;
-  type: string;
-  required?: boolean;
-  register: UseFormRegister<any>;
-  name: string;
-  error?: string;
-  registerOptions?: RegisterOptions;
-  options?: OptionType[];
+  formField: FormFieldData;
+  form: UseFormReturn<{ [p: string]: FormFieldValueType }>;
 };
 
-const DynamicFormField = ({
-  label,
-  type,
-  name,
-  error,
-  registerOptions,
-  register,
-  required,
-  options,
-}: Props) => {
-  const id = `form-field-${name}`;
+const DynamicFormField = ({ form, formField }: Props) => {
+  const { label, name, type, optionList, required } = formField;
   switch (type) {
     case "text":
       return (
-        <>
-          <Label htmlFor={id}>{label}</Label>
-          <Input
-            id={id}
-            required={required}
-            {...register(name, { ...registerOptions })}
-          />
-        </>
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required={required}>{label}</FormLabel>
+              <FormControl>
+                <Input {...field} type="text" value={field.value as string} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       );
     case "textarea":
       return (
-        <InputTextarea
-          label={label}
+        <FormField
+          control={form.control}
           name={name}
-          register={register}
-          registerOptions={registerOptions}
-          error={error}
-          required={required}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required={required}>{label}</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  className="resize-none"
+                  value={field.value as string}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       );
     case "select":
       return (
-        <InputSelect
-          label={label}
-          options={options ?? []}
+        <FormField
+          control={form.control}
           name={name}
-          register={register}
-          registerOptions={registerOptions}
-          error={error}
-          required={required}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required={required}>{label}</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value as string}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {optionList?.map(({ value, label: optionLabel }) => (
+                    <SelectItem key={value} value={value}>
+                      {optionLabel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       );
     case "checkbox":
       return (
-        <InputCheckbox
-          label={label}
+        <FormField
+          control={form.control}
           name={name}
-          register={register}
-          registerOptions={registerOptions}
-          error={error}
-          required={required}
+          render={({ field }) => (
+            <FormItem className="flex items-center">
+              <FormControl>
+                <Checkbox
+                  checked={field.value as boolean}
+                  onCheckedChange={(checked) => {
+                    if (checked !== "indeterminate") {
+                      field.onChange(checked);
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormLabel className="ml-1 !mt-0" required={required}>
+                {label}
+              </FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       );
   }

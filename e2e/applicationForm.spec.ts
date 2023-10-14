@@ -71,7 +71,8 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("What is your experience with hackathons?");
-    await page.getByLabel("Field type").selectOption("textarea");
+    await page.getByText("Select a field type").click();
+    await page.getByText("textarea").click();
     await page.getByLabel("Required field").check();
     await page.getByRole("button", { name: "Add new field" }).click();
 
@@ -83,7 +84,8 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Field type").selectOption("checkbox");
+    await page.getByText("Select a field type").click();
+    await page.getByText("checkbox").click();
     await page.getByRole("button", { name: "Add new field" }).click();
 
     await expect(
@@ -92,7 +94,8 @@ test.describe("application form", () => {
 
     await page.getByRole("button", { name: "Create new field" }).click();
     await page.getByLabel("Label").fill("What company do you work for?");
-    await page.getByLabel("Field type").selectOption("text");
+    await page.getByText("Select a field type").click();
+    await page.getByText("text").click();
     await page.getByRole("button", { name: "Add new field" }).click();
 
     await expect(
@@ -110,7 +113,8 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Field type").selectOption("checkbox");
+    await page.getByText("Select a field type").click();
+    await page.getByText("checkbox").click();
     await page.getByRole("button", { name: "Add new field" }).click();
 
     await expect(
