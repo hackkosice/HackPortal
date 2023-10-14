@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text } from "@/components/Text";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { trpc } from "@/services/trpc";

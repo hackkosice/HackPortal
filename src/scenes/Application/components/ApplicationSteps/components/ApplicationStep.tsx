@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/Text";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";

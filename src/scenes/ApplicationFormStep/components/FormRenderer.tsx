@@ -4,7 +4,7 @@
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import getLocalApplicationFieldData from "@/services/helpers/localData/getLocalApplicationFieldData";
 import { FormFieldData } from "@/server/getters/applicationFormStep";
 import { Form } from "@/components/ui/form";

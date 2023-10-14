@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
 import {

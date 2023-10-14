@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
 import {
   Card,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import {
   Form,
   FormControl,

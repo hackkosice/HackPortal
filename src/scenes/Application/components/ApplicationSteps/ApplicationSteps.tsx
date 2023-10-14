@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "@/components/Text";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import ApplicationStep from "@/scenes/Application/components/ApplicationSteps/components/ApplicationStep";
 import getApplicationData from "@/server/getters/application";
 import ApplicationSubmitButton from "@/scenes/Application/components/ApplicationSteps/components/ApplicationSubmitButton";
