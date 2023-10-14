@@ -1,10 +1,15 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
 import { Stack } from "@/components/Stack";
 import getLocalApplicationFieldData from "@/services/helpers/localData/getLocalApplicationFieldData";
 import { FormFieldData } from "@/server/getters/applicationFormStep";
+import { Form } from "@/components/ui/form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export type Props = {
   onSubmit: (data: any) => void;
@@ -13,48 +18,91 @@ export type Props = {
   shouldUseLocalInitialValues?: boolean;
 };
 
+const mapToZodType = (formField: FormFieldData) => {
+  switch (formField.type) {
+    case "text":
+    case "textarea":
+    case "select":
+      if (!formField.required) {
+        return z.string().nullable();
+      }
+      return z.string().min(1, { message: "This field is required" });
+    case "checkbox":
+      if (formField.required) {
+        return z.literal(true, {
+          errorMap: () => ({ message: "This field is required" }),
+        });
+      }
+      return z.boolean().nullable();
+    default:
+      return z.string();
+  }
+};
+
+const getDefaultValues = (
+  formFields: FormFieldData[],
+  shouldUseLocalInitialValues: boolean
+) => {
+  return Object.fromEntries(
+    formFields.map((formField) => {
+      const initialValue = shouldUseLocalInitialValues
+        ? getLocalApplicationFieldData(formField.id)?.value ?? null
+        : formField.initialValue;
+      switch (formField.type) {
+        case "text":
+        case "textarea":
+        case "select":
+          return [formField.name, initialValue ?? ""];
+        case "checkbox":
+          return [formField.name, initialValue ?? false];
+        default:
+          return [formField.name, initialValue ?? ""];
+      }
+    })
+  );
+};
+
 const FormRenderer = ({
   actionButtons,
   formFields,
   onSubmit,
   shouldUseLocalInitialValues,
 }: Props) => {
-  const { handleSubmit, register, setValue } = useForm();
-  useEffect(() => {
-    // Fill initial values for form fields - either from localStorage or from the server
-    formFields.forEach((formField) => {
-      const initialValue = shouldUseLocalInitialValues
-        ? getLocalApplicationFieldData(formField.id)?.value
-        : formField.initialValue;
-      if (!initialValue) return;
+  const zodSchema = useMemo(
+    () =>
+      z.object(
+        Object.fromEntries(
+          formFields.map((formField) => {
+            return [formField.name, mapToZodType(formField)];
+          })
+        )
+      ),
+    [formFields]
+  );
 
-      switch (formField.type.value) {
-        case "checkbox":
-          setValue(String(formField.id), initialValue === "true");
-          break;
-        default:
-          setValue(String(formField.id), initialValue);
-      }
-    });
-  }, [formFields, setValue, shouldUseLocalInitialValues]);
+  const form = useForm<z.infer<typeof zodSchema>>({
+    resolver: zodResolver(zodSchema),
+    defaultValues: getDefaultValues(
+      formFields,
+      Boolean(shouldUseLocalInitialValues)
+    ),
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack direction="column">
-        {formFields.map((formField: any) => (
-          <DynamicFormField
-            key={formField.id}
-            label={formField.label}
-            type={formField.type.value}
-            required={formField.required}
-            options={formField.optionList}
-            register={register}
-            name={String(formField.id)}
-          />
-        ))}
-        {actionButtons}
-      </Stack>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Stack direction="column">
+          {formFields.map((formField: any) => (
+            <DynamicFormField
+              key={formField.id}
+              form={form}
+              formField={formField}
+            />
+          ))}
+          {actionButtons}
+        </Stack>
+      </form>
+    </Form>
   );
 };
 

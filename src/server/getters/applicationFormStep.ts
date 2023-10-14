@@ -2,6 +2,8 @@ import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
+export type FormFieldValueType = string | boolean | null;
+
 type FieldValue =
   | {
       value: string | null;
@@ -10,19 +12,26 @@ type FieldValue =
     }
   | undefined;
 
-const getInitialValue = (fieldValue: FieldValue) => {
+const getInitialValue = (fieldValue: FieldValue): FormFieldValueType => {
   if (!fieldValue) {
     return null;
   }
 
-  const { value, option } = fieldValue;
+  const {
+    value,
+    option,
+    field: { type },
+  } = fieldValue;
+  if (type.value === "checkbox") {
+    return value === "true";
+  }
 
   if (value) {
     return value;
   }
 
   if (option) {
-    return option.id;
+    return String(option.id);
   }
 
   return null;
@@ -33,8 +42,8 @@ export type FormFieldData = {
   position: number;
   name: string;
   label: string;
-  type: { value: string };
-  initialValue: string | null | number;
+  type: string;
+  initialValue: FormFieldValueType;
   optionList: { value: string; label: string }[] | undefined;
   required: boolean;
 };
@@ -97,6 +106,7 @@ const getApplicationFormStep = async (
   if (!session?.id) {
     const resultFields = stepFormFields.formFields.map((field) => ({
       ...field,
+      type: field.type.value,
       initialValue: null,
       optionList: field.optionList?.options.map((option) => ({
         value: String(option.id),
@@ -166,6 +176,7 @@ const getApplicationFormStep = async (
 
   const resultFields = stepFormFields.formFields.map((field) => ({
     ...field,
+    type: field.type.value,
     initialValue: getInitialValue(
       fieldValues.find((value) => value.field.id === field.id)
     ),

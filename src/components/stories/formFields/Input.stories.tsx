@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Input } from "@/components/ui/input";
 
 const meta: Meta<typeof Input> = {
-  title: "UI Components/Input",
+  title: "UI Components/Form fields/Input",
   component: Input,
   tags: ["autodocs"],
 };
@@ -13,16 +13,14 @@ type Story = StoryObj<typeof Input>;
 
 export const Default: Story = {
   args: {
-    required: true,
     placeholder: "John Doe",
     type: "text",
   },
 };
 
-export const Error: Story = {
+export const Password: Story = {
   args: {
-    required: true,
-    placeholder: "John Doe",
-    type: "text",
+    placeholder: "Your password",
+    type: "password",
   },
 };
