@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export type Props = {
   formField: FormFieldData;
@@ -68,6 +69,41 @@ const DynamicFormField = ({ form, formField }: Props) => {
           )}
         />
       );
+    case FormFieldTypeEnum.radio:
+      return (
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>{label}</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value as string}
+                  className="flex flex-col space-y-1"
+                >
+                  {optionList?.map(({ value, label: optionLabel }) => (
+                    <FormItem
+                      className="flex items-center space-x-3 space-y-0"
+                      key={value}
+                    >
+                      <FormControl>
+                        <RadioGroupItem value={value} />
+                      </FormControl>
+                      <FormLabel className="font-normal cursor-pointer">
+                        {optionLabel}
+                      </FormLabel>
+                    </FormItem>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    case FormFieldTypeEnum.combobox:
     case FormFieldTypeEnum.select:
       return (
         <FormField

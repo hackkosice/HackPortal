@@ -24,6 +24,8 @@ const mapToZodType = (formField: FormFieldData) => {
     case FormFieldTypeEnum.text:
     case FormFieldTypeEnum.textarea:
     case FormFieldTypeEnum.select:
+    case FormFieldTypeEnum.radio:
+    case FormFieldTypeEnum.combobox:
       if (!formField.required) {
         return z.string().nullable();
       }
@@ -53,6 +55,8 @@ const getDefaultValues = (
         case FormFieldTypeEnum.text:
         case FormFieldTypeEnum.textarea:
         case FormFieldTypeEnum.select:
+        case FormFieldTypeEnum.radio:
+        case FormFieldTypeEnum.combobox:
           return [formField.name, initialValue ?? ""];
         case FormFieldTypeEnum.checkbox:
           return [formField.name, initialValue ?? false];

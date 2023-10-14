@@ -63,7 +63,12 @@ const saveFormFieldValue = async (
       });
       break;
     }
+    case FormFieldTypeEnum.combobox:
+    case FormFieldTypeEnum.radio:
     case FormFieldTypeEnum.select: {
+      if (!fieldValue.value) {
+        break;
+      }
       const option = await prisma.option.findUnique({
         select: {
           id: true,
