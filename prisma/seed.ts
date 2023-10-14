@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 const prisma = new PrismaClient();
 async function main() {
   const statuses = ["open", "submitted", "invited", "confirmed", "declined"];
@@ -12,14 +13,7 @@ async function main() {
     });
   }
 
-  const fieldTypes = [
-    "text",
-    "textarea",
-    "radio",
-    "select",
-    "file",
-    "checkbox",
-  ];
+  const fieldTypes: FormFieldType[] = Object.values(FormFieldTypeEnum);
 
   for (const fieldType of fieldTypes) {
     await prisma.formFieldType.upsert({

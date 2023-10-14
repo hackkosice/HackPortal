@@ -1,6 +1,7 @@
 import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 
 export type FormFieldValueType = string | boolean | null;
 
@@ -8,7 +9,7 @@ type FieldValue =
   | {
       value: string | null;
       option: { id: number; value: string } | null;
-      field: { type: { value: string }; id: number; stepId: number };
+      field: { type: FormFieldType; id: number; stepId: number };
     }
   | undefined;
 
@@ -22,7 +23,7 @@ const getInitialValue = (fieldValue: FieldValue): FormFieldValueType => {
     option,
     field: { type },
   } = fieldValue;
-  if (type.value === "checkbox") {
+  if (type === FormFieldTypeEnum.checkbox) {
     return value === "true";
   }
 
@@ -42,7 +43,7 @@ export type FormFieldData = {
   position: number;
   name: string;
   label: string;
-  type: string;
+  type: FormFieldType;
   initialValue: FormFieldValueType;
   optionList: { value: string; label: string }[] | undefined;
   required: boolean;
@@ -63,7 +64,7 @@ const getApplicationFormStep = async (
 ): Promise<ApplicationFormStepData> => {
   const session = await getServerSession(authOptions);
 
-  const stepFormFields = await prisma.applicationFormStep.findUnique({
+  const stepFormFieldsDb = await prisma.applicationFormStep.findUnique({
     select: {
       id: true,
       title: true,
@@ -98,15 +99,22 @@ const getApplicationFormStep = async (
     },
   });
 
-  if (!stepFormFields) {
+  if (!stepFormFieldsDb) {
     throw new Error("Step not found");
   }
+
+  const stepFormFields = {
+    ...stepFormFieldsDb,
+    formFields: stepFormFieldsDb.formFields.map((field) => ({
+      ...field,
+      type: field.type.value as FormFieldType,
+    })),
+  };
 
   // If user is not signed in return steps with empty initial values
   if (!session?.id) {
     const resultFields = stepFormFields.formFields.map((field) => ({
       ...field,
-      type: field.type.value,
       initialValue: null,
       optionList: field.optionList?.options.map((option) => ({
         value: String(option.id),
@@ -170,13 +178,18 @@ const getApplicationFormStep = async (
     throw new Error("Application not found");
   }
 
-  const fieldValues = applicationFormFieldValues.formValues.filter(
-    (value) => value.field.stepId === stepId
-  );
+  const fieldValues = applicationFormFieldValues.formValues
+    .filter((value) => value.field.stepId === stepId)
+    .map((value) => ({
+      ...value,
+      field: {
+        ...value.field,
+        type: value.field.type.value as FormFieldType,
+      },
+    }));
 
   const resultFields = stepFormFields.formFields.map((field) => ({
     ...field,
-    type: field.type.value,
     initialValue: getInitialValue(
       fieldValues.find((value) => value.field.id === field.id)
     ),
