@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/services/trpc";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";

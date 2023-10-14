@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Stack } from "../Stack";
+import { Stack } from "../ui/stack";
 import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Stack> = {

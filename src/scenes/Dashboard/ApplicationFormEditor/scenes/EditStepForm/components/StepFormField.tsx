@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
 import { TRPCClientError } from "@trpc/client";

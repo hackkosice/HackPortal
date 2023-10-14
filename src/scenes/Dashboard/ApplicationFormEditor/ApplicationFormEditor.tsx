@@ -10,7 +10,7 @@ import { Text } from "@/components/Text";
 import { trpc } from "@/services/trpc";
 import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
 
 const ApplicationFormEditor = () => {

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/services/trpc";
 import EditTitleDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";
 import StepFormField from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
-import { Stack } from "@/components/Stack";
+import { Stack } from "@/components/ui/stack";
 import NewFieldDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import Link from "next/link";
 
