@@ -1,88 +1,65 @@
-import React, { PropsWithChildren, useMemo } from "react";
-import { Direction, Size, Spacing } from "@/components/types";
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/components/lib/utils";
 
-export type StackProps = PropsWithChildren<{
-  spacing?: Size;
-  direction?: Direction;
-  alignItems?: "center" | "start" | "end" | "baseline" | "stretch";
-  spaceAfter?: Size;
-}>;
+const stackVariants = cva("flex w-full", {
+  variants: {
+    direction: {
+      column: "flex-col",
+      row: "flex-row",
+    },
+    spacing: {
+      small: "gap-2",
+      medium: "gap-4",
+      large: "gap-7",
+    },
+    alignItems: {
+      center: "items-center",
+      start: "items-start",
+      end: "items-end",
+      baseline: "items-baseline",
+      stretch: "items-stretch",
+    },
+    spaceAfter: {
+      small: "mb-1",
+      medium: "mb-3",
+      large: "mb-5",
+    },
+  },
+  defaultVariants: {
+    direction: "row",
+    spacing: "medium",
+    alignItems: "start",
+    spaceAfter: undefined,
+  },
+});
 
-const getDirectionClasses = (direction?: Direction) => {
-  switch (direction) {
-    case "column":
-      return "flex-col";
-    default:
-      return "flex-row";
+export interface StackProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof stackVariants> {}
+
+const Stack = React.forwardRef<HTMLDivElement, StackProps>(
+  (
+    { className, direction, spacing, alignItems, spaceAfter, ...props },
+    ref
+  ) => {
+    return (
+      <div
+        className={cn(
+          stackVariants({
+            direction,
+            spacing,
+            alignItems,
+            spaceAfter,
+            className,
+          })
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
   }
-};
+);
+Stack.displayName = "Stack";
 
-const getSpacingClasses = (spacing?: Size) => {
-  switch (spacing) {
-    case "small":
-      return "gap-2";
-    case "large":
-      return "gap-7";
-    default:
-      return "gap-4";
-  }
-};
-
-const getAlignItemsClasses = (alignItems?: string) => {
-  switch (alignItems) {
-    case "center":
-      return "items-center";
-    case "end":
-      return "items-end";
-    case "baseline":
-      return "items-baseline";
-    case "stretch":
-      return "items-stretch";
-    default:
-      return "items-start";
-  }
-};
-
-const getSpaceAfterClasses = (spaceAfter: Spacing | undefined) => {
-  switch (spaceAfter) {
-    case "small": {
-      return "mb-1";
-    }
-    case "medium": {
-      return "mb-3";
-    }
-    case "large": {
-      return "mb-5";
-    }
-    default: {
-      return "";
-    }
-  }
-};
-
-const STACK_BASE_CLASSES = "flex w-full";
-
-export const Stack = ({
-  children,
-  direction,
-  spacing,
-  alignItems = "start",
-  spaceAfter,
-}: StackProps) => {
-  const computedClasses = useMemo(() => {
-    const directionClasses = getDirectionClasses(direction);
-    const spacingClasses = getSpacingClasses(spacing);
-    const alignContentClasses = getAlignItemsClasses(alignItems);
-    const spaceAfterClasses = getSpaceAfterClasses(spaceAfter);
-
-    return [
-      directionClasses,
-      spacingClasses,
-      alignContentClasses,
-      spaceAfterClasses,
-    ].join(" ");
-  }, [direction, spacing, alignItems, spaceAfter]);
-  return (
-    <div className={`${STACK_BASE_CLASSES} ${computedClasses}`}>{children}</div>
-  );
-};
+export { Stack, stackVariants };
