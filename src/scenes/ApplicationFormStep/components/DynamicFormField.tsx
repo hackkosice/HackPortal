@@ -24,6 +24,22 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/components/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { Check } from "lucide-react";
+import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 export type Props = {
   formField: FormFieldData;
@@ -76,7 +92,7 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>{label}</FormLabel>
+              <FormLabel required={required}>{label}</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -104,6 +120,65 @@ const DynamicFormField = ({ form, formField }: Props) => {
         />
       );
     case FormFieldTypeEnum.combobox:
+      return (
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel required={required}>{label}</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="combobox"
+                      role="combobox"
+                      className={cn(
+                        "justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? optionList?.find(({ value }) => value === field.value)
+                            ?.label
+                        : "Select option"}
+                      <ChevronUpDownIcon className="h-4 w-4" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search option..." />
+                    <CommandEmpty>No options found.</CommandEmpty>
+                    <CommandGroup>
+                      {optionList?.map(({ value, label: optionLabel }) => (
+                        <CommandItem
+                          value={optionLabel}
+                          key={value}
+                          onSelect={() => {
+                            form.setValue(name, value);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              value === field.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {optionLabel}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
     case FormFieldTypeEnum.select:
       return (
         <FormField
