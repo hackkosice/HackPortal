@@ -26,10 +26,10 @@ const Label = React.forwardRef<
   );
   if (required) {
     return (
-      <>
+      <span>
         {labelComp}
         <span className="text-red-500 ml-1">*</span>
-      </>
+      </span>
     );
   }
   return labelComp;
