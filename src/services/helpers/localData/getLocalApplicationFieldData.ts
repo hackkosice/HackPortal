@@ -1,9 +1,11 @@
-import { LocalApplicationFieldData } from "@/services/helpers/localData/types";
+import { LocalApplicationFieldDataParsed } from "@/services/helpers/localData/types";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 
 const getLocalApplicationFieldData = (
-  fieldId: number
-): LocalApplicationFieldData | null => {
+  fieldId: number,
+  fieldType: FormFieldType
+): LocalApplicationFieldDataParsed | null => {
   const localApplicationData = getLocalApplicationData();
   if (!localApplicationData) {
     return null;
@@ -14,6 +16,13 @@ const getLocalApplicationFieldData = (
   );
   if (!matchingField) {
     return null;
+  }
+
+  if (fieldType === FormFieldTypeEnum.checkbox) {
+    return {
+      ...matchingField,
+      value: matchingField.value === "true",
+    };
   }
 
   return matchingField;
