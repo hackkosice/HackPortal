@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Stack } from "@/components/ui/stack";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import getLocalApplicationDataStepCompleted from "@/services/helpers/localData/getLocalApplicationDataStepCompleted";

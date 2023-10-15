@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useBreakpoints } from "@/services/hooks/useBreakpoints";
-import { Heading } from "@/components/Heading";
+import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 import { usePathname } from "next/navigation";

@@ -1,6 +1,6 @@
 import React from "react";
-import { Heading } from "@/components/Heading";
-import { Text } from "@/components/Text";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 import getTeam from "@/server/getters/team";
 
 const TeamManager = async () => {

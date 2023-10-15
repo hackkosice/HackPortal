@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import { trpc } from "@/services/trpc";
 import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
