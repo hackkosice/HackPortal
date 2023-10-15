@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import { trpc } from "@/services/trpc";
 import { Stack } from "@/components/ui/stack";
 import Link from "next/link";

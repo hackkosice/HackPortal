@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import Link from "next/link";
 
 const LandingPage = () => {

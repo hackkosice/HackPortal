@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import React from "react";
 
 const meta: Meta<typeof Card> = {

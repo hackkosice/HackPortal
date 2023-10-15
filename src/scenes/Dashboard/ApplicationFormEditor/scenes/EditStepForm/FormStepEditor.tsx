@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Heading } from "@/components/Heading";
+import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/services/trpc";
 import EditTitleDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";

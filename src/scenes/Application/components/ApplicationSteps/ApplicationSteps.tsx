@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
 import ApplicationStep from "@/scenes/Application/components/ApplicationSteps/components/ApplicationStep";
 import getApplicationData from "@/server/getters/application";

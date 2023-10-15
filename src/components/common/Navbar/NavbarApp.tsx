@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading } from "../../Heading";
+import { Heading } from "../../ui/heading";
 import { Button } from "@/components/ui/button";
 import NavbarLogo from "@/components/common/Navbar/components/NavbarLogo";
 import { Session } from "next-auth";

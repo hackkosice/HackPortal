@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text } from "@/components/Text";
+import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";

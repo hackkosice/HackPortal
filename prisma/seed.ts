@@ -1,5 +1,10 @@
+// noinspection ES6PreferShortImport
+
 import { PrismaClient } from "@prisma/client";
-import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
+import {
+  FormFieldType,
+  FormFieldTypeEnum,
+} from "../src/services/types/formFields";
 const prisma = new PrismaClient();
 async function main() {
   const statuses = ["open", "submitted", "invited", "confirmed", "declined"];
