@@ -49,7 +49,8 @@ const getDefaultValues = (
   return Object.fromEntries(
     formFields.map((formField) => {
       const initialValue = shouldUseLocalInitialValues
-        ? getLocalApplicationFieldData(formField.id)?.value ?? null
+        ? getLocalApplicationFieldData(formField.id, formField.type)?.value ??
+          null
         : formField.initialValue;
       switch (formField.type) {
         case FormFieldTypeEnum.text:

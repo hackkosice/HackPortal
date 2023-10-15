@@ -6,3 +6,8 @@ export type LocalApplicationFieldData = {
 };
 
 export type LocalApplicationData = LocalApplicationFieldData[];
+
+export type LocalApplicationFieldDataParsed = {
+  fieldId: number;
+  value: string | boolean;
+};
