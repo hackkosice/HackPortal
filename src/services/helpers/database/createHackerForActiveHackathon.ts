@@ -37,8 +37,6 @@ const createHackerForActiveHackathon = async (
   // Assuming there is always an active hackathon
   const activeHackathonId = (await getActiveHackathonId(prisma)) as number;
 
-  console.log(activeHackathonId);
-
   if (!hacker) {
     hacker = await prisma.hacker.create({
       data: {
