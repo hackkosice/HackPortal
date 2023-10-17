@@ -2,17 +2,23 @@
 
 import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import saveFormFieldValue from "@/server/services/helpers/saveFormFieldValue";
 
 export type SaveApplicationStepFormInput = {
-  fieldId: number;
-  value: string;
-}[];
+  stepId: string;
+  fieldValues: {
+    fieldId: number;
+    value: string;
+  }[];
+};
 
-const saveApplicationStepForm = async (input: SaveApplicationStepFormInput) => {
+const saveApplicationStepForm = async ({
+  fieldValues,
+  stepId,
+}: SaveApplicationStepFormInput) => {
   const session = await getServerSession(authOptions);
 
   if (!session?.id) {
@@ -39,12 +45,12 @@ const saveApplicationStepForm = async (input: SaveApplicationStepFormInput) => {
     throw new Error("Application not found");
   }
 
-  for (const fieldValue of input) {
+  for (const fieldValue of fieldValues) {
     await saveFormFieldValue(prisma, application.id, fieldValue);
   }
 
-  revalidatePath("/application");
-  revalidatePath("/application/form/step/[stepId]");
+  revalidatePath("/application", "page");
+  revalidatePath(`/application/form/step/${stepId}`, "page");
   redirect("/application");
 
   return {

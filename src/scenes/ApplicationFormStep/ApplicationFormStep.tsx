@@ -10,7 +10,7 @@ import {
 } from "@/server/getters/applicationFormStep";
 import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -20,6 +20,7 @@ export type Props = {
 
 const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
   const { push } = useRouter();
+  const { stepId } = useParams() as { stepId: string };
   const onFormSubmit = async (formData: Record<string, FormFieldValueType>) => {
     const payload = Object.keys(formData)
       .filter((key) => formData[key] !== null)
@@ -33,12 +34,18 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
 
     // If user is signedIn we can save the field values to the DB
     if (signedIn) {
-      saveApplicationStepForm(payload);
+      saveApplicationStepForm({
+        fieldValues: payload,
+        stepId,
+      });
       return;
     }
 
     // For unsigned users we will save the data to localStorage for later upload
-    updateLocalApplicationData(payload);
+    updateLocalApplicationData({
+      fieldValues: payload,
+      stepId,
+    });
     push("/application");
   };
 

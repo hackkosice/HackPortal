@@ -2,7 +2,7 @@ import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
 import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export type ApplicationStepData = {
   id: number;

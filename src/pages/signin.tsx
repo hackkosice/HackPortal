@@ -2,7 +2,7 @@ import React from "react";
 import SignInPage from "@/scenes/SignInPage/SignInPage";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getProviders } from "next-auth/react";
 
 export type SigninPageProps = InferGetServerSidePropsType<
