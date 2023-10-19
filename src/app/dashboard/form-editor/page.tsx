@@ -9,12 +9,13 @@ export const metadata: Metadata = {
   title: "Edit application form",
 };
 
-const DashboardPage = async () => {
+const FormEditorPage = async () => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
   const applicationFormSteps = await getApplicationFormSteps();
+
   return <ApplicationFormEditor applicationFormSteps={applicationFormSteps} />;
 };
 
-export default DashboardPage;
+export default FormEditorPage;

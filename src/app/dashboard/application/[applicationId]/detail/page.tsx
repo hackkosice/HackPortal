@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Application detail",
 };
 
-const DashboardPage = async ({
+const ApplicationDetailPage = async ({
   params,
 }: {
   params: { applicationId: string };
@@ -23,4 +23,4 @@ const DashboardPage = async ({
   return <ApplicationDetail applicationDetail={applicationDetail} />;
 };
 
-export default DashboardPage;
+export default ApplicationDetailPage;

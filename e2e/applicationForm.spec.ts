@@ -24,11 +24,15 @@ test.describe("application form", () => {
 
     await page.getByRole("button", { name: /^Sign in$/ }).click();
 
+    await page.waitForTimeout(2000);
+
     await page.getByRole("link", { name: "Edit application form" }).click();
 
     await expect(
       page.getByRole("heading", { name: "Application Form Editor" })
     ).toBeVisible();
+
+    await page.waitForTimeout(2000);
 
     await expect(page.getByText("General info")).toBeVisible();
 
@@ -48,6 +52,8 @@ test.describe("application form", () => {
 
     // Editing step
     await page.getByText("Step #2").click();
+
+    await page.waitForTimeout(2000);
 
     await expect(page.getByRole("heading", { name: "Step #2" })).toBeVisible();
 
@@ -75,7 +81,7 @@ test.describe("application form", () => {
     await page.getByText("Select a field type").click();
     await page.getByLabel("textarea").getByText("textarea").click();
     await page.getByLabel("Required").check();
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
       page.getByText("1. What is your experience with hackathons? (textarea)")
@@ -88,7 +94,7 @@ test.describe("application form", () => {
     await page.getByLabel("Name").fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
       page.getByText("2. I have been at the hackathon in the past. (checkbox)")
@@ -99,7 +105,7 @@ test.describe("application form", () => {
     await page.getByLabel("Name").fill("company");
     await page.getByText("Select a field type").click();
     await page.getByLabel("text", { exact: true }).getByText("text").click();
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
       page.getByText("3. What company do you work for? (text)")
@@ -119,7 +125,7 @@ test.describe("application form", () => {
     await page.getByLabel("Name").fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
       page.getByText("3. I have been at the hackathon in the past. (checkbox)")

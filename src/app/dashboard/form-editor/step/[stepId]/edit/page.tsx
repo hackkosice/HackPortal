@@ -10,13 +10,18 @@ export const metadata: Metadata = {
   title: "Edit application form step",
 };
 
-const DashboardPage = async ({ params }: { params: { stepId: string } }) => {
+const FormEditorStepPage = async ({
+  params,
+}: {
+  params: { stepId: string };
+}) => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
   const stepInfo = await getStepInfo(Number(params.stepId));
   const formFieldTypes = await getFormFieldTypes();
+
   return <FormStepEditor stepInfo={stepInfo} formFieldTypes={formFieldTypes} />;
 };
 
-export default DashboardPage;
+export default FormEditorStepPage;
