@@ -4,6 +4,7 @@ import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { FormFieldType } from "@/services/types/formFields";
+import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
 export type StepInfoData = {
   title: string;
@@ -18,21 +19,7 @@ export type StepInfoData = {
 };
 
 const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.id) {
-    throw new Error("User has to be signed in");
-  }
-
-  const organizer = await prisma.organizer.findUnique({
-    where: {
-      userId: session.id,
-    },
-  });
-
-  if (!organizer) {
-    throw new Error("Organizer not found");
-  }
+  await requireOrganizerSession();
 
   const step = await prisma.applicationFormStep.findFirst({
     where: {
