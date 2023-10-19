@@ -4,6 +4,7 @@ import { prisma } from "@/services/prisma";
 import createFormValuesObject from "@/server/services/helpers/createFormValuesObject";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
+import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
 export type ApplicationDetailData = {
   id: number;
@@ -14,21 +15,7 @@ export type ApplicationDetailData = {
 const getApplicationDetail = async (
   applicationId: number
 ): Promise<ApplicationDetailData> => {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.id) {
-    throw new Error("User has to be signed in");
-  }
-
-  const organizer = await prisma.organizer.findUnique({
-    where: {
-      userId: session.id,
-    },
-  });
-
-  if (!organizer) {
-    throw new Error("Organizer not found");
-  }
+  await requireOrganizerSession();
 
   const application = await prisma.application.findUnique({
     select: {

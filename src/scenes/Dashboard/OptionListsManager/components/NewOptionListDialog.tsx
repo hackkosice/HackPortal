@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,39 +22,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import editStep from "@/server/actions/dashboard/editStep";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import newOptionList from "@/server/actions/dashboard/optionListManager/newOptionList";
 
-const titleEditFormSchema = z.object({
-  title: z.string(),
+const newOptionListFormSchema = z.object({
+  name: z.string().min(1),
 });
 
-type TitleEditForm = z.infer<typeof titleEditFormSchema>;
+type NewOptionListForm = z.infer<typeof newOptionListFormSchema>;
 
-export type Props = {
-  stepId: number;
-  initialValue?: string;
-};
-
-const EditTitleDialog = ({ initialValue, stepId }: Props) => {
+const NewOptionListDialog = () => {
   const [isOpened, setIsOpened] = useState(false);
-  const form = useForm<TitleEditForm>({
-    resolver: zodResolver(titleEditFormSchema),
-    defaultValues: {
-      title: initialValue ?? "",
-    },
+  const form = useForm<NewOptionListForm>({
+    resolver: zodResolver(newOptionListFormSchema),
   });
 
-  const onEditTitleModalSave = async ({ title }: TitleEditForm) => {
-    await editStep({ stepId, title });
+  const onEditTitleModalSave = async ({ name }: NewOptionListForm) => {
+    await newOptionList({ name });
     setIsOpened(false);
   };
 
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="small">
-          <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
-          Edit title
+        <Button>
+          <PlusCircleIcon className="h-5 w-5 mr-1" />
+          Add new list
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -66,19 +58,23 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
           <form onSubmit={form.handleSubmit(onEditTitleModalSave)}>
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New title</FormLabel>
+                  <FormLabel>Option list name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Field label" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="My option list"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit">Save</Button>
+              <Button type="submit">Create</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -87,4 +83,4 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
   );
 };
 
-export default EditTitleDialog;
+export default NewOptionListDialog;
