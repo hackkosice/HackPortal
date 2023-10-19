@@ -1,13 +1,13 @@
+"use client";
+
 import React, { useCallback } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { trpc } from "@/services/trpc";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { signupSchema, SignUpSchema } from "@/server/services/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -18,6 +18,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { z } from "zod";
+import signUp from "@/server/actions/signUp";
+
+export const signupSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4).max(12),
+  localApplicationData: z
+    .array(
+      z.object({
+        fieldId: z.number(),
+        value: z.string(),
+      })
+    )
+    .optional(),
+});
+
+export type SignUpSchema = z.infer<typeof signupSchema>;
 
 const SignUp = () => {
   const router = useRouter();
@@ -25,23 +42,19 @@ const SignUp = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  const { mutateAsync } = trpc.signup.useMutation();
-
   const onSubmit = useCallback(
     async (data: SignUpSchema) => {
       const localApplicationData = getLocalApplicationData();
-      const result = await mutateAsync({
+      await signUp({
         ...data,
         localApplicationData,
       });
-      if (result.status === 201) {
-        clearLocalApplicationData();
-        router.push("/application");
-      } else if (result.status === 500) {
-        console.log(result.message);
-      }
+
+      // TODO handle error states
+      clearLocalApplicationData();
+      router.push("/application");
     },
-    [mutateAsync, router]
+    [router]
   );
 
   return (

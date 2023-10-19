@@ -1,15 +1,14 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { signinSchema } from "@/server/services/validation/auth";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
+import { signinSchema } from "@/server/schemas/auth";
 
 export const authOptions: AuthOptions = {
   pages: {
     signIn: "/signin",
-    signOut: "/signout",
   },
   providers: [
     CredentialsProvider({

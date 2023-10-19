@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Stack } from "@/components/ui/stack";
 import {
@@ -12,16 +14,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
-import { SigninPageProps } from "@/pages/signin";
+import { ClientSafeProvider, LiteralUnion, signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import GithubButton from "./components/SocialButtons/GithubButton";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignInSchema, signinSchema } from "@/server/services/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BuiltInProviderType } from "next-auth/providers";
+import { signinSchema, SignInSchema } from "@/server/schemas/auth";
 
-const SignInPage = ({ providers }: SigninPageProps) => {
+type SigninPageProps = {
+  providers: Record<
+    LiteralUnion<BuiltInProviderType>,
+    ClientSafeProvider
+  > | null;
+};
+
+const SignIn = ({ providers }: SigninPageProps) => {
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -29,9 +38,8 @@ const SignInPage = ({ providers }: SigninPageProps) => {
       password: "",
     },
   });
-  const {
-    query: { error },
-  } = useRouter();
+  const searchParams = useSearchParams();
+  const error = searchParams?.get("error");
 
   const onSubmit = async (data: SignInSchema) => {
     await signIn("credentials", {
@@ -99,7 +107,7 @@ const SignInPage = ({ providers }: SigninPageProps) => {
           <Button variant="outline" asChild>
             <Link href="/signup">Sign up with email</Link>
           </Button>
-          {Object.keys(providers).includes("github") && (
+          {providers && Object.keys(providers).includes("github") && (
             <GithubButton onClick={() => signIn("github")} />
           )}
         </Stack>
@@ -108,4 +116,4 @@ const SignInPage = ({ providers }: SigninPageProps) => {
   );
 };
 
-export default SignInPage;
+export default SignIn;
