@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { trpc } from "@/services/trpc";
 import {
   Dialog,
   DialogContent,
@@ -32,9 +31,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import createNewFormField from "@/server/actions/dashboard/createNewFormField";
+import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 
 export type Props = {
   stepId: number;
+  formFieldTypes: FormFieldTypesData;
 };
 
 const newFieldFormSchema = z.object({
@@ -46,17 +48,16 @@ const newFieldFormSchema = z.object({
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
 
-const NewFieldDialog = ({ stepId }: Props) => {
+const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
   const [isOpened, setIsOpened] = useState(false);
-  const utils = trpc.useContext();
-  const { data: dataFieldTypes } = trpc.formFieldTypes.useQuery();
-  const { mutateAsync: newFormField } = trpc.newFormField.useMutation({
-    onSuccess: () => {
-      utils.stepInfo.invalidate();
-    },
-  });
   const form = useForm<NewFieldForm>({
     resolver: zodResolver(newFieldFormSchema),
+    defaultValues: {
+      label: "",
+      name: "",
+      typeId: "",
+      required: false,
+    },
   });
 
   const onNewFieldSubmit = async ({
@@ -65,7 +66,7 @@ const NewFieldDialog = ({ stepId }: Props) => {
     typeId,
     required,
   }: NewFieldForm) => {
-    await newFormField({
+    await createNewFormField({
       label,
       name,
       stepId,
@@ -135,7 +136,7 @@ const NewFieldDialog = ({ stepId }: Props) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {dataFieldTypes?.data.map((fieldType) => (
+                        {formFieldTypes.map((fieldType) => (
                           <SelectItem
                             key={fieldType.id}
                             value={String(fieldType.id)}

@@ -3,10 +3,9 @@ import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { trpc } from "@/services/trpc";
 import Link from "next/link";
-import { TRPCClientError } from "@trpc/client";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
+import deleteStep from "@/server/actions/dashboard/deleteStep";
 
 type StepProps = {
   stepId: number;
@@ -17,29 +16,27 @@ type StepProps = {
 const Step = ({ title, position, stepId }: StepProps) => {
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
     useState(false);
-  const utils = trpc.useContext();
-  const { mutateAsync: deleteStep } = trpc.deleteStep.useMutation({
-    onSuccess: async () => {
-      utils.steps.invalidate();
-    },
-  });
   const onStepDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      await deleteStep({ id: stepId, force: false });
+      await deleteStep({ stepId, force: false });
     } catch (err) {
-      if (err instanceof TRPCClientError && err.data.code == "CONFLICT") {
-        setIsConfirmationModalOpened(true);
-      } else {
-        throw err;
+      if (err instanceof Error) {
+        if (
+          err.message === "This form field has some values and force is false"
+        ) {
+          setIsConfirmationModalOpened(true);
+          return;
+        }
       }
+      throw err;
     }
   };
 
   const onConfirmClose = async (value: boolean) => {
     if (value) {
-      await deleteStep({ id: stepId, force: true });
+      await deleteStep({ stepId, force: true });
     }
     setIsConfirmationModalOpened(false);
   };

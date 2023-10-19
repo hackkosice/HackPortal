@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { trpc } from "@/services/trpc";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import editStep from "@/server/actions/dashboard/editStep";
 
 const titleEditFormSchema = z.object({
   title: z.string(),
@@ -38,18 +38,12 @@ export type Props = {
 
 const EditTitleDialog = ({ initialValue, stepId }: Props) => {
   const [isOpened, setIsOpened] = useState(false);
-  const utils = trpc.useContext();
-  const { mutateAsync: editStep } = trpc.editStep.useMutation({
-    onSuccess: () => {
-      utils.stepInfo.invalidate();
-    },
-  });
   const form = useForm<TitleEditForm>({
     resolver: zodResolver(titleEditFormSchema),
   });
 
   const onEditTitleModalSave = async ({ title }: TitleEditForm) => {
-    await editStep({ id: stepId, title });
+    await editStep({ stepId, title });
     setIsOpened(false);
   };
 
