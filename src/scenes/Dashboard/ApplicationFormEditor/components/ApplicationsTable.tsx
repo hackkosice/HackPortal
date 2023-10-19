@@ -1,10 +1,10 @@
 import React from "react";
-import { trpc } from "@/services/trpc";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import getApplicationsList from "@/server/getters/dashboard/applicationList";
 
-const ApplicationsTable = () => {
-  const { data } = trpc.applicationsList.useQuery();
+const ApplicationsTable = async () => {
+  const { applications } = await getApplicationsList();
   return (
     <div className="relative overflow-x-auto mt-5">
       <table className="w-full text-sm text-left text-gray-500 ">
@@ -23,7 +23,7 @@ const ApplicationsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.data.map((application, index) => (
+          {applications.map((application, index) => (
             <tr className="bg-white border-b" key={application.id}>
               <th
                 scope="row"

@@ -8,47 +8,49 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/services/trpc";
 import EditTitleDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";
 import StepFormField from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
 import { Stack } from "@/components/ui/stack";
 import NewFieldDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import Link from "next/link";
+import { StepInfoData } from "@/server/getters/dashboard/stepInfo";
+import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 
 export type Props = {
-  stepId: number;
+  stepInfo: StepInfoData;
+  formFieldTypes: FormFieldTypesData;
 };
 
-const FormStepEditor = ({ stepId }: Props) => {
-  const { data } = trpc.stepInfo.useQuery({ id: stepId });
+const FormStepEditor = ({
+  stepInfo: { title, formFields, id },
+  formFieldTypes,
+}: Props) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{data?.data.title}</CardTitle>
-        <EditTitleDialog initialValue={data?.data.title} stepId={stepId} />
+        <CardTitle>{title}</CardTitle>
+        <EditTitleDialog initialValue={title} stepId={id} />
       </CardHeader>
       <CardContent>
         <Heading size="small" spaceAfter="medium">
           Form fields
         </Heading>
         <Stack direction="column" spacing="small" spaceAfter="medium">
-          {data?.data.formFields.map(
-            ({ id, label, position, type: { value }, required }) => (
-              <StepFormField
-                key={id}
-                formFieldId={id}
-                label={label}
-                type={value}
-                position={position}
-                required={required}
-              />
-            )
-          )}
+          {formFields.map(({ id, label, position, type, required }) => (
+            <StepFormField
+              key={id}
+              fieldId={id}
+              label={label}
+              type={type}
+              position={position}
+              required={required}
+            />
+          ))}
         </Stack>
       </CardContent>
       <CardFooter>
         <Stack direction="column">
-          <NewFieldDialog stepId={stepId} />
+          <NewFieldDialog stepId={id} formFieldTypes={formFieldTypes} />
           <Button asChild variant="outline" size="small">
             <Link href="/dashboard/form-editor">Back to steps</Link>
           </Button>

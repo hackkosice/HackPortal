@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -6,24 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Text } from "@/components/ui/text";
-import { trpc } from "@/services/trpc";
 import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
 import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
+import { ApplicationFormStepsData } from "@/server/getters/dashboard/applicationFormSteps";
+import createNewStep from "@/server/actions/dashboard/createNewStep";
 
-const ApplicationFormEditor = () => {
-  const { data, isLoading } = trpc.steps.useQuery();
-  const utils = trpc.useContext();
-  const { mutateAsync: newStep } = trpc.newStep.useMutation({
-    onSuccess: () => {
-      utils.steps.invalidate();
-    },
-  });
-
-  const createNewStep = () => {
-    newStep();
+type ApplicationFormEditorProps = {
+  applicationFormSteps: ApplicationFormStepsData;
+};
+const ApplicationFormEditor = ({
+  applicationFormSteps,
+}: ApplicationFormEditorProps) => {
+  const onCreateNewStepClick = () => {
+    createNewStep();
   };
 
   return (
@@ -32,16 +31,15 @@ const ApplicationFormEditor = () => {
         <CardTitle>Application Form Editor</CardTitle>
       </CardHeader>
       <CardContent>
-        {isLoading && <Text>Loading...</Text>}
         <Stack direction="column" spaceAfter="medium" spacing="small">
-          {data?.data.map(({ title, id, position }) => (
+          {applicationFormSteps.map(({ title, id, position }) => (
             <Step key={id} stepId={id} title={title} position={position} />
           ))}
         </Stack>
       </CardContent>
       <CardFooter>
         <Stack direction="column">
-          <Button onClick={createNewStep}>Create new step</Button>
+          <Button onClick={onCreateNewStepClick}>Create new step</Button>
           <Button asChild size="small" variant="outline">
             <Link href="/dashboard">Back to dashboard</Link>
           </Button>

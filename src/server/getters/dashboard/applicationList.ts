@@ -1,11 +1,34 @@
-import { procedure } from "@/server/trpc";
-import { requireOrganizer } from "@/server/services/requireOrganizer";
 import createFormValuesObject from "@/server/services/helpers/createFormValuesObject";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { prisma } from "@/services/prisma";
 
-const applicationsList = procedure.query(async ({ ctx }) => {
-  await requireOrganizer(ctx);
+export type ApplicationListData = {
+  applications: {
+    id: number;
+    status: string;
+    values: { [p: string]: string };
+  }[];
+};
 
-  const applicationsDb = await ctx.prisma.application.findMany({
+const getApplicationsList = async (): Promise<ApplicationListData> => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.id) {
+    throw new Error("User has to be signed in");
+  }
+
+  const organizer = await prisma.organizer.findUnique({
+    where: {
+      userId: session.id,
+    },
+  });
+
+  if (!organizer) {
+    throw new Error("Organizer not found");
+  }
+
+  const applicationsDb = await prisma.application.findMany({
     select: {
       id: true,
       status: {
@@ -43,9 +66,8 @@ const applicationsList = procedure.query(async ({ ctx }) => {
   }));
 
   return {
-    message: "Application found",
-    data: applications,
+    applications,
   };
-});
+};
 
-export default applicationsList;
+export default getApplicationsList;

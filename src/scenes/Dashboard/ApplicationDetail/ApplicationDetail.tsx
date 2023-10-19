@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { trpc } from "@/services/trpc";
 import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
 import {
@@ -11,13 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ApplicationDetailData } from "@/server/getters/dashboard/applicationDetail";
 
 export type Props = {
-  applicationId: number;
+  applicationDetail: ApplicationDetailData;
 };
 
-const ApplicationDetail = ({ applicationId }: Props) => {
-  const { data } = trpc.applicationInfo.useQuery({ id: applicationId });
+const ApplicationDetail = ({ applicationDetail }: Props) => {
   return (
     <Card>
       <CardHeader>
@@ -25,13 +24,12 @@ const ApplicationDetail = ({ applicationId }: Props) => {
       </CardHeader>
       <CardContent>
         <Stack direction="column" spacing="small">
-          {data &&
-            Object.keys(data.data.values).map((key) => (
-              <Text key={key}>
-                <span className="font-bold mr-1">{key}:</span>
-                {data.data.values[key]}
-              </Text>
-            ))}
+          {Object.keys(applicationDetail.values).map((key) => (
+            <Text key={key}>
+              <span className="font-bold mr-1">{key}:</span>
+              {applicationDetail.values[key]}
+            </Text>
+          ))}
         </Stack>
       </CardContent>
       <CardFooter>
