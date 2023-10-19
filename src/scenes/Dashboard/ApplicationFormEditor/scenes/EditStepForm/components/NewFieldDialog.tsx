@@ -175,7 +175,7 @@ const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
                 )}
               />
               <DialogFooter>
-                <Button type="submit">Create new field</Button>
+                <Button type="submit">Save new field</Button>
               </DialogFooter>
             </Stack>
           </form>

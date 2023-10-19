@@ -12,6 +12,7 @@ const DashboardPage = async () => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
+
   return <Dashboard />;
 };
 
