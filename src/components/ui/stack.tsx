@@ -2,7 +2,7 @@ import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/components/lib/utils";
 
-const stackVariants = cva("flex w-full", {
+const stackVariants = cva("flex", {
   variants: {
     direction: {
       column: "flex-col",

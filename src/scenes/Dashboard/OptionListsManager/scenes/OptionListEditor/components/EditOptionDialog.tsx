@@ -22,46 +22,59 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import createNewOptionList from "@/server/actions/dashboard/optionListManager/createNewOptionList";
+import editOption from "@/server/actions/dashboard/optionListManager/editOption";
 
-const newOptionListFormSchema = z.object({
-  name: z.string().min(1),
+const editOptionFormSchema = z.object({
+  value: z.string().min(1),
 });
 
-type NewOptionListForm = z.infer<typeof newOptionListFormSchema>;
+type EditOptionForm = z.infer<typeof editOptionFormSchema>;
 
-const NewOptionListDialog = () => {
-  const [isOpened, setIsOpened] = useState(false);
-  const form = useForm<NewOptionListForm>({
-    resolver: zodResolver(newOptionListFormSchema),
+type EditOptionDialogProps = {
+  optionId: number;
+  initialValue: string;
+  isOpened: boolean;
+  onClose: () => void;
+};
+const EditOptionDialog = ({
+  optionId,
+  initialValue,
+  isOpened,
+  onClose,
+}: EditOptionDialogProps) => {
+  const form = useForm<EditOptionForm>({
+    resolver: zodResolver(editOptionFormSchema),
+    defaultValues: {
+      value: initialValue,
+    },
   });
 
-  const onNewOptionListSave = async ({ name }: NewOptionListForm) => {
-    await createNewOptionList({ name });
-    setIsOpened(false);
+  const onEditOptionSave = async ({ value }: EditOptionForm) => {
+    await editOption({ optionId, newValue: value });
+    onClose();
   };
 
   return (
-    <Dialog onOpenChange={setIsOpened} open={isOpened}>
-      <DialogTrigger asChild>
-        <Button>
-          <PlusCircleIcon className="h-5 w-5 mr-1" />
-          Add new list
-        </Button>
-      </DialogTrigger>
+    <Dialog
+      onOpenChange={(value) => {
+        if (!value) {
+          onClose();
+        }
+      }}
+      open={isOpened}
+    >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create new option list</DialogTitle>
+          <DialogTitle>Edit option</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onNewOptionListSave)}>
+          <form onSubmit={form.handleSubmit(onEditOptionSave)}>
             <FormField
               control={form.control}
-              name="name"
+              name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Option list name</FormLabel>
+                  <FormLabel>Option value</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
@@ -74,7 +87,7 @@ const NewOptionListDialog = () => {
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit">Create</Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -83,4 +96,4 @@ const NewOptionListDialog = () => {
   );
 };
 
-export default NewOptionListDialog;
+export default EditOptionDialog;

@@ -23,51 +23,53 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import createNewOptionList from "@/server/actions/dashboard/optionListManager/createNewOptionList";
+import createNewOptions from "@/server/actions/dashboard/optionListManager/createNewOptions";
 
-const newOptionListFormSchema = z.object({
-  name: z.string().min(1),
+const newOptionFormSchema = z.object({
+  value: z.string().min(1),
 });
 
-type NewOptionListForm = z.infer<typeof newOptionListFormSchema>;
+type NewOptionForm = z.infer<typeof newOptionFormSchema>;
 
-const NewOptionListDialog = () => {
+type NewOptionListDialogProps = {
+  optionListId: number;
+};
+const NewOptionDialog = ({ optionListId }: NewOptionListDialogProps) => {
   const [isOpened, setIsOpened] = useState(false);
-  const form = useForm<NewOptionListForm>({
-    resolver: zodResolver(newOptionListFormSchema),
+  const form = useForm<NewOptionForm>({
+    resolver: zodResolver(newOptionFormSchema),
   });
 
-  const onNewOptionListSave = async ({ name }: NewOptionListForm) => {
-    await createNewOptionList({ name });
+  const onNewOptiontSave = async ({ value }: NewOptionForm) => {
+    await createNewOptions({
+      optionListId,
+      options: [value],
+    });
     setIsOpened(false);
   };
 
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button>
+        <Button size="small">
           <PlusCircleIcon className="h-5 w-5 mr-1" />
-          Add new list
+          Add new option
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create new option list</DialogTitle>
+          <DialogTitle>Create new option</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onNewOptionListSave)}>
+          <form onSubmit={form.handleSubmit(onNewOptiontSave)}>
             <FormField
               control={form.control}
-              name="name"
+              name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Option list name</FormLabel>
+                  <FormLabel>Option value</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="My option list"
-                      {...field}
-                    />
+                    <Input type="text" placeholder="Value" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,4 +85,4 @@ const NewOptionListDialog = () => {
   );
 };
 
-export default NewOptionListDialog;
+export default NewOptionDialog;
