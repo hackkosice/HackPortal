@@ -1,5 +1,7 @@
 import { prisma } from "@/services/prisma";
 import requireAnySession from "@/server/services/helpers/requireAnySession";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export type TeamData = {
   message: string;
@@ -13,7 +15,15 @@ export type TeamData = {
 };
 
 const getTeam = async (): Promise<TeamData> => {
-  const sessionId = await requireAnySession();
+  const session = await getServerSession(authOptions);
+  if (!session?.id) {
+    return {
+      message: "User has to be signed in",
+      data: {
+        team: null,
+      },
+    };
+  }
   const hacker = await prisma.hacker.findUnique({
     select: {
       id: true,
@@ -26,7 +36,7 @@ const getTeam = async (): Promise<TeamData> => {
       },
     },
     where: {
-      userId: sessionId,
+      userId: session.id,
     },
   });
 

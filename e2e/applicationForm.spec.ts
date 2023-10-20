@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { test, expect } from "./fixtures/custom-test";
 import { PrismaClient } from "@prisma/client";
 import prepareDBBeforeTest from "./helpers/prepareDBBeforeTest";
 
@@ -13,26 +14,8 @@ test.describe("application form", () => {
     await prisma.$disconnect();
   });
 
-  test("editing application form", async ({ page }) => {
-    await page.goto("/");
-
-    await page.getByRole("link", { name: "Sign in" }).click();
-
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
-    await page.fill('input[name="email"]', "test-org@hackkosice.com");
-    await page.fill('input[name="password"]', "test123");
-
-    await page.getByRole("button", { name: /^Sign in$/ }).click();
-
-    await page.waitForTimeout(2000);
-
-    await page.getByRole("link", { name: "Edit application form" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Application Form Editor" })
-    ).toBeVisible();
-
-    await page.waitForTimeout(2000);
+  test("editing application form", async ({ page, dashboardPage }) => {
+    await dashboardPage.openFormEditor();
 
     await expect(page.getByText("General info")).toBeVisible();
 
@@ -138,17 +121,11 @@ test.describe("application form", () => {
     await expect(page.getByText("Experience")).toBeVisible();
   });
 
-  test("submitting application form (signed in hacker)", async ({ page }) => {
-    await page.goto("/");
-
-    await page.getByRole("link", { name: "Sign in" }).click();
-
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
-    await page.fill('input[name="email"]', "test-hacker@test.com");
-    await page.fill('input[name="password"]', "test123");
-
-    await page.getByRole("button", { name: /^Sign in$/ }).click();
-
+  test("submitting application form (signed in hacker)", async ({
+    page,
+    applicationPage,
+  }) => {
+    await applicationPage.openSignedIn();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -226,10 +203,11 @@ test.describe("application form", () => {
     await expect(page.getByText("Application status: submitted")).toBeVisible();
   });
 
-  test("submitting application form (unsigned hacker)", async ({ page }) => {
-    await page.goto("/");
-
-    await page.getByRole("link", { name: "Start application" }).click();
+  test("submitting application form (unsigned hacker)", async ({
+    page,
+    applicationPage,
+  }) => {
+    await applicationPage.openUnsigned();
 
     await expect(page.getByText("You are not signed in")).toBeVisible();
     await expect(page.getByText("Application status: open")).toBeVisible();
@@ -298,17 +276,7 @@ test.describe("application form", () => {
     await expect(page.getByText("Application status: open")).toBeVisible();
   });
 
-  test("see submitted applications", async ({ page }) => {
-    await page.goto("/");
-
-    await page.getByRole("link", { name: "Sign in" }).click();
-
-    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
-    await page.fill('input[name="email"]', "test-org@hackkosice.com");
-    await page.fill('input[name="password"]', "test123");
-
-    await page.getByRole("button", { name: /^Sign in$/ }).click();
-
+  test("see submitted applications", async ({ page, dashboardPage }) => {
     await expect(
       page.getByRole("heading", {
         name: "Dashboard Organizer",
