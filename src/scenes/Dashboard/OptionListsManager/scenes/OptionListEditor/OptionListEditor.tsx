@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import getOptionList from "@/server/getters/dashboard/optionListManager/getOptionList";
+import OptionsTable from "@/scenes/Dashboard/OptionListsManager/scenes/OptionListEditor/components/OptionsTable";
 
 type OptionListEditorProps = {
   optionListId: number;
@@ -20,7 +21,9 @@ const OptionListEditor = async ({ optionListId }: OptionListEditorProps) => {
       <CardHeader>
         <CardTitle>Option List Editor</CardTitle>
       </CardHeader>
-      <CardContent>Editing option list {optionList.name}</CardContent>
+      <CardContent>
+        <OptionsTable optionList={optionList} />
+      </CardContent>
       <CardFooter>
         <Button asChild variant="outline">
           <Link href="/dashboard/option-lists">Back to option lists</Link>

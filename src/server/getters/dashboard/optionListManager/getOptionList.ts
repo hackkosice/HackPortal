@@ -1,10 +1,14 @@
 import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
+export type OptionListOption = {
+  id: number;
+  value: string;
+};
 export type OptionList = {
   id: number;
   name: string;
-  options: { id: number; value: string }[];
+  options: OptionListOption[];
 };
 
 export type GetOptionListInput = {
