@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import FormStepEditor from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
 import getStepInfo from "@/server/getters/dashboard/stepInfo";
-import getFormFieldTypes from "@/server/getters/dashboard/formFieldTypes";
 
 export const metadata: Metadata = {
   title: "Edit application form step",
