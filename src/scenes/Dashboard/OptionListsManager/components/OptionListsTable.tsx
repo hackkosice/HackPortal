@@ -89,7 +89,7 @@ const columns: ColumnDef<OptionList>[] = [
     header: "Number of options",
   },
   {
-    id: "edit",
+    id: "actions",
     cell: ({ row }) => {
       return <ActionsCell optionList={row.original} />;
     },

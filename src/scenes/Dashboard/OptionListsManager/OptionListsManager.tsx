@@ -22,7 +22,7 @@ const OptionListsManager = async () => {
         <OptionListsTable optionLists={optionLists} />
       </CardContent>
       <CardFooter>
-        <Button asChild>
+        <Button variant="outline" asChild>
           <Link href="/dashboard">Back to Dashboard</Link>
         </Button>
       </CardFooter>
