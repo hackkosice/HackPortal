@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/command";
 import { Check } from "lucide-react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type Props = {
   formField: FormFieldData;
@@ -47,6 +48,7 @@ export type Props = {
 };
 
 const DynamicFormField = ({ form, formField }: Props) => {
+  const [openCombobox, setOpenCombobox] = useState(false);
   const { label, name, type, optionList, required } = formField;
   switch (type) {
     case FormFieldTypeEnum.text:
@@ -127,7 +129,7 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel required={required}>{label}</FormLabel>
-              <Popover>
+              <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -146,30 +148,33 @@ const DynamicFormField = ({ form, formField }: Props) => {
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
+                <PopoverContent className="w-96 p-0">
                   <Command>
                     <CommandInput placeholder="Search option..." />
                     <CommandEmpty>No options found.</CommandEmpty>
                     <CommandGroup>
-                      {optionList?.map(({ value, label: optionLabel }) => (
-                        <CommandItem
-                          value={optionLabel}
-                          key={value}
-                          onSelect={() => {
-                            form.setValue(name, value);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {optionLabel}
-                        </CommandItem>
-                      ))}
+                      <ScrollArea className="h-72">
+                        {optionList?.map(({ value, label: optionLabel }) => (
+                          <CommandItem
+                            value={optionLabel}
+                            key={value}
+                            onSelect={() => {
+                              form.setValue(name, value);
+                              setOpenCombobox(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {optionLabel}
+                          </CommandItem>
+                        ))}
+                      </ScrollArea>
                     </CommandGroup>
                   </Command>
                 </PopoverContent>

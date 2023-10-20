@@ -14,17 +14,18 @@ import { Stack } from "@/components/ui/stack";
 import NewFieldDialog from "@/scenes/Dashboard/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import Link from "next/link";
 import { StepInfoData } from "@/server/getters/dashboard/stepInfo";
-import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import getFormFieldTypes from "@/server/getters/dashboard/formFieldTypes";
+import getOptionLists from "@/server/getters/dashboard/optionListManager/getOptionLists";
 
 export type Props = {
   stepInfo: StepInfoData;
-  formFieldTypes: FormFieldTypesData;
 };
 
-const FormStepEditor = ({
+const FormStepEditor = async ({
   stepInfo: { title, formFields, id },
-  formFieldTypes,
 }: Props) => {
+  const formFieldTypes = await getFormFieldTypes();
+  const optionLists = await getOptionLists();
   return (
     <Card>
       <CardHeader>
@@ -50,7 +51,11 @@ const FormStepEditor = ({
       </CardContent>
       <CardFooter>
         <Stack direction="column">
-          <NewFieldDialog stepId={id} formFieldTypes={formFieldTypes} />
+          <NewFieldDialog
+            stepId={id}
+            formFieldTypes={formFieldTypes}
+            optionLists={optionLists}
+          />
           <Button asChild variant="outline" size="small">
             <Link href="/dashboard/form-editor">Back to steps</Link>
           </Button>

@@ -5,7 +5,6 @@ export type OptionList = {
   id: number;
   name: string;
   optionsLength: number;
-  options: { id: number; value: string }[];
 };
 export type OptionListsData = OptionList[];
 const getOptionLists = async (): Promise<OptionListsData> => {
@@ -24,7 +23,8 @@ const getOptionLists = async (): Promise<OptionListsData> => {
     },
   });
   return optionLists.map((optionList) => ({
-    ...optionList,
+    id: optionList.id,
+    name: optionList.name,
     optionsLength: optionList.options.length,
   }));
 };

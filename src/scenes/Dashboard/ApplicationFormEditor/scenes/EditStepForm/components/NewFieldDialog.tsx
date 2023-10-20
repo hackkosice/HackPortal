@@ -33,22 +33,26 @@ import {
 } from "@/components/ui/select";
 import createNewFormField from "@/server/actions/dashboard/createNewFormField";
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import { FormFieldTypesWithOptions } from "@/services/types/formFields";
+import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 
 export type Props = {
   stepId: number;
   formFieldTypes: FormFieldTypesData;
+  optionLists: OptionListsData;
 };
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
   name: z.string().min(1),
   typeId: z.string().min(1),
+  optionListId: z.string().min(1).optional(),
   required: z.boolean().optional(),
 });
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
 
-const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
+const NewFieldDialog = ({ stepId, formFieldTypes, optionLists }: Props) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewFieldForm>({
     resolver: zodResolver(newFieldFormSchema),
@@ -60,11 +64,20 @@ const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
     },
   });
 
+  const selectedFieldId = form.watch("typeId");
+  const selectedFieldType = formFieldTypes.find(
+    (fieldType) => fieldType.id === Number(selectedFieldId)
+  );
+  const hasOptions =
+    selectedFieldType &&
+    FormFieldTypesWithOptions.includes(selectedFieldType.value);
+
   const onNewFieldSubmit = async ({
     label,
     name,
     typeId,
     required,
+    optionListId,
   }: NewFieldForm) => {
     await createNewFormField({
       label,
@@ -72,6 +85,7 @@ const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
       stepId,
       typeId: Number(typeId),
       required: Boolean(required),
+      optionListId: optionListId ? Number(optionListId) : undefined,
     });
     setIsOpened(false);
   };
@@ -150,6 +164,38 @@ const NewFieldDialog = ({ stepId, formFieldTypes }: Props) => {
                   </FormItem>
                 )}
               />
+              {hasOptions && (
+                <FormField
+                  control={form.control}
+                  name="optionListId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Connected option list</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select an option list" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {optionLists.map((optionList) => (
+                            <SelectItem
+                              key={optionList.id}
+                              value={String(optionList.id)}
+                            >
+                              {optionList.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="required"
