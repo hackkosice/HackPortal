@@ -1,6 +1,4 @@
 import createFormValuesObject from "@/server/services/helpers/createFormValuesObject";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
