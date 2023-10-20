@@ -34,16 +34,16 @@ describe("FormRenderer", () => {
     expect(input).toBeVisible();
     expect(button).toBeVisible();
 
-    act(() => userEvent.click(button));
+    await act(() => userEvent.click(button));
     expect(onSubmitMock).not.toHaveBeenCalled();
     await waitFor(() =>
       expect(screen.getByText("This field is required")).toBeVisible()
     );
 
-    act(() => userEvent.type(input, "John"));
+    await act(() => userEvent.type(input, "John"));
     expect(input).toHaveValue("John");
 
-    act(() => userEvent.click(button));
+    await act(() => userEvent.click(button));
     await waitFor(() => expect(onSubmitMock).toHaveBeenCalledTimes(1));
   });
 });

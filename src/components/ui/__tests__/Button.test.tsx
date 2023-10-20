@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Link from "next/link";
 describe("Button", () => {
@@ -9,16 +9,16 @@ describe("Button", () => {
     expect(getByRole("button", { name: "Click me" })).toBeVisible();
   });
 
-  it("should call onClick callback on button click", () => {
+  it("should call onClick callback on button click", async () => {
     const onClick = jest.fn();
     const { getByRole } = render(<Button onClick={onClick}>Click me</Button>);
     const button = getByRole("button", { name: "Click me" });
-    userEvent.click(button);
+    await act(() => userEvent.click(button));
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it("should behave as a submit button when having input as child", () => {
+  it("should behave as a submit button when having input as child", async () => {
     const onClick = jest.fn();
     const onSubmit = jest.fn((e) => e.preventDefault());
     const { getByRole } = render(
@@ -29,12 +29,12 @@ describe("Button", () => {
       </form>
     );
     const button = getByRole("button", { name: "Click me" });
-    userEvent.click(button);
+    await act(() => userEvent.click(button));
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
-  it("should behave as a Link when having link as child", () => {
+  it("should behave as a Link when having link as child", async () => {
     const onClick = jest.fn();
     const { getByRole } = render(
       <Button onClick={onClick}>
@@ -42,7 +42,7 @@ describe("Button", () => {
       </Button>
     );
     const button = getByRole("link", { name: "Click me" });
-    userEvent.click(button);
+    await act(() => userEvent.click(button));
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(button).toHaveAttribute("href", "/signin");
