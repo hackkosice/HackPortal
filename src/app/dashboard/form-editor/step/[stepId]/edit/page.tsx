@@ -19,9 +19,8 @@ const FormEditorStepPage = async ({
     redirect("/application");
   }
   const stepInfo = await getStepInfo(Number(params.stepId));
-  const formFieldTypes = await getFormFieldTypes();
 
-  return <FormStepEditor stepInfo={stepInfo} formFieldTypes={formFieldTypes} />;
+  return <FormStepEditor stepInfo={stepInfo} />;
 };
 
 export default FormEditorStepPage;

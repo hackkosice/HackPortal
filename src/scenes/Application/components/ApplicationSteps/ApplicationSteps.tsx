@@ -18,7 +18,12 @@ const ApplicationSteps = async () => {
       {data.application.status === "open" && (
         <Stack spacing="medium" direction="column">
           <Text>Complete steps below to finish your application:</Text>
-          <Stack direction="column" spaceAfter="medium" spacing="small">
+          <Stack
+            direction="column"
+            spaceAfter="medium"
+            spacing="small"
+            className="w-full"
+          >
             {data.steps.map((step) => (
               <ApplicationStep
                 key={step.id}

@@ -7,5 +7,12 @@ export const FormFieldTypeEnum = {
   checkbox: "checkbox",
   combobox: "combobox",
 } as const;
+
 export type FormFieldType =
   (typeof FormFieldTypeEnum)[keyof typeof FormFieldTypeEnum];
+
+export const FormFieldTypesWithOptions: FormFieldType[] = [
+  FormFieldTypeEnum.radio,
+  FormFieldTypeEnum.select,
+  FormFieldTypeEnum.combobox,
+];

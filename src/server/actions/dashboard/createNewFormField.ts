@@ -13,6 +13,7 @@ type NewFormFieldInput = {
   name: string;
   typeId: number;
   required: boolean;
+  optionListId?: number;
 };
 
 const createNewFormField = async ({
@@ -21,6 +22,7 @@ const createNewFormField = async ({
   label,
   name,
   required,
+  optionListId,
 }: NewFormFieldInput) => {
   const session = await getServerSession(authOptions);
 
@@ -57,6 +59,7 @@ const createNewFormField = async ({
       name,
       required,
       position: newFormFieldNumber,
+      optionListId,
     },
   });
 
