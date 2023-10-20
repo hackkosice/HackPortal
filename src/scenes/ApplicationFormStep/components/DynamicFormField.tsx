@@ -198,7 +198,7 @@ const DynamicFormField = ({ form, formField }: Props) => {
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select option" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

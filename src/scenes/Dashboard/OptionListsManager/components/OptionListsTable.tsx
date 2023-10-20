@@ -50,14 +50,18 @@ const ActionsCell = ({ optionList }: { optionList: OptionList }) => {
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            aria-label={`Open menu ${name} option list`}
+          >
             <span className="sr-only">Open menu</span>
             <EllipsisHorizontalCircleIcon className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem asChild aria-label={`Edit option list ${name}`}>
+          <DropdownMenuItem asChild>
             <Link href={`/dashboard/option-lists/${id}/edit`}>
               <PencilSquareIcon className="h-4 w-4 mr-1" />
               Edit list

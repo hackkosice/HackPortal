@@ -45,7 +45,7 @@ const ActionsCell = ({ option }: { option: OptionListOption }) => {
   return (
     <>
       <ConfirmationDialog
-        question={`Are you sure you want to delete option list "${value}"?`}
+        question={`Are you sure you want to delete option "${value}"?`}
         onAnswer={async (answer) => {
           if (answer) {
             await deleteOptions({ optionIds: [id] });
@@ -64,7 +64,11 @@ const ActionsCell = ({ option }: { option: OptionListOption }) => {
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            aria-label={`Open menu option ${value}`}
+          >
             <span className="sr-only">Open menu</span>
             <EllipsisHorizontalCircleIcon className="h-5 w-5" />
           </Button>
@@ -184,11 +188,10 @@ const OptionsTable = ({
   return (
     <>
       <Stack direction="row">
-        <div className="w-80">
+        <div className="w-[500px]">
           <DataTable
             columns={columns}
             data={options}
-            shouldUsePagination
             shouldHaveFiltering
             filterColumn="value"
             hasRowSelection

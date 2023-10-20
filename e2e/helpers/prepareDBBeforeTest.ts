@@ -12,6 +12,8 @@ async function clearDb(prisma: PrismaClient) {
   await prisma.organizer.deleteMany();
   await prisma.user.deleteMany();
   await prisma.hackathon.deleteMany();
+  await prisma.option.deleteMany();
+  await prisma.optionList.deleteMany();
 }
 
 export async function main(prisma: PrismaClient) {
