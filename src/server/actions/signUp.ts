@@ -12,24 +12,41 @@ const signUp = async ({
   localApplicationData,
 }: SignUpSchema) => {
   const hashedPassword = await hash(password);
-
-  const { userId: newUserId, hackerId: newHackerId } =
-    await createHackerForActiveHackathon(prisma, email, {
-      password: hashedPassword,
-    });
-
   const isOrganizer = email.endsWith("@hackkosice.com");
 
-  if (isOrganizer && newUserId) {
-    await prisma.organizer.create({
-      data: { userId: newUserId },
+  if (isOrganizer) {
+    let user = await prisma.user.findFirst({
+      where: { email },
     });
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          password: hashedPassword,
+          email: email,
+        },
+      });
+
+      await prisma.organizer.create({
+        data: { userId: user.id },
+      });
+
+      return {
+        message: "Account created successfully",
+      };
+    }
 
     return {
-      status: 201,
-      message: "Account created successfully",
+      message: "Account already exists",
     };
   }
+
+  const { hackerId: newHackerId } = await createHackerForActiveHackathon(
+    prisma,
+    email,
+    {
+      password: hashedPassword,
+    }
+  );
 
   if (localApplicationData && localApplicationData.length > 0) {
     const application = await prisma.application.create({
