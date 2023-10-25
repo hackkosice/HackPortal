@@ -187,8 +187,8 @@ const OptionsTable = ({
   };
   return (
     <>
-      <Stack direction="row">
-        <div className="w-[500px]">
+      <Stack direction="column" className="md:flex-row">
+        <div className="md:w-[500px]">
           <DataTable
             columns={columns}
             data={options}
