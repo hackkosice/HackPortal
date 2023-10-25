@@ -1,4 +1,4 @@
-import OptionListEditor from "@/scenes/Dashboard/OptionListsManager/scenes/OptionListEditor/OptionListEditor";
+import OptionListEditor from "@/scenes/Dashboard/scenes/OptionListsManager/scenes/OptionListEditor/OptionListEditor";
 import React from "react";
 import { Metadata } from "next";
 
