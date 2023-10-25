@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
-import getActiveHackathonId from "@/services/helpers/database/getActiveHackathonId";
+import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";

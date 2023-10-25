@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import getOptionList from "@/server/getters/dashboard/optionListManager/getOptionList";
-import OptionsTable from "@/scenes/Dashboard/OptionListsManager/scenes/OptionListEditor/components/OptionsTable";
+import OptionsTable from "@/scenes/Dashboard/scenes/OptionListsManager/scenes/OptionListEditor/components/OptionsTable";
 
 type OptionListEditorProps = {
   optionListId: number;

@@ -21,7 +21,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Stack } from "@/components/ui/stack";
-import NewOptionListDialog from "@/scenes/Dashboard/OptionListsManager/components/NewOptionListDialog";
+import NewOptionListDialog from "@/scenes/Dashboard/scenes/OptionListsManager/components/NewOptionListDialog";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteOptionList from "@/server/actions/dashboard/optionListManager/deleteOptionList";
 

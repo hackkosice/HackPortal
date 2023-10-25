@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import getActiveHackathonId from "@/services/helpers/database/getActiveHackathonId";
+import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 
 type AdditionalData = { githubProfileId?: number; password?: string };
 
