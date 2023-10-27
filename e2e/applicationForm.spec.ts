@@ -60,7 +60,7 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("What is your experience with hackathons?");
-    await page.getByLabel("Name").fill("experience");
+    await page.getByLabel("Name (has to be unique across the form)").fill("experience");
     await page.getByText("Select a field type").click();
     await page.getByLabel("textarea").getByText("textarea").click();
     await page.getByLabel("Required").check();
@@ -74,7 +74,7 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Name").fill("hackathonsPast");
+    await page.getByLabel("Name (has to be unique across the form)").fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
     await page.getByRole("button", { name: "Save new field" }).click();
@@ -85,7 +85,7 @@ test.describe("application form", () => {
 
     await page.getByRole("button", { name: "Create new field" }).click();
     await page.getByLabel("Label").fill("What company do you work for?");
-    await page.getByLabel("Name").fill("company");
+    await page.getByLabel("Name (has to be unique across the form)").fill("company");
     await page.getByText("Select a field type").click();
     await page.getByLabel("text", { exact: true }).getByText("text").click();
     await page.getByRole("button", { name: "Save new field" }).click();
@@ -95,7 +95,9 @@ test.describe("application form", () => {
     ).toBeVisible();
 
     // Deleting field
-    await page.getByRole("button", { name: "Delete field 2" }).click();
+    await page
+      .getByRole("button", { name: "Delete field hackathonsPast" })
+      .click();
     await expect(
       page.getByText("2. I have been at the hackathon in the past. (checkbox)")
     ).not.toBeVisible();
@@ -105,13 +107,30 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Name").fill("hackathonsPast");
+    await page.getByLabel("Name (has to be unique across the form)").fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
     await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
       page.getByText("3. I have been at the hackathon in the past. (checkbox)")
+    ).toBeVisible();
+
+    // Editing field
+    await page.getByRole("button", { name: "Edit field experience" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Edit field" })
+    ).toBeVisible();
+    await expect(page.getByLabel("Label")).toHaveValue(
+      "What is your experience with hackathons?"
+    );
+    await page.getByLabel("Label").fill("What is your experience with coding?");
+    await page.getByRole("button", { name: "Save field" }).click();
+    await expect(
+      page.getByText("1. What is your experience with hackathons? (textarea)")
+    ).not.toBeVisible();
+    await expect(
+      page.getByText("1. What is your experience with coding? (textarea)")
     ).toBeVisible();
 
     await page.getByRole("link", { name: "Back to steps" }).click();
@@ -155,7 +174,7 @@ test.describe("application form", () => {
     await expect(page.getByTestId("Step 2 completed icon")).not.toBeVisible();
     await page.getByText("Experience").click();
     await page
-      .getByLabel("What is your experience with hackathons?")
+      .getByLabel("What is your experience with coding?")
       .fill("It's good");
     await page.getByRole("button", { name: "Save" }).click();
 
@@ -163,7 +182,7 @@ test.describe("application form", () => {
 
     await page.getByText("Experience").click();
     await expect(
-      page.getByLabel("What is your experience with hackathons?")
+      page.getByLabel("What is your experience with coding?")
     ).toHaveValue("It's good");
 
     await page.getByLabel("What company do you work for?").fill("Test company");
@@ -173,7 +192,7 @@ test.describe("application form", () => {
     await expect(page.getByTestId("Step 2 completed icon")).toBeVisible();
     await page.getByText("Experience").click();
     await expect(
-      page.getByLabel("What is your experience with hackathons?")
+      page.getByLabel("What is your experience with coding?")
     ).toHaveValue("It's good");
     await expect(page.getByLabel("What company do you work for?")).toHaveValue(
       "Test company"
@@ -239,7 +258,7 @@ test.describe("application form", () => {
     await expect(page.getByTestId("Step 2 completed icon")).not.toBeVisible();
     await page.getByText("Experience").click();
     await page
-      .getByLabel("What is your experience with hackathons?")
+      .getByLabel("What is your experience with coding?")
       .fill("I am awesome");
     await page.getByRole("button", { name: "Save" }).click();
 
@@ -247,7 +266,7 @@ test.describe("application form", () => {
 
     await page.getByText("Experience").click();
     await expect(
-      page.getByLabel("What is your experience with hackathons?")
+      page.getByLabel("What is your experience with coding?")
     ).toHaveValue("I am awesome");
 
     await page
@@ -258,7 +277,7 @@ test.describe("application form", () => {
     await expect(page.getByTestId("Step 2 completed icon")).toBeVisible();
     await page.getByText("Experience").click();
     await expect(
-      page.getByLabel("What is your experience with hackathons?")
+      page.getByLabel("What is your experience with coding?")
     ).toHaveValue("I am awesome");
     await expect(page.getByLabel("What company do you work for?")).toHaveValue(
       "My own company"

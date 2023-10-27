@@ -4,16 +4,20 @@ import SortOrder = Prisma.SortOrder;
 import { FormFieldType } from "@/services/types/formFields";
 import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
+export type FormFieldData = {
+  id: number;
+  position: number;
+  label: string;
+  name: string;
+  required: boolean;
+  optionListId: number | null;
+  type: FormFieldType;
+};
+
 export type StepInfoData = {
   title: string;
   id: number;
-  formFields: {
-    id: number;
-    position: number;
-    label: string;
-    required: boolean;
-    type: FormFieldType;
-  }[];
+  formFields: FormFieldData[];
 };
 
 const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
@@ -31,7 +35,9 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
           id: true,
           position: true,
           label: true,
+          name: true,
           required: true,
+          optionListId: true,
           type: {
             select: {
               value: true,

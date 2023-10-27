@@ -4,7 +4,8 @@ import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
-type CreateNewHackathonInput = {
+type EditHackathonInput = {
+  hackathonId: number;
   name: string;
   description: string;
   eventStartDate: Date;
@@ -12,17 +13,21 @@ type CreateNewHackathonInput = {
   applicationStartDate: Date;
   applicationEndDate: Date;
 };
-const createNewHackathon = async ({
+const editHackathon = async ({
+  hackathonId,
   name,
   description,
   eventStartDate,
   eventEndDate,
   applicationStartDate,
   applicationEndDate,
-}: CreateNewHackathonInput) => {
+}: EditHackathonInput) => {
   await requireOrganizerSession();
 
-  await prisma.hackathon.create({
+  await prisma.hackathon.update({
+    where: {
+      id: hackathonId,
+    },
     data: {
       name,
       description,
@@ -33,7 +38,7 @@ const createNewHackathon = async ({
     },
   });
 
-  revalidatePath("/dashboard", "layout");
+  revalidatePath(`/dashboard/${hackathonId}`, "layout");
 };
 
-export default createNewHackathon;
+export default editHackathon;

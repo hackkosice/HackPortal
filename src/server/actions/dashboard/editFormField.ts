@@ -1,13 +1,11 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import { Prisma } from ".prisma/client";
-import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
 type NewFormFieldInput = {
-  stepId: number;
+  formFieldId: number;
   label: string;
   name: string;
   typeId: number;
@@ -15,8 +13,8 @@ type NewFormFieldInput = {
   optionListId?: number;
 };
 
-const createNewFormField = async ({
-  stepId,
+const editFormField = async ({
+  formFieldId,
   typeId,
   label,
   name,
@@ -25,32 +23,23 @@ const createNewFormField = async ({
 }: NewFormFieldInput) => {
   await requireOrganizerSession();
 
-  const lastFormField = await prisma.formField.findFirst({
-    where: {
-      stepId,
-    },
-    orderBy: {
-      position: SortOrder.desc,
-    },
-  });
-
-  const newFormFieldNumber = (lastFormField?.position ?? 0) + 1;
-
   const {
-    step: { hackathonId },
-  } = await prisma.formField.create({
+    step: { id: stepId, hackathonId },
+  } = await prisma.formField.update({
+    where: {
+      id: formFieldId,
+    },
     data: {
-      stepId,
       typeId,
       label,
       name,
       required,
-      position: newFormFieldNumber,
       optionListId,
     },
     select: {
       step: {
         select: {
+          id: true,
           hackathonId: true,
         },
       },
@@ -65,4 +54,4 @@ const createNewFormField = async ({
   revalidatePath(`/application/form/step/${stepId}`, "page");
 };
 
-export default createNewFormField;
+export default editFormField;

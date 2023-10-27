@@ -35,12 +35,8 @@ import createNewFormField from "@/server/actions/dashboard/createNewFormField";
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
-
-export type Props = {
-  stepId: number;
-  formFieldTypes: FormFieldTypesData;
-  optionLists: OptionListsData;
-};
+import { PencilIcon } from "@heroicons/react/24/solid";
+import editFormField from "@/server/actions/dashboard/editFormField";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
@@ -52,7 +48,23 @@ const newFieldFormSchema = z.object({
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
 
-const NewFieldDialog = ({ stepId, formFieldTypes, optionLists }: Props) => {
+export type Props = {
+  stepId?: number;
+  formFieldTypes: FormFieldTypesData;
+  optionLists: OptionListsData;
+  mode?: "create" | "edit";
+  formFieldId?: number;
+  initialData?: NewFieldForm;
+};
+
+const NewFieldDialog = ({
+  stepId,
+  formFieldTypes,
+  optionLists,
+  mode = "create",
+  formFieldId,
+  initialData,
+}: Props) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewFieldForm>({
     resolver: zodResolver(newFieldFormSchema),
@@ -79,29 +91,57 @@ const NewFieldDialog = ({ stepId, formFieldTypes, optionLists }: Props) => {
     required,
     optionListId,
   }: NewFieldForm) => {
-    await createNewFormField({
-      label,
-      name,
-      stepId,
-      typeId: Number(typeId),
-      required: Boolean(required),
-      optionListId: optionListId ? Number(optionListId) : undefined,
-    });
+    if (mode === "edit" && formFieldId) {
+      await editFormField({
+        formFieldId,
+        label,
+        name,
+        typeId: Number(typeId),
+        required: Boolean(required),
+        optionListId: optionListId ? Number(optionListId) : undefined,
+      });
+    } else if (mode === "create" && stepId) {
+      await createNewFormField({
+        label,
+        name,
+        stepId,
+        typeId: Number(typeId),
+        required: Boolean(required),
+        optionListId: optionListId ? Number(optionListId) : undefined,
+      });
+    }
+
     setIsOpened(false);
   };
 
   useEffect(() => {
-    form.reset();
-  }, [isOpened, form]);
+    if (mode === "edit" && initialData && isOpened) {
+      form.reset(initialData);
+    } else if (mode === "create" && isOpened) {
+      form.reset();
+    }
+  }, [initialData, mode, form, isOpened]);
 
   return (
     <Dialog open={isOpened} onOpenChange={setIsOpened}>
       <DialogTrigger asChild>
-        <Button>Create new field</Button>
+        {mode === "create" ? (
+          <Button>Create new field</Button>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Edit field ${initialData?.name}`}
+          >
+            <PencilIcon className="h-4 w-4 text-hkOrange" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new field</DialogTitle>
+          <DialogTitle>
+            {mode === "create" ? "Add new field" : "Edit field"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewFieldSubmit)}>
@@ -221,7 +261,9 @@ const NewFieldDialog = ({ stepId, formFieldTypes, optionLists }: Props) => {
                 )}
               />
               <DialogFooter>
-                <Button type="submit">Save new field</Button>
+                <Button type="submit">
+                  {mode === "create" ? "Save new field" : "Save field"}
+                </Button>
               </DialogFooter>
             </Stack>
           </form>

@@ -32,9 +32,10 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/components/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "@heroicons/react/24/solid";
+import { CalendarIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { Calendar } from "@/components/ui/calendar";
 import createNewHackathon from "@/server/actions/dashboard/createNewHackathon";
+import editHackathon from "@/server/actions/dashboard/editHackathon";
 
 const newHackathonFormSchema = z.object({
   name: z.string().min(1),
@@ -47,7 +48,17 @@ const newHackathonFormSchema = z.object({
 
 type NewHackathonForm = z.infer<typeof newHackathonFormSchema>;
 
-const NewHackathonDialog = () => {
+type NewHackathonDialogProps = {
+  mode?: "create" | "edit";
+  hackathonId?: number;
+  initialData?: NewHackathonForm;
+};
+
+const NewHackathonDialog = ({
+  mode = "create",
+  hackathonId,
+  initialData,
+}: NewHackathonDialogProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewHackathonForm>({
     resolver: zodResolver(newHackathonFormSchema),
@@ -58,25 +69,42 @@ const NewHackathonDialog = () => {
   });
 
   const onNewHackathonSubmit = async (data: NewHackathonForm) => {
-    await createNewHackathon(data);
+    if (mode === "create") {
+      await createNewHackathon(data);
+    } else if (mode === "edit" && hackathonId) {
+      await editHackathon({
+        hackathonId,
+        ...data,
+      });
+    }
     setIsOpened(false);
   };
 
   useEffect(() => {
-    form.reset();
-  }, [isOpened, form]);
+    if (mode === "edit" && initialData && isOpened) {
+      form.reset(initialData);
+    } else if (mode === "create" && isOpened) {
+      form.reset();
+    }
+  }, [initialData, mode, form, isOpened]);
 
   return (
     <Dialog open={isOpened} onOpenChange={setIsOpened}>
       <DialogTrigger asChild>
         <Button size="small" variant="ghost" className="text-hkOrange">
-          <PlusIcon className="h-4 w-4 mr-1" />
-          Create new hackathon
+          {mode === "create" ? (
+            <PlusIcon className="h-4 w-4 mr-1" />
+          ) : (
+            <PencilIcon className="h-4 w-4 mr-1" />
+          )}
+          {mode === "create" ? "Create new hackathon" : "Edit hackathon"}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create new hackathon</DialogTitle>
+          <DialogTitle>
+            {mode === "create" ? "Create new hackathon" : "Edit hackathon"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewHackathonSubmit)}>
@@ -266,7 +294,11 @@ const NewHackathonDialog = () => {
                 )}
               />
               <DialogFooter>
-                <Button type="submit">Create new hackathon</Button>
+                <Button type="submit">
+                  {mode === "create"
+                    ? "Create new hackathon"
+                    : "Edit hackathon"}
+                </Button>
               </DialogFooter>
             </Stack>
           </form>

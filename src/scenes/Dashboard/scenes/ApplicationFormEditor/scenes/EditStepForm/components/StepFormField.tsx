@@ -7,16 +7,30 @@ import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/ui/text";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteFormField from "@/server/actions/dashboard/deleteFormField";
+import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
+import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
+import { FormFieldData } from "@/server/getters/dashboard/stepInfo";
 
 export type Props = {
-  label: string;
-  type: string;
-  position: number;
-  fieldId: number;
-  required: boolean;
+  formField: FormFieldData;
+  formFieldTypes: FormFieldTypesData;
+  optionLists: OptionListsData;
 };
 
-const StepFormField = ({ label, type, position, fieldId, required }: Props) => {
+const StepFormField = ({
+  formField: {
+    id: fieldId,
+    label,
+    name,
+    type,
+    required,
+    position,
+    optionListId,
+  },
+  formFieldTypes,
+  optionLists,
+}: Props) => {
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
     useState(false);
   const onFormFieldDelete = async () => {
@@ -50,16 +64,31 @@ const StepFormField = ({ label, type, position, fieldId, required }: Props) => {
         isManuallyOpened={isConfirmationModalOpened}
         onAnswer={onConfirmClose}
       />
-      <Stack direction="row" alignItems="center">
+      <Stack direction="row" alignItems="center" spacing="small">
         <Text>
           {position}. {label} ({type})
           {required && <span className="text-red-500 ml-1">*</span>}
         </Text>
+        <NewFieldDialog
+          formFieldId={fieldId}
+          formFieldTypes={formFieldTypes}
+          optionLists={optionLists}
+          mode="edit"
+          initialData={{
+            label,
+            name,
+            typeId: formFieldTypes
+              .find((fieldType) => fieldType.value === type)
+              ?.id.toString() as string,
+            required,
+            optionListId: optionListId ? optionListId.toString() : undefined,
+          }}
+        />
         <Button
           size="icon"
           variant="ghost"
           onClick={onFormFieldDelete}
-          aria-label={`Delete field ${position}`}
+          aria-label={`Delete field ${name}`}
         >
           <TrashIcon className="w-4 h-4 text-hkOrange" />
         </Button>
