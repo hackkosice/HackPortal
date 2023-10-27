@@ -18,6 +18,8 @@ const requireOrganizerSession = async () => {
   if (!organizer) {
     throw new Error("Organizer not found");
   }
+
+  return organizer;
 };
 
 export default requireOrganizerSession;

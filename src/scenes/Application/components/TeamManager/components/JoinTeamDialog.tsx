@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import {
@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,62 +22,58 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import editStep from "@/server/actions/dashboard/editStep";
+import joinTeam from "@/server/actions/team/joinTeam";
 
-const titleEditFormSchema = z.object({
-  title: z.string(),
+const joinTeamFormSchema = z.object({
+  code: z.string().min(1),
 });
 
-type TitleEditForm = z.infer<typeof titleEditFormSchema>;
+type JoinTeamForm = z.infer<typeof joinTeamFormSchema>;
 
-export type Props = {
-  stepId: number;
-  initialValue?: string;
-};
-
-const EditTitleDialog = ({ initialValue, stepId }: Props) => {
+const JoinTeamDialog = () => {
   const [isOpened, setIsOpened] = useState(false);
-  const form = useForm<TitleEditForm>({
-    resolver: zodResolver(titleEditFormSchema),
+  const form = useForm<JoinTeamForm>({
+    resolver: zodResolver(joinTeamFormSchema),
     defaultValues: {
-      title: initialValue ?? "",
+      code: "",
     },
   });
 
-  const onEditTitleModalSave = async ({ title }: TitleEditForm) => {
-    await editStep({ stepId, title });
+  const onEditTitleModalSave = async (data: JoinTeamForm) => {
+    await joinTeam(data);
     setIsOpened(false);
   };
+
+  useEffect(() => {
+    if (isOpened) form.reset();
+  }, [form, isOpened]);
 
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="small">
-          <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
-          Edit title
-        </Button>
+        <Button variant="outline">Join existing team</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit title of the step</DialogTitle>
+          <DialogTitle>Join existing team</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onEditTitleModalSave)}>
             <FormField
               control={form.control}
-              name="title"
+              name="code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New title</FormLabel>
+                  <FormLabel>Team code</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Title" {...field} />
+                    <Input type="text" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit">Save</Button>
+              <Button type="submit">Join</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -87,4 +82,4 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
   );
 };
 
-export default EditTitleDialog;
+export default JoinTeamDialog;
