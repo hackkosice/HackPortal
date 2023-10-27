@@ -18,6 +18,8 @@ const requireHackerSession = async () => {
   if (!hacker) {
     throw new Error("Hacker not found");
   }
+
+  return hacker;
 };
 
 export default requireHackerSession;

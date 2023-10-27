@@ -25,7 +25,7 @@ const ApplicationStep = ({ step, shouldUseLocalIsCompleted }: Props) => {
   }, [shouldUseLocalIsCompleted, step]);
 
   return (
-    <Link href={`/application/form/step/${step.id}`} className="w-1/2">
+    <Link href={`/application/form/step/${step.id}`} className="w-full">
       <div
         className={`border-2 p-4 rounded-md ${
           isCompleted ? "border-green-500" : "border-hkOrange"

@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
           />
         </div>
       )}
-      <ScrollArea className="h-[400px]">
+      <ScrollArea className="max-h-[400px]">
         <div className="rounded-md border min-w-full">
           <Table>
             <TableHeader>

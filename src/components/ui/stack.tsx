@@ -9,6 +9,7 @@ const stackVariants = cva("flex", {
       row: "flex-row",
     },
     spacing: {
+      none: "",
       small: "gap-2",
       medium: "gap-4",
       large: "gap-7",
