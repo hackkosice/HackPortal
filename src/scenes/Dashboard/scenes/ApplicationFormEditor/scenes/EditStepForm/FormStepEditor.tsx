@@ -31,22 +31,22 @@ const FormStepEditor = async ({
   return (
     <Card className="md:w-[60%] mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
-        <EditTitleDialog initialValue={title} stepId={id} />
+        <Stack alignItems="center">
+          <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
+          <EditTitleDialog initialValue={title} stepId={id} />
+        </Stack>
       </CardHeader>
       <CardContent>
         <Heading size="small" spaceAfter="medium">
           Form fields
         </Heading>
         <Stack direction="column" spacing="small" spaceAfter="medium">
-          {formFields.map(({ id, label, position, type, required }) => (
+          {formFields.map((formField) => (
             <StepFormField
-              key={id}
-              fieldId={id}
-              label={label}
-              type={type}
-              position={position}
-              required={required}
+              key={formField.id}
+              formField={formField}
+              formFieldTypes={formFieldTypes}
+              optionLists={optionLists}
             />
           ))}
         </Stack>

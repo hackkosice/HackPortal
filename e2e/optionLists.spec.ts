@@ -164,7 +164,7 @@ test.describe("Option Lists", () => {
     await page.getByRole("button", { name: "Create new field" }).click();
 
     await page.getByLabel("Label").fill("What is your school?");
-    await page.getByLabel("Name").fill("school");
+    await page.getByLabel("Name (has to be unique across the form)").fill("school");
     await page.getByText("Select a field type").click();
     await page.getByLabel("select").getByText("select").click();
     await expect(page.getByLabel("Connected option list")).toBeVisible();
