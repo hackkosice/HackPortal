@@ -1,30 +1,15 @@
 "use server";
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
+import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
 
 type DeleteStepInput = {
   stepId: number;
   force: boolean;
 };
 const deleteStep = async ({ stepId, force }: DeleteStepInput) => {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.id) {
-    throw new Error("User has to be signed in");
-  }
-
-  const organizer = await prisma.organizer.findUnique({
-    where: {
-      userId: session.id,
-    },
-  });
-
-  if (!organizer) {
-    throw new Error("Organizer not found");
-  }
+  await requireOrganizerSession();
 
   const fields = await prisma.formField.findMany({
     where: {
@@ -82,7 +67,7 @@ const deleteStep = async ({ stepId, force }: DeleteStepInput) => {
     }
   }
 
-  revalidatePath("/dashboard/form-editor", "page");
+  revalidatePath(`/dashboard/${deletedStep.hackathonId}/form-editor`, "page");
 };
 
 export default deleteStep;

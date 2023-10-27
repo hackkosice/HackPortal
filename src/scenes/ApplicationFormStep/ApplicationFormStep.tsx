@@ -50,7 +50,7 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
   };
 
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>{data?.title}</CardTitle>
       </CardHeader>

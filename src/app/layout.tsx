@@ -12,7 +12,7 @@ const roboto = Roboto({
 
 const leagueSpartan = League_Spartan({
   variable: "--font-league-spartan",
-  weight: ["400", "700"],
+  weight: ["400", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -29,9 +29,7 @@ export default async function RootLayout({
         <NextAuthProvider>
           <main className={`font-default bg-hkLightGray relative`}>
             <Navbar />
-            <div className="grid items-center justify-center h-full min-h-screen">
-              {children}
-            </div>
+            <div className="flex min-h-screen px-2 md:px-5">{children}</div>
           </main>
         </NextAuthProvider>
       </body>

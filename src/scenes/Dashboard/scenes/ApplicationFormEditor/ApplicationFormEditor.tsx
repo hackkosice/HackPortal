@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
 import { Stack } from "@/components/ui/stack";
-import Link from "next/link";
 import { ApplicationFormStepsData } from "@/server/getters/dashboard/applicationFormSteps";
 import createNewStep from "@/server/actions/dashboard/createNewStep";
 
@@ -26,9 +25,11 @@ const ApplicationFormEditor = ({
   };
 
   return (
-    <Card>
+    <Card className="md:w-[60%] mx-auto">
       <CardHeader>
-        <CardTitle>Application Form Editor</CardTitle>
+        <CardTitle className="text-2xl font-semibold">
+          Application Form Editor
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Stack direction="column" spaceAfter="medium" spacing="small">
@@ -40,9 +41,6 @@ const ApplicationFormEditor = ({
       <CardFooter>
         <Stack direction="column">
           <Button onClick={onCreateNewStepClick}>Create new step</Button>
-          <Button asChild size="small" variant="outline">
-            <Link href="/dashboard">Back to dashboard</Link>
-          </Button>
         </Stack>
       </CardFooter>
     </Card>

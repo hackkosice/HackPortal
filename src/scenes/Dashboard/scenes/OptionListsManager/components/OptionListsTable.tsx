@@ -62,7 +62,7 @@ const ActionsCell = ({ optionList }: { optionList: OptionList }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem asChild>
-            <Link href={`/dashboard/option-lists/${id}/edit`}>
+            <Link href={`/option-lists/${id}/edit`}>
               <PencilSquareIcon className="h-4 w-4 mr-1" />
               Edit list
             </Link>

@@ -50,7 +50,7 @@ const SignIn = ({ providers }: SigninPageProps) => {
   };
 
   return (
-    <Card>
+    <Card className="m-auto w-full md:w-fit">
       <CardHeader>
         <CardTitle>Sign in</CardTitle>
       </CardHeader>

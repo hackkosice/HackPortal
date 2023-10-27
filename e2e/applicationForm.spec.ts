@@ -279,7 +279,7 @@ test.describe("application form", () => {
   test("see submitted applications", async ({ page, dashboardPage }) => {
     await expect(
       page.getByRole("heading", {
-        name: "Dashboard Organizer",
+        name: "Dashboard",
       })
     ).toBeVisible();
 

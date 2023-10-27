@@ -9,11 +9,17 @@ export const metadata: Metadata = {
   title: "Edit application form",
 };
 
-const FormEditorPage = async () => {
+const FormEditorPage = async ({
+  params: { hackathonId },
+}: {
+  params: { hackathonId: string };
+}) => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
-  const applicationFormSteps = await getApplicationFormSteps();
+  const applicationFormSteps = await getApplicationFormSteps(
+    Number(hackathonId)
+  );
 
   return <ApplicationFormEditor applicationFormSteps={applicationFormSteps} />;
 };

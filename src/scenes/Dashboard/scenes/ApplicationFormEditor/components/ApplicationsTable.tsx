@@ -3,8 +3,11 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import getApplicationsList from "@/server/getters/dashboard/applicationList";
 
-const ApplicationsTable = async () => {
-  const { applications } = await getApplicationsList();
+type ApplicationsTableProps = {
+  hackathonId: number;
+};
+const ApplicationsTable = async ({ hackathonId }: ApplicationsTableProps) => {
+  const { applications } = await getApplicationsList(hackathonId);
   return (
     <div className="relative overflow-x-auto mt-5">
       <table className="w-full text-sm text-left text-gray-500 ">
@@ -35,7 +38,7 @@ const ApplicationsTable = async () => {
               <td className="px-6 py-4">{application.status}</td>
               <td className="px-6 py-4">
                 <Link
-                  href={`/dashboard/application/${application.id}/detail`}
+                  href={`/dashboard/${hackathonId}/applications/${application.id}/detail`}
                   aria-label={`Application detail ${index + 1}`}
                 >
                   <InformationCircleIcon className="w-5 h-5 text-hkOrange inline" />

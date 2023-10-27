@@ -6,6 +6,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteStep from "@/server/actions/dashboard/deleteStep";
+import { useParams } from "next/navigation";
 
 type StepProps = {
   stepId: number;
@@ -16,6 +17,7 @@ type StepProps = {
 const Step = ({ title, position, stepId }: StepProps) => {
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
     useState(false);
+  const params = useParams();
   const onStepDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -51,8 +53,8 @@ const Step = ({ title, position, stepId }: StepProps) => {
         isManuallyOpened={isConfirmationModalOpened}
       />
       <Link
-        href={`/dashboard/form-editor/step/${stepId}/edit`}
-        className="w-full"
+        href={`/dashboard/${params.hackathonId}/form-editor/step/${stepId}/edit`}
+        className="w-full md:w-[400px]"
       >
         <div className="border-2 border-hkOrange p-4 rounded-md">
           <Stack alignItems="center">

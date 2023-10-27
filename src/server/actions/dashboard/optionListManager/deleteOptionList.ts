@@ -18,7 +18,7 @@ const deleteOptionList = async ({ id }: DeleteOptionListInput) => {
     throw new Error("Error deleting option list");
   }
 
-  revalidatePath("/dashboard/option-lists", "page");
+  revalidatePath("/option-lists", "page");
 };
 
 export default deleteOptionList;

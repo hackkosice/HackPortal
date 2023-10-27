@@ -14,7 +14,7 @@ import OptionListsTable from "@/scenes/Dashboard/scenes/OptionListsManager/compo
 const OptionListsManager = async () => {
   const optionLists = await getOptionLists();
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>Option Lists Manager</CardTitle>
       </CardHeader>
