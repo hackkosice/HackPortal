@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const LandingPage = () => {
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>
           Welcome to application portal for Hack Kosice 2023!

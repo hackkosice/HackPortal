@@ -59,7 +59,7 @@ test.describe("smoke tests", () => {
 
     await expect(
       page.getByRole("heading", {
-        name: "Dashboard Organizer",
+        name: "Dashboard",
       })
     ).toBeVisible();
 

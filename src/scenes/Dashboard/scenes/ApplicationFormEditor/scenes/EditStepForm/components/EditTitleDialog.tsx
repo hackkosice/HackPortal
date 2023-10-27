@@ -53,7 +53,7 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="small">
+        <Button variant="outline" size="small" className="w-fit">
           <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
           Edit title
         </Button>

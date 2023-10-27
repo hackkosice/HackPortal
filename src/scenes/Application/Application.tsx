@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Application = () => {
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>Welcome to Hack Kosice Application portal!</CardTitle>
       </CardHeader>

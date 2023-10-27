@@ -14,9 +14,10 @@ import { ApplicationDetailData } from "@/server/getters/dashboard/applicationDet
 
 export type Props = {
   applicationDetail: ApplicationDetailData;
+  hackathonId: number;
 };
 
-const ApplicationDetail = ({ applicationDetail }: Props) => {
+const ApplicationDetail = ({ applicationDetail, hackathonId }: Props) => {
   return (
     <Card>
       <CardHeader>
@@ -34,7 +35,9 @@ const ApplicationDetail = ({ applicationDetail }: Props) => {
       </CardContent>
       <CardFooter>
         <Button asChild size="small" variant="outline">
-          <Link href="/dashboard">Back to dashboard</Link>
+          <Link href={`/dashboard/${hackathonId}/applications`}>
+            Back to applications
+          </Link>
         </Button>
       </CardFooter>
     </Card>

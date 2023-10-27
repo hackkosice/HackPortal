@@ -58,7 +58,7 @@ const SignUp = () => {
   );
 
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
       </CardHeader>

@@ -20,6 +20,14 @@ const stackVariants = cva("flex", {
       baseline: "items-baseline",
       stretch: "items-stretch",
     },
+    justify: {
+      center: "justify-center",
+      start: "justify-start",
+      end: "justify-end",
+      between: "justify-between",
+      around: "justify-around",
+      evenly: "justify-evenly",
+    },
     spaceAfter: {
       small: "mb-1",
       medium: "mb-3",
@@ -31,6 +39,7 @@ const stackVariants = cva("flex", {
     spacing: "medium",
     alignItems: "start",
     spaceAfter: undefined,
+    justify: "start",
   },
 });
 
@@ -40,7 +49,15 @@ export interface StackProps
 
 const Stack = React.forwardRef<HTMLDivElement, StackProps>(
   (
-    { className, direction, spacing, alignItems, spaceAfter, ...props },
+    {
+      className,
+      direction,
+      spacing,
+      alignItems,
+      justify,
+      spaceAfter,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -50,6 +67,7 @@ const Stack = React.forwardRef<HTMLDivElement, StackProps>(
             direction,
             spacing,
             alignItems,
+            justify,
             spaceAfter,
             className,
           })

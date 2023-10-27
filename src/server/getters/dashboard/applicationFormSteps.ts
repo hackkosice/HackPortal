@@ -9,12 +9,17 @@ export type ApplicationFormStepsData = {
   position: number;
   hackathonId: number;
 }[];
-const getApplicationFormSteps = async (): Promise<ApplicationFormStepsData> => {
+const getApplicationFormSteps = async (
+  hackathonId: number
+): Promise<ApplicationFormStepsData> => {
   await requireOrganizerSession();
 
   return prisma.applicationFormStep.findMany({
     orderBy: {
       position: SortOrder.asc,
+    },
+    where: {
+      hackathonId,
     },
   });
 };

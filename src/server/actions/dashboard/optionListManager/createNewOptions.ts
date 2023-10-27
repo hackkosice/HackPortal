@@ -25,8 +25,8 @@ const createNewOptions = async ({
     )
   );
 
-  revalidatePath(`/dashboard/option-lists/${optionListId}/edit`, "page");
-  revalidatePath("/dashboard/option-lists", "page");
+  revalidatePath(`/option-lists/${optionListId}/edit`, "page");
+  revalidatePath("/option-lists", "page");
 };
 
 export default createNewOptions;

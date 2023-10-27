@@ -10,7 +10,9 @@ export type ApplicationListData = {
   }[];
 };
 
-const getApplicationsList = async (): Promise<ApplicationListData> => {
+const getApplicationsList = async (
+  hackathonId: number
+): Promise<ApplicationListData> => {
   await requireOrganizerSession();
 
   const applicationsDb = await prisma.application.findMany({
@@ -40,6 +42,11 @@ const getApplicationsList = async (): Promise<ApplicationListData> => {
             },
           },
         },
+      },
+    },
+    where: {
+      hacker: {
+        hackathonId,
       },
     },
   });

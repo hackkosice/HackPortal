@@ -14,7 +14,7 @@ const createNewOptionList = async ({ name }: CreateNewOptionListInput) => {
     },
   });
 
-  revalidatePath("/dashboard/option-lists", "page");
+  revalidatePath("/option-lists", "page");
 };
 
 export default createNewOptionList;

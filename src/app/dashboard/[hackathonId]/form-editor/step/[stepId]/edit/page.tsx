@@ -12,14 +12,19 @@ export const metadata: Metadata = {
 const FormEditorStepPage = async ({
   params,
 }: {
-  params: { stepId: string };
+  params: { stepId: string; hackathonId: string };
 }) => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
   const stepInfo = await getStepInfo(Number(params.stepId));
 
-  return <FormStepEditor stepInfo={stepInfo} />;
+  return (
+    <FormStepEditor
+      stepInfo={stepInfo}
+      hackathonId={Number(params.hackathonId)}
+    />
+  );
 };
 
 export default FormEditorStepPage;

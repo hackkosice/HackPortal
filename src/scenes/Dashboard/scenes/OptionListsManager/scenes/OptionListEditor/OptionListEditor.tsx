@@ -17,7 +17,7 @@ type OptionListEditorProps = {
 const OptionListEditor = async ({ optionListId }: OptionListEditorProps) => {
   const optionList = await getOptionList({ id: optionListId });
   return (
-    <Card>
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle>Option List Editor</CardTitle>
       </CardHeader>
@@ -26,7 +26,7 @@ const OptionListEditor = async ({ optionListId }: OptionListEditorProps) => {
       </CardContent>
       <CardFooter>
         <Button asChild variant="outline">
-          <Link href="/dashboard/option-lists">Back to option lists</Link>
+          <Link href="/option-lists">Back to option lists</Link>
         </Button>
       </CardFooter>
     </Card>

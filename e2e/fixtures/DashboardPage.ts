@@ -18,9 +18,7 @@ export class DashboardPage {
   }
 
   async openFormEditor() {
-    await this.page
-      .getByRole("link", { name: "Edit application form" })
-      .click();
+    await this.page.getByRole("tab", { name: "Application form" }).click();
 
     await expect(
       this.page.getByRole("heading", { name: "Application Form Editor" })
@@ -30,13 +28,13 @@ export class DashboardPage {
   }
 
   async openOptionLists() {
+    await this.page.getByRole("tab", { name: "Settings" }).click();
+
     await this.page.getByRole("link", { name: "Manage option lists" }).click();
 
     await expect(
       this.page.getByRole("heading", { name: "Option Lists Manager" })
     ).toBeVisible();
-
-    // await this.page.waitForTimeout(2000);
   }
 
   async signOut() {

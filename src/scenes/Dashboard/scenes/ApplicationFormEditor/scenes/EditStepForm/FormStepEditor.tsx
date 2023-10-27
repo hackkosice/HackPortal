@@ -19,17 +19,19 @@ import getOptionLists from "@/server/getters/dashboard/optionListManager/getOpti
 
 export type Props = {
   stepInfo: StepInfoData;
+  hackathonId: number;
 };
 
 const FormStepEditor = async ({
   stepInfo: { title, formFields, id },
+  hackathonId,
 }: Props) => {
   const formFieldTypes = await getFormFieldTypes();
   const optionLists = await getOptionLists();
   return (
-    <Card>
+    <Card className="md:w-[60%] mx-auto">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
         <EditTitleDialog initialValue={title} stepId={id} />
       </CardHeader>
       <CardContent>
@@ -57,7 +59,9 @@ const FormStepEditor = async ({
             optionLists={optionLists}
           />
           <Button asChild variant="outline" size="small">
-            <Link href="/dashboard/form-editor">Back to steps</Link>
+            <Link href={`/dashboard/${hackathonId}/form-editor`}>
+              Back to steps
+            </Link>
           </Button>
         </Stack>
       </CardFooter>

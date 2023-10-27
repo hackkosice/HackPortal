@@ -23,7 +23,7 @@ const editOption = async ({ optionId, newValue }: EditOptionInput) => {
     },
   });
 
-  revalidatePath(`/dashboard/option-lists/${listId}/edit`, "page");
+  revalidatePath(`/option-lists/${listId}/edit`, "page");
 };
 
 export default editOption;

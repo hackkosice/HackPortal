@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const ApplicationDetailPage = async ({
   params,
 }: {
-  params: { applicationId: string };
+  params: { applicationId: string; hackathonId: string };
 }) => {
   if (!(await requireOrganizerApp())) {
     redirect("/application");
@@ -20,7 +20,12 @@ const ApplicationDetailPage = async ({
   const applicationDetail = await getApplicationDetail(
     Number(params.applicationId)
   );
-  return <ApplicationDetail applicationDetail={applicationDetail} />;
+  return (
+    <ApplicationDetail
+      applicationDetail={applicationDetail}
+      hackathonId={Number(params.hackathonId)}
+    />
+  );
 };
 
 export default ApplicationDetailPage;
