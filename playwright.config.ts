@@ -39,6 +39,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "retry-with-trace",
+    permissions: ["clipboard-read", "clipboard-write"],
   },
 
   /* Configure projects for major browsers */
