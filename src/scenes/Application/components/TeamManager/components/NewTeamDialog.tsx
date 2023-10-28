@@ -24,6 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import createTeam from "@/server/actions/team/createTeam";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import editTeamName from "@/server/actions/team/editTeamName";
+import { PencilIcon } from "@heroicons/react/24/solid";
 
 const newTeamFormSchema = z.object({
   name: z.string().min(1),
@@ -31,7 +33,15 @@ const newTeamFormSchema = z.object({
 
 type NewTeamForm = z.infer<typeof newTeamFormSchema>;
 
-const NewTeamDialog = () => {
+type NewTeamDialogProps = {
+  mode?: "create" | "edit";
+  initialData?: NewTeamForm;
+};
+
+const NewTeamDialog = ({
+  mode = "create",
+  initialData,
+}: NewTeamDialogProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewTeamForm>({
     resolver: zodResolver(newTeamFormSchema),
@@ -41,25 +51,43 @@ const NewTeamDialog = () => {
   });
 
   const onNewTeamCreation = async (data: NewTeamForm) => {
-    await createTeam(data);
+    if (mode === "edit") {
+      await editTeamName({ newName: data.name });
+    } else if (mode === "create") {
+      await createTeam(data);
+    }
+
     setIsOpened(false);
   };
 
   useEffect(() => {
-    if (isOpened) form.reset();
-  }, [form, isOpened]);
+    if (mode === "edit" && initialData && isOpened) {
+      form.reset(initialData);
+    } else if (mode === "create" && isOpened) {
+      form.reset();
+    }
+  }, [form, initialData, isOpened, mode]);
 
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button>
-          <PlusIcon className="w-4 h-4 mr-1 text-white inline" />
-          Create new team
-        </Button>
+        {mode === "create" ? (
+          <Button>
+            <PlusIcon className="w-4 h-4 mr-1 text-white inline" />
+            Create new team
+          </Button>
+        ) : (
+          <Button variant="ghost" size="small">
+            <PencilIcon className="w-4 h-4 mr-1 inline" />
+            Edit team name
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create new team</DialogTitle>
+          <DialogTitle>
+            {mode === "create" ? "Create new team" : "Edit team name"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewTeamCreation)}>
@@ -81,7 +109,9 @@ const NewTeamDialog = () => {
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit">Create</Button>
+              <Button type="submit">
+                {mode === "create" ? "Create" : "Save"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

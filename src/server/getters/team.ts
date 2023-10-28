@@ -6,6 +6,7 @@ export type TeamMemberData = {
   id: number;
   email: string;
   isOwner: boolean;
+  isCurrentUser: boolean;
 };
 
 export type TeamData = {
@@ -78,6 +79,7 @@ const getTeam = async (): Promise<GetTeamData> => {
       id: member.id,
       email: member.user.email,
       isOwner: member.id === ownerId,
+      isCurrentUser: member.id === hacker.id,
     })),
   };
 
