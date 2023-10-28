@@ -8,6 +8,7 @@ async function clearDb(prisma: PrismaClient) {
   await prisma.formField.deleteMany();
   await prisma.applicationFormStep.deleteMany();
   await prisma.application.deleteMany();
+  await prisma.team.deleteMany();
   await prisma.hacker.deleteMany();
   await prisma.organizer.deleteMany();
   await prisma.user.deleteMany();
@@ -16,7 +17,15 @@ async function clearDb(prisma: PrismaClient) {
   await prisma.optionList.deleteMany();
 }
 
-export async function main(prisma: PrismaClient) {
+type Options = {
+  numberOfHackers?: number;
+};
+export async function main(
+  prisma: PrismaClient,
+  options: Options = {
+    numberOfHackers: 1,
+  }
+) {
   await clearDb(prisma);
 
   const { id: hackathonId } = await prisma.hackathon.create({
@@ -50,6 +59,31 @@ export async function main(prisma: PrismaClient) {
       statusId: 1,
     },
   });
+
+  if (options.numberOfHackers && options.numberOfHackers > 1) {
+    for (let i = 0; i < options.numberOfHackers - 1; i++) {
+      const { id: userId } = await prisma.user.create({
+        data: {
+          email: `test-hacker-${i + 2}@test.com`,
+          password: await hash("test123"),
+        },
+      });
+
+      const { id: hackerId } = await prisma.hacker.create({
+        data: {
+          userId,
+          hackathonId,
+        },
+      });
+
+      await prisma.application.create({
+        data: {
+          hackerId,
+          statusId: 1,
+        },
+      });
+    }
+  }
 
   const { id: userOrganizerId } = await prisma.user.create({
     data: {

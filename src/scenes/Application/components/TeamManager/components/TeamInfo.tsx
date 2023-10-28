@@ -108,6 +108,7 @@ const TeamInfo = ({
             }}
             variant="ghost"
             size="icon"
+            aria-label="Copy team code"
           >
             <DocumentDuplicateIcon className="w-4 h-4 mr-1 inline" />
           </Button>

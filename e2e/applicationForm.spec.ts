@@ -60,7 +60,9 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("What is your experience with hackathons?");
-    await page.getByLabel("Name (has to be unique across the form)").fill("experience");
+    await page
+      .getByLabel("Name (has to be unique across the form)")
+      .fill("experience");
     await page.getByText("Select a field type").click();
     await page.getByLabel("textarea").getByText("textarea").click();
     await page.getByLabel("Required").check();
@@ -74,7 +76,9 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Name (has to be unique across the form)").fill("hackathonsPast");
+    await page
+      .getByLabel("Name (has to be unique across the form)")
+      .fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
     await page.getByRole("button", { name: "Save new field" }).click();
@@ -85,7 +89,9 @@ test.describe("application form", () => {
 
     await page.getByRole("button", { name: "Create new field" }).click();
     await page.getByLabel("Label").fill("What company do you work for?");
-    await page.getByLabel("Name (has to be unique across the form)").fill("company");
+    await page
+      .getByLabel("Name (has to be unique across the form)")
+      .fill("company");
     await page.getByText("Select a field type").click();
     await page.getByLabel("text", { exact: true }).getByText("text").click();
     await page.getByRole("button", { name: "Save new field" }).click();
@@ -107,7 +113,9 @@ test.describe("application form", () => {
     await page
       .getByLabel("Label")
       .fill("I have been at the hackathon in the past.");
-    await page.getByLabel("Name (has to be unique across the form)").fill("hackathonsPast");
+    await page
+      .getByLabel("Name (has to be unique across the form)")
+      .fill("hackathonsPast");
     await page.getByText("Select a field type").click();
     await page.getByLabel("checkbox").getByText("checkbox").click();
     await page.getByRole("button", { name: "Save new field" }).click();
