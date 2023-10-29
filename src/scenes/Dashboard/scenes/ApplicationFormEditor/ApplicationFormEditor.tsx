@@ -16,12 +16,14 @@ import createNewStep from "@/server/actions/dashboard/createNewStep";
 
 type ApplicationFormEditorProps = {
   applicationFormSteps: ApplicationFormStepsData;
+  hackathonId: number;
 };
 const ApplicationFormEditor = ({
   applicationFormSteps,
+  hackathonId,
 }: ApplicationFormEditorProps) => {
   const onCreateNewStepClick = () => {
-    createNewStep();
+    createNewStep({ hackathonId });
   };
 
   return (

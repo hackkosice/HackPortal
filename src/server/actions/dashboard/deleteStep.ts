@@ -53,7 +53,11 @@ const deleteStep = async ({ stepId, force }: DeleteStepInput) => {
   });
 
   // Update step numbers of all steps after the deleted step
-  const steps = await prisma.applicationFormStep.findMany();
+  const steps = await prisma.applicationFormStep.findMany({
+    where: {
+      hackathonId: deletedStep.hackathonId,
+    },
+  });
   for (const step of steps) {
     if (step.position > deletedStep.position) {
       await prisma.applicationFormStep.update({
