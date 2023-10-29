@@ -10,13 +10,15 @@ export type FormFieldData = {
   label: string;
   name: string;
   required: boolean;
-  optionListId: number | null;
+  optionList: {
+    id: number;
+    name: string;
+  } | null;
   type: FormFieldType;
 };
 
 export type StepInfoData = {
   title: string;
-  id: number;
   formFields: FormFieldData[];
 };
 
@@ -28,7 +30,6 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
       id: stepId,
     },
     select: {
-      id: true,
       title: true,
       formFields: {
         select: {
@@ -37,10 +38,15 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
           label: true,
           name: true,
           required: true,
-          optionListId: true,
           type: {
             select: {
               value: true,
+            },
+          },
+          optionList: {
+            select: {
+              id: true,
+              name: true,
             },
           },
         },

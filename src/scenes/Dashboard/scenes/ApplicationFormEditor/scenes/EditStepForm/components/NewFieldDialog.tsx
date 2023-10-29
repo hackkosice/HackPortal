@@ -56,6 +56,8 @@ export type Props = {
   formFieldId?: number;
   initialData?: NewFieldForm;
   name?: string;
+  isOpened: boolean;
+  onOpenChange: (isOpened: boolean) => void;
 };
 
 const createName = (label: string) => {
@@ -83,8 +85,9 @@ const NewFieldDialog = ({
   formFieldId,
   initialData,
   name,
+  isOpened,
+  onOpenChange,
 }: Props) => {
-  const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewFieldForm>({
     resolver: zodResolver(newFieldFormSchema),
     defaultValues: {
@@ -135,7 +138,7 @@ const NewFieldDialog = ({
       });
     }
 
-    setIsOpened(false);
+    onOpenChange(false);
   };
 
   useEffect(() => {
@@ -147,16 +150,7 @@ const NewFieldDialog = ({
   }, [initialData, mode, form, isOpened]);
 
   return (
-    <Dialog open={isOpened} onOpenChange={setIsOpened}>
-      <DialogTrigger asChild>
-        {mode === "create" ? (
-          <Button>Create new field</Button>
-        ) : (
-          <Button variant="ghost" size="icon" aria-label={`Edit field ${name}`}>
-            <PencilIcon className="h-4 w-4 text-hkOrange" />
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={isOpened} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>

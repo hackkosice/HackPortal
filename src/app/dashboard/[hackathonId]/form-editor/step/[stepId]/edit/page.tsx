@@ -17,12 +17,11 @@ const FormEditorStepPage = async ({
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
-  const stepInfo = await getStepInfo(Number(params.stepId));
 
   return (
     <FormStepEditor
-      stepInfo={stepInfo}
       hackathonId={Number(params.hackathonId)}
+      stepId={Number(params.stepId)}
     />
   );
 };

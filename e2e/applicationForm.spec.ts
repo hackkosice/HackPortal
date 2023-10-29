@@ -66,8 +66,12 @@ test.describe("application form", () => {
     await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
-      page.getByText("1. What is your experience with hackathons? (textarea)")
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(
+      page.getByText("What is your experience with hackathons?")
     ).toBeVisible();
+    await expect(page.getByText("textarea")).toBeVisible();
 
     await page.getByRole("button", { name: "Create new field" }).click();
     await page
@@ -78,8 +82,12 @@ test.describe("application form", () => {
     await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
-      page.getByText("2. I have been at the hackathon in the past. (checkbox)")
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(
+      page.getByText("I have been at the hackathon in the past.")
     ).toBeVisible();
+    await expect(page.getByText("checkbox")).toBeVisible();
 
     await page.getByRole("button", { name: "Create new field" }).click();
     await page.getByLabel("Label").fill("What company do you work for?");
@@ -88,17 +96,44 @@ test.describe("application form", () => {
     await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
-      page.getByText("3. What company do you work for? (text)")
-    ).toBeVisible();
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(page.getByText("What company do you work for?")).toBeVisible();
+    await expect(page.getByText("text", { exact: true })).toBeVisible();
 
     // Deleting field
     await page
       .getByRole("button", {
-        name: "Delete field iHaveBeenAtTheHackathonInThePast",
+        name: "Open menu iHaveBeenAtTheHackathonInThePast form field",
       })
       .click();
+    await page.getByRole("menuitem", { name: "Delete" }).click();
     await expect(
-      page.getByText("2. I have been at the hackathon in the past. (checkbox)")
+      page.getByText(
+        'Are you sure you want to delete form field "I have been at the hackathon in the past."? It may contain already filled values!'
+      )
+    ).toBeVisible();
+    await page.getByRole("button", { name: "No" }).click();
+    await expect(page.getByRole("button", { name: "No" })).not.toBeVisible();
+    await expect(
+      page.getByText("I have been at the hackathon in the past.")
+    ).toBeVisible();
+
+    await page
+      .getByRole("button", {
+        name: "Open menu iHaveBeenAtTheHackathonInThePast form field",
+      })
+      .click();
+    await page.getByRole("menuitem", { name: "Delete" }).click();
+    await expect(
+      page.getByText(
+        'Are you sure you want to delete form field "I have been at the hackathon in the past."? It may contain already filled values!'
+      )
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Yes" }).click();
+    await expect(page.getByRole("button", { name: "Yes" })).not.toBeVisible();
+    await expect(
+      page.getByText("I have been at the hackathon in the past.")
     ).not.toBeVisible();
 
     // Recreating deleted field
@@ -111,15 +146,20 @@ test.describe("application form", () => {
     await page.getByRole("button", { name: "Save new field" }).click();
 
     await expect(
-      page.getByText("3. I have been at the hackathon in the past. (checkbox)")
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(
+      page.getByText("I have been at the hackathon in the past.")
     ).toBeVisible();
+    await expect(page.getByText("checkbox")).toBeVisible();
 
     // Editing field
     await page
       .getByRole("button", {
-        name: "Edit field whatIsYourExperienceWithHackathons",
+        name: "Open menu whatIsYourExperienceWithHackathons form field",
       })
       .click();
+    await page.getByRole("menuitem", { name: "Edit field" }).click();
     await expect(
       page.getByRole("heading", { name: "Edit field" })
     ).toBeVisible();
@@ -128,11 +168,15 @@ test.describe("application form", () => {
     );
     await page.getByLabel("Label").fill("What is your experience with coding?");
     await page.getByRole("button", { name: "Save field" }).click();
+
     await expect(
-      page.getByText("1. What is your experience with hackathons? (textarea)")
+      page.getByRole("heading", { name: "Edit field" })
     ).not.toBeVisible();
     await expect(
-      page.getByText("1. What is your experience with coding? (textarea)")
+      page.getByText("What is your experience with hackathons?")
+    ).not.toBeVisible();
+    await expect(
+      page.getByText("What is your experience with coding?")
     ).toBeVisible();
 
     await page.getByRole("link", { name: "Back to steps" }).click();
