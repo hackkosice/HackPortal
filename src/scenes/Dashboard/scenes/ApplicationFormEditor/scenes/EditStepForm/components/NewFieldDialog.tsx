@@ -55,6 +55,7 @@ export type Props = {
   mode?: "create" | "edit";
   formFieldId?: number;
   initialData?: NewFieldForm;
+  name?: string;
 };
 
 const createName = (label: string) => {
@@ -81,6 +82,7 @@ const NewFieldDialog = ({
   mode = "create",
   formFieldId,
   initialData,
+  name,
 }: Props) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewFieldForm>({
@@ -150,11 +152,7 @@ const NewFieldDialog = ({
         {mode === "create" ? (
           <Button>Create new field</Button>
         ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Edit field ${initialData?.label}`}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Edit field ${name}`}>
             <PencilIcon className="h-4 w-4 text-hkOrange" />
           </Button>
         )}

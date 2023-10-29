@@ -76,13 +76,13 @@ const StepFormField = ({
           mode="edit"
           initialData={{
             label,
-            name,
             typeId: formFieldTypes
               .find((fieldType) => fieldType.value === type)
               ?.id.toString() as string,
             required,
             optionListId: optionListId ? optionListId.toString() : undefined,
           }}
+          name={name}
         />
         <Button
           size="icon"

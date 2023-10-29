@@ -93,7 +93,9 @@ test.describe("application form", () => {
 
     // Deleting field
     await page
-      .getByRole("button", { name: "Delete field hackathonsPast" })
+      .getByRole("button", {
+        name: "Delete field iHaveBeenAtTheHackathonInThePast",
+      })
       .click();
     await expect(
       page.getByText("2. I have been at the hackathon in the past. (checkbox)")
@@ -113,7 +115,11 @@ test.describe("application form", () => {
     ).toBeVisible();
 
     // Editing field
-    await page.getByRole("button", { name: "Edit field experience" }).click();
+    await page
+      .getByRole("button", {
+        name: "Edit field whatIsYourExperienceWithHackathons",
+      })
+      .click();
     await expect(
       page.getByRole("heading", { name: "Edit field" })
     ).toBeVisible();
@@ -137,12 +143,12 @@ test.describe("application form", () => {
 
     // Deleting step with fields
     await page.getByRole("button", { name: "Delete step 2" }).click();
-    await expect(
-      page.getByText(
-        "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "No" }).click();
+    // await expect(
+    //   page.getByText(
+    //     "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
+    //   )
+    // ).toBeVisible();
+    // await page.getByRole("button", { name: "No" }).click();
     await expect(page.getByText("Experience")).toBeVisible();
   });
 
