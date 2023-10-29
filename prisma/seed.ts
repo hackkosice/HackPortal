@@ -5,9 +5,13 @@ import {
   FormFieldType,
   FormFieldTypeEnum,
 } from "../src/services/types/formFields";
+import {
+  ApplicationStatus,
+  ApplicationStatusEnum,
+} from "../src/services/types/applicationStatus";
 const prisma = new PrismaClient();
 async function main() {
-  const statuses = ["open", "submitted", "invited", "confirmed", "declined"];
+  const statuses: ApplicationStatus[] = Object.values(ApplicationStatusEnum);
   for (const status of statuses) {
     await prisma.applicationStatus.upsert({
       where: { name: status },
