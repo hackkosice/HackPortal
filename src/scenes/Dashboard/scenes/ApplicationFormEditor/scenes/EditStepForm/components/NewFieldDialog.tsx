@@ -42,6 +42,7 @@ const newFieldFormSchema = z.object({
   label: z.string().min(1),
   typeId: z.string().min(1),
   optionListId: z.string().min(1).optional(),
+  newOptionListName: z.string().min(1).optional(),
   required: z.boolean().optional(),
 });
 
@@ -98,12 +99,15 @@ const NewFieldDialog = ({
   const hasOptions =
     selectedFieldType &&
     FormFieldTypesWithOptions.includes(selectedFieldType.value);
+  const selectedOptionListId = form.watch("optionListId");
+  const hasNewOptionList = selectedOptionListId === "new";
 
   const onNewFieldSubmit = async ({
     label,
     typeId,
     required,
     optionListId,
+    newOptionListName,
   }: NewFieldForm) => {
     if (mode === "edit" && formFieldId) {
       await editFormField({
@@ -113,6 +117,8 @@ const NewFieldDialog = ({
         typeId: Number(typeId),
         required: Boolean(required),
         optionListId: optionListId ? Number(optionListId) : undefined,
+        newOptionListName:
+          optionListId === "new" ? newOptionListName : undefined,
       });
     } else if (mode === "create" && stepId) {
       await createNewFormField({
@@ -122,6 +128,8 @@ const NewFieldDialog = ({
         typeId: Number(typeId),
         required: Boolean(required),
         optionListId: optionListId ? Number(optionListId) : undefined,
+        newOptionListName:
+          optionListId === "new" ? newOptionListName : undefined,
       });
     }
 
@@ -228,8 +236,30 @@ const NewFieldDialog = ({
                               {optionList.name}
                             </SelectItem>
                           ))}
+                          <SelectItem value={"new"}>
+                            (New empty option list)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {hasNewOptionList && (
+                <FormField
+                  control={form.control}
+                  name="newOptionListName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New option list name</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Option list name"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
