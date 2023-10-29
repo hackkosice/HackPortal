@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
+  DocumentDuplicateIcon,
   EllipsisHorizontalCircleIcon,
   PencilSquareIcon,
   TrashIcon,
@@ -23,6 +24,7 @@ import deleteFormField from "@/server/actions/dashboard/deleteFormField";
 import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
+import duplicateFormField from "@/server/actions/dashboard/duplicateFormField";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];
@@ -95,6 +97,15 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
           >
             <PencilSquareIcon className="h-4 w-4 mr-1" />
             Edit field
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={async () => {
+              await duplicateFormField({ formFieldId: id });
+            }}
+          >
+            <DocumentDuplicateIcon className="h-4 w-4 mr-1" />
+            Duplicate field
           </DropdownMenuItem>
 
           <DropdownMenuItem
