@@ -146,6 +146,16 @@ test.describe("application form", () => {
       page.getByRole("heading", { name: "Application Form Editor" })
     ).toBeVisible();
     await expect(page.getByText("Experience")).toBeVisible();
+
+    // Deleting step with fields
+    await page.getByRole("button", { name: "Delete step 2" }).click();
+    await expect(
+      page.getByText(
+        "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
+      )
+    ).toBeVisible();
+    await page.getByRole("button", { name: "No" }).click();
+    await expect(page.getByText("Experience")).toBeVisible();
   });
 
   test("submitting application form (signed in hacker)", async ({

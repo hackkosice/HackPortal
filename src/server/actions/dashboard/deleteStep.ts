@@ -18,32 +18,23 @@ const deleteStep = async ({ stepId, force }: DeleteStepInput) => {
   });
 
   if (fields.length > 0) {
-    const fieldsFilter = fields.map((field) => ({
-      fieldId: field.id,
-    }));
-
-    const fieldValues = await prisma.applicationFormFieldValue.findMany({
-      where: {
-        OR: fieldsFilter,
-      },
-    });
-
-    if (fieldValues.length > 0) {
-      if (force) {
-        await prisma.applicationFormFieldValue.deleteMany({
-          where: {
-            OR: fieldsFilter,
-          },
-        });
-      } else {
-        throw new Error("This form field has some values and force is false");
-      }
+    if (force) {
+      const fieldsFilter = fields.map((field) => ({
+        fieldId: field.id,
+      }));
+      await prisma.applicationFormFieldValue.deleteMany({
+        where: {
+          OR: fieldsFilter,
+        },
+      });
+      await prisma.formField.deleteMany({
+        where: {
+          stepId,
+        },
+      });
+    } else {
+      throw new Error("This step has some form fields and force is false");
     }
-    await prisma.formField.deleteMany({
-      where: {
-        stepId,
-      },
-    });
   }
 
   const deletedStep = await prisma.applicationFormStep.delete({

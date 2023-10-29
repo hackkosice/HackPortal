@@ -26,7 +26,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
     } catch (err) {
       if (err instanceof Error) {
         if (
-          err.message === "This form field has some values and force is false"
+          err.message === "This step has some form fields and force is false"
         ) {
           setIsConfirmationModalOpened(true);
           return;
@@ -47,7 +47,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
     <>
       <ConfirmationDialog
         question={
-          "This step contains fields, which have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
+          "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
         }
         onAnswer={onConfirmClose}
         isManuallyOpened={isConfirmationModalOpened}
