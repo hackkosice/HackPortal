@@ -11,6 +11,7 @@ type NewFormFieldInput = {
   typeId: number;
   required: boolean;
   optionListId?: number;
+  newOptionListName?: string;
 };
 
 const editFormField = async ({
@@ -20,8 +21,22 @@ const editFormField = async ({
   name,
   required,
   optionListId,
+  newOptionListName,
 }: NewFormFieldInput) => {
   await requireOrganizerSession();
+
+  let newOptionListId: number | null = null;
+  if (newOptionListName) {
+    const { id } = await prisma.optionList.create({
+      data: {
+        name: newOptionListName,
+      },
+      select: {
+        id: true,
+      },
+    });
+    newOptionListId = id;
+  }
 
   const {
     step: { id: stepId, hackathonId },
@@ -34,7 +49,7 @@ const editFormField = async ({
       label,
       name,
       required,
-      optionListId,
+      optionListId: newOptionListId ?? optionListId,
     },
     select: {
       step: {

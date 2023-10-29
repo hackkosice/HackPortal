@@ -164,7 +164,6 @@ test.describe("Option Lists", () => {
     await page.getByRole("button", { name: "Create new field" }).click();
 
     await page.getByLabel("Label").fill("What is your school?");
-    await page.getByLabel("Name (has to be unique across the form)").fill("school");
     await page.getByText("Select a field type").click();
     await page.getByLabel("select").getByText("select").click();
     await expect(page.getByLabel("Connected option list")).toBeVisible();
@@ -189,5 +188,33 @@ test.describe("Option Lists", () => {
     }
     await page.getByLabel(options[0]).getByText(options[0]).click();
     await page.getByRole("button", { name: "Save" }).click();
+  });
+
+  test("can create option list when creating form field", async ({
+    dashboardPage,
+    page,
+  }) => {
+    await dashboardPage.openFormEditor();
+    await page.getByText("General info").click();
+    await page.getByRole("button", { name: "Create new field" }).click();
+
+    await page.getByLabel("Label").fill("What is your gender?");
+    await page.getByText("Select a field type").click();
+    await page.getByLabel("radio").getByText("radio").click();
+    await expect(page.getByLabel("Connected option list")).toBeVisible();
+    await page.getByText("Select an option list").click();
+    await page
+      .getByLabel("(New empty option list)")
+      .getByText("(New empty option list)")
+      .click();
+    await expect(page.getByLabel("New option list name")).toBeVisible();
+    await page.getByLabel("New option list name").fill("genders");
+
+    await page.getByRole("button", { name: "Save new field" }).click();
+
+    await expect(page.getByText("What is your gender? (radio)")).toBeVisible();
+
+    await dashboardPage.openOptionLists();
+    await expect(page.getByText("genders")).toBeVisible();
   });
 });
