@@ -40,7 +40,6 @@ import editFormField from "@/server/actions/dashboard/editFormField";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
-  name: z.string().min(1),
   typeId: z.string().min(1),
   optionListId: z.string().min(1).optional(),
   required: z.boolean().optional(),
@@ -57,6 +56,23 @@ export type Props = {
   initialData?: NewFieldForm;
 };
 
+const createName = (label: string) => {
+  // Remove special characters and split the label into words
+  const words = label.replace(/[^a-zA-Z0-9 ]/g, "").split(/\s+/);
+
+  // Capitalize the first letter of each word except the first one
+  const camelCaseWords = words.map((word, index) => {
+    if (index === 0) {
+      return word.toLowerCase(); // Keep the first word lowercase
+    } else {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+  });
+
+  // Join the words to create the camelCase string
+  return camelCaseWords.join("");
+};
+
 const NewFieldDialog = ({
   stepId,
   formFieldTypes,
@@ -70,7 +86,6 @@ const NewFieldDialog = ({
     resolver: zodResolver(newFieldFormSchema),
     defaultValues: {
       label: "",
-      name: "",
       typeId: "",
       required: false,
     },
@@ -86,7 +101,6 @@ const NewFieldDialog = ({
 
   const onNewFieldSubmit = async ({
     label,
-    name,
     typeId,
     required,
     optionListId,
@@ -95,7 +109,7 @@ const NewFieldDialog = ({
       await editFormField({
         formFieldId,
         label,
-        name,
+        name: createName(label),
         typeId: Number(typeId),
         required: Boolean(required),
         optionListId: optionListId ? Number(optionListId) : undefined,
@@ -103,7 +117,7 @@ const NewFieldDialog = ({
     } else if (mode === "create" && stepId) {
       await createNewFormField({
         label,
-        name,
+        name: createName(label),
         stepId,
         typeId: Number(typeId),
         required: Boolean(required),
@@ -131,7 +145,7 @@ const NewFieldDialog = ({
           <Button
             variant="ghost"
             size="icon"
-            aria-label={`Edit field ${initialData?.name}`}
+            aria-label={`Edit field ${initialData?.label}`}
           >
             <PencilIcon className="h-4 w-4 text-hkOrange" />
           </Button>
@@ -152,21 +166,6 @@ const NewFieldDialog = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Label</FormLabel>
-                    <FormControl>
-                      <Input type="text" placeholder="Field label" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Name (has to be unique across the form)
-                    </FormLabel>
                     <FormControl>
                       <Input type="text" placeholder="Field label" {...field} />
                     </FormControl>
