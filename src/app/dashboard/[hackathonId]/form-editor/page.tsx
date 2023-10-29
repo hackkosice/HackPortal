@@ -21,7 +21,12 @@ const FormEditorPage = async ({
     Number(hackathonId)
   );
 
-  return <ApplicationFormEditor applicationFormSteps={applicationFormSteps} />;
+  return (
+    <ApplicationFormEditor
+      applicationFormSteps={applicationFormSteps}
+      hackathonId={Number(hackathonId)}
+    />
+  );
 };
 
 export default FormEditorPage;
