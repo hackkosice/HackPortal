@@ -172,7 +172,12 @@ test.describe("Option Lists", () => {
 
     await page.getByRole("button", { name: "Save new field" }).click();
 
-    await expect(page.getByText("What is your school? (select)")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(page.getByText("What is your school?")).toBeVisible();
+    await expect(page.getByText("select")).toBeVisible();
+    await expect(page.getByRole("link", { name: "schools" })).toBeVisible();
   });
 
   test("can fill the form with option list", async ({
@@ -212,7 +217,12 @@ test.describe("Option Lists", () => {
 
     await page.getByRole("button", { name: "Save new field" }).click();
 
-    await expect(page.getByText("What is your gender? (radio)")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+    await expect(page.getByText("What is your gender?")).toBeVisible();
+    await expect(page.getByText("radio")).toBeVisible();
+    await expect(page.getByRole("link", { name: "genders" })).toBeVisible();
 
     await dashboardPage.openOptionLists();
     await expect(page.getByText("genders")).toBeVisible();

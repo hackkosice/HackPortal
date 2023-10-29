@@ -9,23 +9,21 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import EditTitleDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";
-import StepFormField from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/StepFormField";
 import { Stack } from "@/components/ui/stack";
-import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import Link from "next/link";
-import { StepInfoData } from "@/server/getters/dashboard/stepInfo";
+import getStepInfo from "@/server/getters/dashboard/stepInfo";
 import getFormFieldTypes from "@/server/getters/dashboard/formFieldTypes";
 import getOptionLists from "@/server/getters/dashboard/optionListManager/getOptionLists";
+import FormFieldsTable from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/FormFieldsTable";
+import NewFieldButton from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldButton";
 
 export type Props = {
-  stepInfo: StepInfoData;
+  stepId: number;
   hackathonId: number;
 };
 
-const FormStepEditor = async ({
-  stepInfo: { title, formFields, id },
-  hackathonId,
-}: Props) => {
+const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
+  const { title, formFields } = await getStepInfo(Number(stepId));
   const formFieldTypes = await getFormFieldTypes();
   const optionLists = await getOptionLists();
   return (
@@ -33,28 +31,23 @@ const FormStepEditor = async ({
       <CardHeader>
         <Stack alignItems="center">
           <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
-          <EditTitleDialog initialValue={title} stepId={id} />
+          <EditTitleDialog initialValue={title} stepId={stepId} />
         </Stack>
       </CardHeader>
       <CardContent>
         <Heading size="small" spaceAfter="medium">
           Form fields
         </Heading>
-        <Stack direction="column" spacing="small" spaceAfter="medium">
-          {formFields.map((formField) => (
-            <StepFormField
-              key={formField.id}
-              formField={formField}
-              formFieldTypes={formFieldTypes}
-              optionLists={optionLists}
-            />
-          ))}
-        </Stack>
+        <FormFieldsTable
+          formFields={formFields}
+          formFieldTypes={formFieldTypes}
+          optionLists={optionLists}
+        />
       </CardContent>
       <CardFooter>
         <Stack direction="column">
-          <NewFieldDialog
-            stepId={id}
+          <NewFieldButton
+            stepId={stepId}
             formFieldTypes={formFieldTypes}
             optionLists={optionLists}
           />

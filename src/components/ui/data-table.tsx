@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { ReactNode, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
       <ScrollArea className="max-h-[400px]">
-        <div className="rounded-md border min-w-full">
+        <div className="rounded-md border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -136,6 +136,7 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
+        <ScrollBar orientation="horizontal" />
       </ScrollArea>
       {hasRowSelection &&
         rowSelectionAction &&
