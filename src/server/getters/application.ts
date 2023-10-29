@@ -3,6 +3,7 @@ import { Prisma } from ".prisma/client";
 import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 
 export type ApplicationStepData = {
   id: number;
@@ -35,6 +36,12 @@ const getApplicationData = async (): Promise<ApplicationData> => {
 
   const session = await getServerSession(authOptions);
 
+  const hackathonId = await getActiveHackathonId(prisma);
+
+  if (!hackathonId) {
+    throw new Error("No active hackathon");
+  }
+
   const stepsDb = await prisma.applicationFormStep.findMany({
     select: {
       id: true,
@@ -54,6 +61,9 @@ const getApplicationData = async (): Promise<ApplicationData> => {
     },
     orderBy: {
       position: Prisma.SortOrder.asc,
+    },
+    where: {
+      hackathonId,
     },
   });
 
