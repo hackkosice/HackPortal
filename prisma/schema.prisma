@@ -33,12 +33,12 @@ model Hackathon {
   hackers              Hacker[]
   sponsors             Sponsor[]
   applicationFormSteps ApplicationFormStep[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }
 
 model Hacker {
   id          Int          @id @default(autoincrement())
-  fullName    String?
-  age         Int?
   user        User         @relation(fields: [userId], references: [id])
   userId      Int          @unique
   team        Team?        @relation(fields: [teamId], references: [id])
@@ -47,6 +47,8 @@ model Hacker {
   application Application?
   hackathonId Int
   hackathon   Hackathon    @relation(fields: [hackathonId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Team {
@@ -59,9 +61,11 @@ model Team {
 }
 
 model Organizer {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @unique
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Sponsor {
@@ -71,6 +75,8 @@ model Sponsor {
   userId      Int       @unique
   hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
   hackathonId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Application {
@@ -80,6 +86,8 @@ model Application {
   status     ApplicationStatus           @relation(fields: [statusId], references: [id])
   statusId   Int
   formValues ApplicationFormFieldValue[]
+  createdAt  DateTime                    @default(now())
+  updatedAt  DateTime                    @updatedAt
 }
 
 model ApplicationStatus {
@@ -95,6 +103,8 @@ model ApplicationFormStep {
   formFields  FormField[]
   hackathon   Hackathon   @relation(fields: [hackathonId], references: [id])
   hackathonId Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model FormField {
@@ -110,6 +120,8 @@ model FormField {
   optionList      OptionList?                 @relation(fields: [optionListId], references: [id])
   optionListId    Int?
   formFieldValues ApplicationFormFieldValue[]
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
 }
 
 model FormFieldType {
@@ -122,8 +134,9 @@ model File {
   id             Int                        @id @default(autoincrement())
   name           String
   path           String
-  createdAt      DateTime                   @default(now())
   formFieldValue ApplicationFormFieldValue?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
 }
 
 model OptionList {
@@ -131,6 +144,8 @@ model OptionList {
   name       String      @unique
   options    Option[]
   formFields FormField[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Option {
@@ -139,6 +154,8 @@ model Option {
   list            OptionList                  @relation(fields: [listId], references: [id])
   listId          Int
   formFieldValues ApplicationFormFieldValue[]
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
 }
 
 model ApplicationFormFieldValue {
@@ -152,6 +169,8 @@ model ApplicationFormFieldValue {
   fileId        Int?        @unique
   option        Option?     @relation(fields: [optionId], references: [id])
   optionId      Int?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@unique([applicationId, fieldId])
 }
