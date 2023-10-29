@@ -14,7 +14,13 @@ const config = {
   testEnvironment: "jest-environment-jsdom",
   testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
   testPathIgnorePatterns: ["/node_modules/", "/.next/", "/e2e/"],
-  collectCoverageFrom: ["**/*.{ts,tsx}", "!**/*.d.ts", "!**/node_modules/**"],
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/components/stories/**/*.{ts,tsx}",
+    "!src/app/**/*.{ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**"
+  ],
   coverageThreshold: {
     global: {
       branches: 5,
