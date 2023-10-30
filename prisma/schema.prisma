@@ -33,6 +33,7 @@ model Hackathon {
   hackers              Hacker[]
   sponsors             Sponsor[]
   applicationFormSteps ApplicationFormStep[]
+  voteParameters       VoteParameter[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 }
@@ -66,6 +67,7 @@ model Organizer {
   userId    Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  votes     Vote[]
 }
 
 model Sponsor {
@@ -88,6 +90,7 @@ model Application {
   formValues ApplicationFormFieldValue[]
   createdAt  DateTime                    @default(now())
   updatedAt  DateTime                    @updatedAt
+  votes      Vote[]
 }
 
 model ApplicationStatus {
@@ -173,4 +176,35 @@ model ApplicationFormFieldValue {
   updatedAt     DateTime    @updatedAt
 
   @@unique([applicationId, fieldId])
+}
+
+model VoteParameter {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  weight      Int
+  minValue    Int
+  maxValue    Int
+  hackathonId Int
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  votes       Vote[]
+
+  @@unique([hackathonId, name])
+}
+
+model Vote {
+  id              Int           @id @default(autoincrement())
+  voteParameterId Int
+  voteParameter   VoteParameter @relation(fields: [voteParameterId], references: [id])
+  applicationId   Int
+  application     Application   @relation(fields: [applicationId], references: [id])
+  organizerId     Int
+  organizer       Organizer     @relation(fields: [organizerId], references: [id])
+  value           Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([voteParameterId, applicationId, organizerId])
 }
