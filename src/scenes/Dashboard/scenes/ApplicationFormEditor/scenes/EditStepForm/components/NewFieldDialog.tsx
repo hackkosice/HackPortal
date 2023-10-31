@@ -31,12 +31,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import createNewFormField from "@/server/actions/dashboard/createNewFormField";
+import createNewFormField from "@/server/actions/dashboard/applicationFormEditor/createNewFormField";
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import { PencilIcon } from "@heroicons/react/24/solid";
-import editFormField from "@/server/actions/dashboard/editFormField";
+import editFormField from "@/server/actions/dashboard/applicationFormEditor/editFormField";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),

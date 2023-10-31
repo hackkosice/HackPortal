@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
-import deleteStep from "@/server/actions/dashboard/deleteStep";
+import deleteStep from "@/server/actions/dashboard/applicationFormEditor/deleteStep";
 import { useParams } from "next/navigation";
 
 type StepProps = {

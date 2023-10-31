@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import editStep from "@/server/actions/dashboard/editStep";
+import editStep from "@/server/actions/dashboard/applicationFormEditor/editStep";
 
 const titleEditFormSchema = z.object({
   title: z.string(),

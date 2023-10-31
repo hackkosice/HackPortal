@@ -1,5 +1,5 @@
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 export type OptionList = {
   id: number;

@@ -1,6 +1,6 @@
 import { prisma } from "@/services/prisma";
 import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 export type FormFieldTypesData = {
   id: number;

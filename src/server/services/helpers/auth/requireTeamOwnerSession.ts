@@ -1,4 +1,4 @@
-import requireHackerSession from "@/server/services/helpers/requireHackerSession";
+import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 import { prisma } from "@/services/prisma";
 
 const requireTeamOwnerSession = async () => {

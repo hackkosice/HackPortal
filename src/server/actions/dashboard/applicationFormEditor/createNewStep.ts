@@ -4,7 +4,7 @@ import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 type CreateNewStepInput = {
   hackathonId: number;

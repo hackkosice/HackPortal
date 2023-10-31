@@ -1,8 +1,8 @@
 import { prisma } from "@/services/prisma";
-import createFormValuesObject from "@/server/services/helpers/createFormValuesObject";
+import createFormValuesObject from "@/server/services/helpers/applications/createFormValuesObject";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 export type ApplicationDetailData = {
   id: number;
