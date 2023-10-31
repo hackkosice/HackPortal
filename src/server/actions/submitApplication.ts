@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
-import isApplicationComplete from "@/server/services/helpers/isApplicationComplete";
+import isApplicationComplete from "@/server/services/helpers/applications/isApplicationComplete";
 import { revalidatePath } from "next/cache";
 
 const submitApplication = async () => {

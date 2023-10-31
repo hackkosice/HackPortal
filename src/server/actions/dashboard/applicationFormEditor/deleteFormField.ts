@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 type DeleteFormFieldInput = {
   fieldId: number;

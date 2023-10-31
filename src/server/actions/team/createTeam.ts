@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireHackerSession from "@/server/services/helpers/requireHackerSession";
+import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 

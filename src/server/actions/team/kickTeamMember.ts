@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireTeamOwnerSession from "@/server/services/helpers/requireTeamOwnerSession";
+import requireTeamOwnerSession from "@/server/services/helpers/auth/requireTeamOwnerSession";
 
 type KickTeamMemberInput = {
   memberId: number;

@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 import { revalidatePath } from "next/cache";
 
 type DeleteOptionsInput = {

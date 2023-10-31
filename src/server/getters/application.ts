@@ -1,6 +1,6 @@
 import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
-import { isStepCompleted } from "@/server/services/helpers/isApplicationComplete";
+import { isStepCompleted } from "@/server/services/helpers/applications/isApplicationComplete";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import getActiveHackathonId from "@/server/getters/getActiveHackathonId";

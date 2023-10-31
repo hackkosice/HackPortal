@@ -20,11 +20,11 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import deleteFormField from "@/server/actions/dashboard/deleteFormField";
+import deleteFormField from "@/server/actions/dashboard/applicationFormEditor/deleteFormField";
 import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
-import duplicateFormField from "@/server/actions/dashboard/duplicateFormField";
+import duplicateFormField from "@/server/actions/dashboard/applicationFormEditor/duplicateFormField";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];

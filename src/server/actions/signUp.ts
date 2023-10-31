@@ -2,7 +2,7 @@
 
 import { hash } from "argon2";
 import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
-import saveFormFieldValue from "@/server/services/helpers/saveFormFieldValue";
+import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
 import { prisma } from "@/services/prisma";
 import { SignUpSchema } from "@/scenes/SignUp/SignUp";
 

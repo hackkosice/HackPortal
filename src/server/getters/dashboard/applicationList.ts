@@ -1,6 +1,6 @@
-import createFormValuesObject from "@/server/services/helpers/createFormValuesObject";
+import createFormValuesObject from "@/server/services/helpers/applications/createFormValuesObject";
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/requireOrganizerSession";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 export type ApplicationListData = {
   applications: {
@@ -41,6 +41,17 @@ const getApplicationsList = async (
               value: true,
             },
           },
+        },
+      },
+      votes: {
+        select: {
+          voteParameter: {
+            select: {
+              weight: true,
+            },
+          },
+          organizerId: true,
+          value: true,
         },
       },
     },
