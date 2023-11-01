@@ -22,8 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import createNewVoteParameter from "@/server/actions/dashboard/voteParameterManager/createNewVoteParameter";
+import editVoteParameter from "@/server/actions/dashboard/voteParameterManager/editVoteParameter";
 
 const newVoteParameterFormSchema = z.object({
   name: z.string().min(1),
@@ -42,12 +42,21 @@ const newVoteParameterFormSchema = z.object({
 type NewVoteParameterForm = z.infer<typeof newVoteParameterFormSchema>;
 
 type NewVoteParameterDialogProps = {
-  hackathonId: number;
+  hackathonId?: number;
+  isOpened: boolean;
+  onOpenChange: (isOpened: boolean) => void;
+  mode?: "create" | "edit";
+  voteParameterId?: number;
+  initialData?: NewVoteParameterForm;
 };
 const NewVoteParameterDialog = ({
   hackathonId,
+  isOpened,
+  onOpenChange,
+  mode = "create",
+  voteParameterId,
+  initialData,
 }: NewVoteParameterDialogProps) => {
-  const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewVoteParameterForm>({
     resolver: zodResolver(newVoteParameterFormSchema),
     defaultValues: {
@@ -60,30 +69,37 @@ const NewVoteParameterDialog = ({
   });
 
   const onNewOptionListSave = async (data: NewVoteParameterForm) => {
-    await createNewVoteParameter({
-      ...data,
-      hackathonId,
-    });
-    setIsOpened(false);
+    if (mode === "edit" && voteParameterId) {
+      await editVoteParameter({
+        ...data,
+        voteParameterId,
+      });
+    } else if (mode === "create" && hackathonId) {
+      await createNewVoteParameter({
+        ...data,
+        hackathonId,
+      });
+    }
+    onOpenChange(false);
   };
 
   useEffect(() => {
-    if (isOpened) {
+    if (mode === "edit" && initialData && isOpened) {
+      form.reset(initialData);
+    } else if (mode === "create" && isOpened) {
       form.reset();
     }
-  }, [isOpened, form]);
+  }, [isOpened, form, mode, initialData]);
 
   return (
-    <Dialog onOpenChange={setIsOpened} open={isOpened}>
-      <DialogTrigger asChild>
-        <Button>
-          <PlusCircleIcon className="h-5 w-5 mr-1" />
-          Add new vote parameter
-        </Button>
-      </DialogTrigger>
+    <Dialog onOpenChange={onOpenChange} open={isOpened}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create new vote parameter</DialogTitle>
+          <DialogTitle>
+            {mode === "create"
+              ? "Create new vote parameter"
+              : "Edit vote parameter"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewOptionListSave)}>
@@ -203,7 +219,9 @@ const NewVoteParameterDialog = ({
               )}
             />
             <DialogFooter className="mt-5">
-              <Button type="submit">Create</Button>
+              <Button type="submit">
+                {mode === "create" ? "Create" : "Save"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
