@@ -2,7 +2,7 @@ import React from "react";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/ApplicationDetail";
+import ApplicationDetailCard from "@/scenes/Dashboard/scenes/ApplicationDetail/ApplicationDetailCard";
 import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
 
 export const metadata: Metadata = {
@@ -17,12 +17,9 @@ const ApplicationDetailPage = async ({
   if (!(await requireOrganizerApp())) {
     redirect("/application");
   }
-  const applicationDetail = await getApplicationDetail(
-    Number(params.applicationId)
-  );
   return (
-    <ApplicationDetail
-      applicationDetail={applicationDetail}
+    <ApplicationDetailCard
+      applicationId={Number(params.applicationId)}
       hackathonId={Number(params.hackathonId)}
     />
   );
