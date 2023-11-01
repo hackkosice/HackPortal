@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import getVoteParameters from "@/server/getters/dashboard/voteParameterManager/voteParameters";
 import {
   Card,
