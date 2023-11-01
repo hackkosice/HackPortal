@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { VoteParameter, VoteParametersData } from "@/server/getters/dashboard/voteParameterManager/voteParameters";
+import {
+  VoteParameter,
+  VoteParametersData,
+} from "@/server/getters/dashboard/voteParameterManager/voteParameters";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteVoteParameter from "@/server/actions/dashboard/voteParameterManager/deleteVoteParameter";
 import NewVoteParameterDialog from "@/scenes/Dashboard/scenes/VoteParameterManager/components/NewVoteParameterDialog";
@@ -118,12 +121,10 @@ const voteParameterColumns: ColumnDef<VoteParameter>[] = [
 
 type VoteParametersTableProps = {
   voteParameters: VoteParametersData;
-}
+};
 
-const VoteParametersTable = ({
-  voteParameters,
-}: VoteParametersTableProps) => {
-  return <DataTable columns={voteParameterColumns} data={voteParameters} />
-}
+const VoteParametersTable = ({ voteParameters }: VoteParametersTableProps) => {
+  return <DataTable columns={voteParameterColumns} data={voteParameters} />;
+};
 
 export default VoteParametersTable;

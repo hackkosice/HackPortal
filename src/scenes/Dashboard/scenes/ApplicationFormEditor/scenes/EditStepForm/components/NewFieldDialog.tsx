@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +34,6 @@ import createNewFormField from "@/server/actions/dashboard/applicationFormEditor
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
-import { PencilIcon } from "@heroicons/react/24/solid";
 import editFormField from "@/server/actions/dashboard/applicationFormEditor/editFormField";
 
 const newFieldFormSchema = z.object({
@@ -55,7 +53,6 @@ export type Props = {
   mode?: "create" | "edit";
   formFieldId?: number;
   initialData?: NewFieldForm;
-  name?: string;
   isOpened: boolean;
   onOpenChange: (isOpened: boolean) => void;
 };
@@ -84,7 +81,6 @@ const NewFieldDialog = ({
   mode = "create",
   formFieldId,
   initialData,
-  name,
   isOpened,
   onOpenChange,
 }: Props) => {

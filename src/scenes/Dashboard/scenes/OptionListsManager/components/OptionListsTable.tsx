@@ -24,7 +24,6 @@ import { Stack } from "@/components/ui/stack";
 import NewOptionListDialog from "@/scenes/Dashboard/scenes/OptionListsManager/components/NewOptionListDialog";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteOptionList from "@/server/actions/dashboard/optionListManager/deleteOptionList";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type OptionListsTableProps = {
   optionLists: OptionListsData;
@@ -100,9 +99,7 @@ const columns: ColumnDef<OptionList>[] = [
     },
   },
 ];
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-);
+
 const OptionListsTable = ({ optionLists }: OptionListsTableProps) => {
   return (
     <>
