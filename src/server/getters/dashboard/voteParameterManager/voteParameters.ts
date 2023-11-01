@@ -1,6 +1,7 @@
 import { prisma } from "@/services/prisma";
 
 export type VoteParameter = {
+  id: number;
   name: string;
   description: string | null;
   weight: number;
@@ -17,6 +18,7 @@ const getVoteParameters = (
       hackathonId,
     },
     select: {
+      id: true,
       name: true,
       description: true,
       weight: true,
