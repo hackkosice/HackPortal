@@ -37,6 +37,115 @@ export class DashboardPage {
     ).toBeVisible();
   }
 
+  async openVoteParameters() {
+    await this.page.getByRole("tab", { name: "Settings" }).click();
+
+    await this.page
+      .getByRole("link", { name: "Manage vote parameters" })
+      .click();
+
+    await expect(
+      this.page.getByRole("heading", { name: "Vote parameters" })
+    ).toBeVisible();
+  }
+
+  async createNewVoteParameter({
+    name,
+    description,
+    minValue,
+    maxValue,
+    weight,
+  }: {
+    name: string;
+    description: string;
+    minValue: number;
+    maxValue: number;
+    weight: number;
+  }) {
+    await this.page
+      .getByRole("button", { name: "Add new vote parameter" })
+      .click();
+    await expect(
+      this.page.getByRole("heading", { name: "Create new vote parameter" })
+    ).toBeVisible();
+    await this.page.getByLabel("Name").fill(name);
+    await this.page.getByLabel("Optional description").fill(description);
+    await this.page.getByLabel("Minimal value").fill(minValue.toString());
+    await this.page.getByLabel("Maximal value").fill(maxValue.toString());
+    await this.page.getByLabel("Weight").fill(weight.toString());
+    await this.page.getByRole("button", { name: "Create" }).click();
+    await expect(
+      this.page.getByRole("heading", { name: "Create new vote parameter" })
+    ).not.toBeVisible();
+  }
+
+  async editVoteParameter({
+    originalName,
+    name,
+    description,
+    minValue,
+    maxValue,
+    weight,
+  }: {
+    originalName: string;
+    name: string;
+    description: string;
+    minValue: number;
+    maxValue: number;
+    weight: number;
+  }) {
+    await this.page
+      .getByRole("button", { name: `Open menu ${originalName} vote parameter` })
+      .click();
+    await this.page
+      .getByRole("menuitem", { name: "Edit vote parameter" })
+      .click();
+    await expect(
+      this.page.getByRole("heading", { name: "Edit vote parameter" })
+    ).toBeVisible();
+    await this.page.getByLabel("Name").fill(name);
+    await this.page.getByLabel("Optional description").fill(description);
+    await this.page.getByLabel("Minimal value").fill(minValue.toString());
+    await this.page.getByLabel("Maximal value").fill(maxValue.toString());
+    await this.page.getByLabel("Weight").fill(weight.toString());
+    await this.page.getByRole("button", { name: "Save" }).click();
+    await expect(
+      this.page.getByRole("heading", { name: "Edit vote parameter" })
+    ).not.toBeVisible();
+  }
+
+  async deleteVoteParameter({ name }: { name: string }) {
+    await this.page
+      .getByRole("button", { name: `Open menu ${name} vote parameter` })
+      .click();
+    await this.page.getByRole("menuitem", { name: "Delete" }).click();
+    await expect(
+      this.page.getByText(
+        `Are you sure you want to delete vote parameter "${name}"? It may contain some votes already!`
+      )
+    ).toBeVisible();
+    await this.page.getByRole("button", { name: "No" }).click();
+    await expect(
+      this.page.getByRole("button", { name: "No" })
+    ).not.toBeVisible();
+    await expect(this.page.getByText(name, { exact: true })).toBeVisible();
+
+    await this.page
+      .getByRole("button", { name: `Open menu ${name} vote parameter` })
+      .click();
+    await this.page.getByRole("menuitem", { name: "Delete" }).click();
+    await expect(
+      this.page.getByText(
+        `Are you sure you want to delete vote parameter "${name}"? It may contain some votes already!`
+      )
+    ).toBeVisible();
+    await this.page.getByRole("button", { name: "Yes" }).click();
+    await expect(
+      this.page.getByRole("button", { name: "Yes" })
+    ).not.toBeVisible();
+    await expect(this.page.getByText(name, { exact: true })).not.toBeVisible();
+  }
+
   async signOut() {
     await this.page.getByRole("button", { name: "Sign out" }).click();
 

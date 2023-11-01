@@ -11,7 +11,7 @@ type DashboardLayoutProps = {
 const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
   const { hackathons } = await getHackathons();
   return (
-    <div className="mx-auto mt-[200px] w-full md:min-w-[75%]">
+    <div className="mx-auto mt-[100px] md:mt-[200px] w-full md:min-w-[75%]">
       <Stack
         direction="column"
         className="md:flex-row md:justify-between md:items-center md:mx-20"

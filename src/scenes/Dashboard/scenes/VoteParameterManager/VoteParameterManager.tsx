@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import getVoteParameters from "@/server/getters/dashboard/voteParameterManager/voteParameters";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Stack } from "@/components/ui/stack";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import NewVoteParameterButton from "@/scenes/Dashboard/scenes/VoteParameterManager/components/NewVoteParameterButton";
 import VoteParametersTable from "@/scenes/Dashboard/scenes/VoteParameterManager/components/VoteParametersTable";
 
@@ -21,11 +26,13 @@ const VoteParameterManager = async ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Stack direction="column">
+        <div className="md:max-w-[50%]">
           <VoteParametersTable voteParameters={voteParameters} />
-          <NewVoteParameterButton hackathonId={hackathonId} />
-        </Stack>
+        </div>
       </CardContent>
+      <CardFooter>
+        <NewVoteParameterButton hackathonId={hackathonId} />
+      </CardFooter>
     </Card>
   );
 };
