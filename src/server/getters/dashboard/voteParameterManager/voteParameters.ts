@@ -1,6 +1,6 @@
 import { prisma } from "@/services/prisma";
 
-type VoteParameter = {
+export type VoteParameter = {
   name: string;
   description: string | null;
   weight: number;
@@ -8,7 +8,7 @@ type VoteParameter = {
   maxValue: number;
 };
 
-type VoteParametersData = VoteParameter[];
+export type VoteParametersData = VoteParameter[];
 const getVoteParameters = (
   hackathonId: number
 ): Promise<VoteParametersData> => {
@@ -25,3 +25,5 @@ const getVoteParameters = (
     },
   });
 };
+
+export default getVoteParameters;
