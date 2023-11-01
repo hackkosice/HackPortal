@@ -10,28 +10,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ApplicationDetailData } from "@/server/getters/dashboard/applicationDetail";
+import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
+import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/components/ApplicationDetail";
 
 export type Props = {
-  applicationDetail: ApplicationDetailData;
+  applicationId: number;
   hackathonId: number;
 };
 
-const ApplicationDetail = ({ applicationDetail, hackathonId }: Props) => {
+const ApplicationDetailCard = async ({ applicationId, hackathonId }: Props) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Application detail</CardTitle>
       </CardHeader>
       <CardContent>
-        <Stack direction="column" spacing="small">
-          {Object.keys(applicationDetail.values).map((key) => (
-            <Text key={key}>
-              <span className="font-bold mr-1">{key}:</span>
-              {applicationDetail.values[key]}
-            </Text>
-          ))}
-        </Stack>
+        <ApplicationDetail applicationId={applicationId} />
       </CardContent>
       <CardFooter>
         <Button asChild size="small" variant="outline">
@@ -44,4 +38,4 @@ const ApplicationDetail = ({ applicationDetail, hackathonId }: Props) => {
   );
 };
 
-export default ApplicationDetail;
+export default ApplicationDetailCard;

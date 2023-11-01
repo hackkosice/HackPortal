@@ -5,19 +5,14 @@ import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 type AddVoteInput = {
-  organizerId: number;
   applicationId: number;
   values: {
     voteParameterId: number;
     value: number;
   }[];
 };
-const addVote = async ({
-  organizerId,
-  applicationId,
-  values,
-}: AddVoteInput) => {
-  await requireOrganizerSession();
+const addVote = async ({ applicationId, values }: AddVoteInput) => {
+  const { id: organizerId } = await requireOrganizerSession();
 
   if (values.length === 0) {
     throw new Error("No values provided");
