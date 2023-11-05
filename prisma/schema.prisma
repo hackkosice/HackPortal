@@ -70,6 +70,7 @@ model Organizer {
   votes                         Vote[]
   currentApplicationForReview   Application? @relation(fields: [currentApplicationForReviewId], references: [id])
   currentApplicationForReviewId Int?
+  isAdmin                       Boolean      @default(false)
 }
 
 model Sponsor {
