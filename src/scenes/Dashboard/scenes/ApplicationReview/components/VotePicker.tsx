@@ -24,6 +24,11 @@ const VotePicker = ({ voteParameters, applicationId }: VotePickerProps) => {
   );
   const onSaveClick = async () => {
     if (!isVoteValid) return;
+    setSelectedValues(
+      Object.fromEntries(
+        voteParameters.map((voteParameter) => [voteParameter.id, null])
+      )
+    );
     await addVote({
       applicationId,
       values: Object.entries(selectedValues).map(
