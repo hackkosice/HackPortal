@@ -45,6 +45,15 @@ const addVote = async ({ applicationId, values }: AddVoteInput) => {
 
   const { hackathonId } = result;
 
+  await prisma.organizer.update({
+    where: {
+      id: organizerId,
+    },
+    data: {
+      currentApplicationForReviewId: null,
+    },
+  });
+
   revalidatePath(`/dashboard/${hackathonId}/applications`, "page");
   revalidatePath(
     `/dashboard/${hackathonId}/applications/${applicationId}/detail`,

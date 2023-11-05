@@ -52,7 +52,7 @@ const SignUp = () => {
 
       // TODO handle error states
       clearLocalApplicationData();
-      router.push("/application");
+      router.push("/signin");
     },
     [router]
   );
