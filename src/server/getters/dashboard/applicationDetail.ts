@@ -1,5 +1,7 @@
 import { prisma } from "@/services/prisma";
-import createFormValuesObject from "@/server/services/helpers/applications/createFormValuesObject";
+import createFormValuesObject, {
+  ApplicationFormValuesObject,
+} from "@/server/services/helpers/applications/createFormValuesObject";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
@@ -7,7 +9,7 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 export type ApplicationDetailData = {
   id: number;
   status: string;
-  values: { [p: string]: string };
+  values: ApplicationFormValuesObject;
 };
 
 const getApplicationDetail = async (
@@ -18,6 +20,11 @@ const getApplicationDetail = async (
   const application = await prisma.application.findUnique({
     select: {
       id: true,
+      hacker: {
+        select: {
+          hackathonId: true,
+        },
+      },
       status: {
         select: {
           name: true,
@@ -42,12 +49,7 @@ const getApplicationDetail = async (
           value: true,
           field: {
             select: {
-              label: true,
-              type: {
-                select: {
-                  value: true,
-                },
-              },
+              id: true,
             },
           },
           option: {
@@ -67,10 +69,32 @@ const getApplicationDetail = async (
     throw new Error("Application not found");
   }
 
+  const formFields = await prisma.formField.findMany({
+    select: {
+      id: true,
+      label: true,
+    },
+    where: {
+      step: {
+        hackathonId: application.hacker.hackathonId,
+      },
+    },
+    orderBy: [
+      {
+        step: {
+          position: SortOrder.asc,
+        },
+      },
+      {
+        position: SortOrder.asc,
+      },
+    ],
+  });
+
   return {
     id: application.id,
     status: application.status.name,
-    values: createFormValuesObject(application.formValues),
+    values: createFormValuesObject(application.formValues, formFields),
   };
 };
 

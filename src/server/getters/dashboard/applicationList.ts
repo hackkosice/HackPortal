@@ -1,13 +1,18 @@
-import createFormValuesObject from "@/server/services/helpers/applications/createFormValuesObject";
+import createFormValuesObject, {
+  ApplicationFormValuesObject,
+} from "@/server/services/helpers/applications/createFormValuesObject";
 import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import { ApplicationStatus } from "@/services/types/applicationStatus";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
+import calculateApplicationScore from "@/server/services/helpers/applications/calculateApplicationScore";
 
+export type ApplicationData = {
+  properties: ApplicationFormValuesObject;
+};
 export type ApplicationListData = {
-  applications: {
-    id: number;
-    status: string;
-    values: { [p: string]: string };
-  }[];
+  applications: ApplicationData[];
 };
 
 const getApplicationsList = async (
@@ -28,12 +33,7 @@ const getApplicationsList = async (
           value: true,
           field: {
             select: {
-              label: true,
-              type: {
-                select: {
-                  value: true,
-                },
-              },
+              id: true,
             },
           },
           option: {
@@ -62,10 +62,36 @@ const getApplicationsList = async (
     },
   });
 
+  const formFields = await prisma.formField.findMany({
+    select: {
+      id: true,
+      label: true,
+    },
+    where: {
+      step: {
+        hackathonId,
+      },
+    },
+    orderBy: [
+      {
+        step: {
+          position: SortOrder.asc,
+        },
+      },
+      {
+        position: SortOrder.asc,
+      },
+    ],
+  });
+
   const applications = applicationsDb.map((application) => ({
-    id: application.id,
-    status: application.status.name,
-    values: createFormValuesObject(application.formValues),
+    properties: {
+      ...createFormValuesObject(application.formValues, formFields),
+      id: application.id.toString(),
+      score: calculateApplicationScore({ votes: application.votes }).toString(),
+      team: null,
+      status: application.status.name as ApplicationStatus,
+    },
   }));
 
   return {
