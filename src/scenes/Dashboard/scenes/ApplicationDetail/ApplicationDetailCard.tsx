@@ -1,7 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
-import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
 import {
   Card,
@@ -10,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
 import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/components/ApplicationDetail";
 
 export type Props = {

@@ -361,7 +361,7 @@ test.describe("application form", () => {
     await expect(page.getByText("Test Testovic")).toBeVisible();
     await expect(page.getByText("submitted")).toBeVisible();
 
-    await page.getByRole("link", { name: "Application detail 1" }).click();
+    await page.getByRole("link", { name: "Details" }).click();
 
     await expect(
       page.getByRole("heading", {

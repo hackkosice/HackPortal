@@ -3,7 +3,6 @@ import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import ApplicationDetailCard from "@/scenes/Dashboard/scenes/ApplicationDetail/ApplicationDetailCard";
-import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
 
 export const metadata: Metadata = {
   title: "Application detail",

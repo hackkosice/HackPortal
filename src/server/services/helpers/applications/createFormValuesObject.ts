@@ -1,17 +1,33 @@
 type FormValues = {
   value: string | null;
   option: { value: string } | null;
-  field: { type: { value: string }; label: string };
+  field: { id: number };
+}[];
+
+type FormFields = {
+  id: number;
+  label: string;
+}[];
+
+export type ApplicationFormValuesObject = {
+  [key: string]: string | null;
 };
-
 const createFormValuesObject = (
-  formValues: FormValues[]
-): { [key: string]: string } => {
-  const result = {} as { [key: string]: string };
+  formValues: FormValues,
+  formFields: FormFields
+): ApplicationFormValuesObject => {
+  const result = {} as ApplicationFormValuesObject;
 
-  for (const formValue of formValues) {
-    const value = formValue.value ? formValue.value : formValue.option?.value;
-    result[formValue.field.label] = value ?? "";
+  for (const formField of formFields) {
+    const formValue = formValues.find(
+      (formValue) => formValue.field.id === formField.id
+    );
+    if (formValue) {
+      const value = formValue.option?.value ?? formValue.value;
+      result[formField.label] = value ?? "";
+    } else {
+      result[formField.label] = null;
+    }
   }
 
   return result;
