@@ -1,31 +1,16 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
 import isApplicationComplete from "@/server/services/helpers/applications/isApplicationComplete";
 import { revalidatePath } from "next/cache";
+import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 
 const submitApplication = async () => {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.id) {
-    throw new Error("User not logged in");
-  }
-
-  const hacker = await prisma.hacker.findUnique({
-    where: {
-      userId: session.id,
-    },
-  });
-
-  if (!hacker) {
-    throw new Error("Hacker not found");
-  }
+  const { id: hackerId } = await requireHackerSession();
 
   const application = await prisma.application.findUnique({
     where: {
-      hackerId: hacker.id,
+      hackerId: hackerId,
     },
   });
 
