@@ -1,4 +1,5 @@
 import { prisma } from "@/services/prisma";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
 export type HackathonData = {
   id: number;
@@ -12,6 +13,8 @@ type GetHackathonsData = {
 };
 
 const getHackathons = async (): Promise<GetHackathonsData> => {
+  await requireOrganizerSession();
+
   const hackathons = await prisma.hackathon.findMany({
     select: {
       id: true,
