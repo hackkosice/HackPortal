@@ -1,6 +1,5 @@
 import React from "react";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import ApplicationFormEditor from "@/scenes/Dashboard/scenes/ApplicationFormEditor/ApplicationFormEditor";
 import getApplicationFormSteps from "@/server/getters/dashboard/applicationFormSteps";
@@ -14,9 +13,7 @@ const FormEditorPage = async ({
 }: {
   params: { hackathonId: string };
 }) => {
-  if (!(await requireOrganizerApp())) {
-    redirect("/application");
-  }
+  await requireOrganizerApp();
   const applicationFormSteps = await getApplicationFormSteps(
     Number(hackathonId)
   );

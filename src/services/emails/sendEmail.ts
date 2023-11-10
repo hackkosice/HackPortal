@@ -31,7 +31,15 @@ export const sendInvitationEmail = async ({
 
 export const sendEmailConfirmationEmail = async ({
   recipientEmail,
-}: SendEmailParams) => {
+  verificationToken,
+  userId,
+}: SendEmailParams & {
+  verificationToken: string;
+  userId: number;
+}) => {
+  const link = `${
+    process.env.HOSTNAME ?? "https://apply.hackkosice.com"
+  }/auth/${userId}/verify?token=${verificationToken}`;
   await sendEmailSafely(async () => {
     await emailClient.smtp.sendTransacEmail({
       templateId: BrevoTemplateIds.EMAIL_CONFIRMATION,
@@ -41,7 +49,7 @@ export const sendEmailConfirmationEmail = async ({
         },
       ],
       params: {
-        confirmationLink: "https://apply.hackkosice.com/confirm-email",
+        confirmationLink: link,
       },
     });
   });

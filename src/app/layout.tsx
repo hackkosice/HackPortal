@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import NextAuthProvider from "@/components/context/NextAuthProvider";
 import Navbar from "@/components/common/Navbar/Navbar";
 import React from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -31,6 +32,7 @@ export default async function RootLayout({
             <Navbar />
             <div className="flex min-h-screen px-2 md:px-5">{children}</div>
           </main>
+          <Toaster />
         </NextAuthProvider>
       </body>
     </html>

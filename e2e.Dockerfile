@@ -81,5 +81,6 @@ RUN npx playwright install
 ENV PORT 3004
 ENV HOSTNAME 0.0.0.0
 ENV NEXTAUTH_URL http://localhost:3004
+ENV BREVO_API_KEY test-api-key
 
 CMD ["node", "server.js"]

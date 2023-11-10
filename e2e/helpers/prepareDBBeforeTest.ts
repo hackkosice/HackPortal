@@ -45,6 +45,7 @@ export async function main(
     data: {
       email: "test-hacker@test.com",
       password: await hash("test123"),
+      emailVerified: true,
     },
   });
 
@@ -68,6 +69,7 @@ export async function main(
         data: {
           email: `test-hacker-${i + 2}@test.com`,
           password: await hash("test123"),
+          emailVerified: true,
         },
       });
 
@@ -91,6 +93,7 @@ export async function main(
     data: {
       email: "test-org@hackkosice.com",
       password: await hash("test123"),
+      emailVerified: true,
     },
   });
 

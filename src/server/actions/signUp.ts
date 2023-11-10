@@ -2,15 +2,12 @@
 
 import { hash } from "argon2";
 import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
-import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
 import { prisma } from "@/services/prisma";
 import { SignUpSchema } from "@/scenes/SignUp/SignUp";
+import { randomBytes } from "crypto";
+import { sendEmailConfirmationEmail } from "@/services/emails/sendEmail";
 
-const signUp = async ({
-  email,
-  password,
-  localApplicationData,
-}: SignUpSchema) => {
+const signUp = async ({ email, password }: SignUpSchema) => {
   const hashedPassword = await hash(password);
   const isOrganizer = email.endsWith("@hackkosice.com");
 
@@ -19,15 +16,24 @@ const signUp = async ({
       where: { email },
     });
     if (!user) {
+      const verificationToken = randomBytes(24).toString("hex");
       user = await prisma.user.create({
         data: {
           password: hashedPassword,
           email: email,
+          emailVerified: false,
+          emailVerificationToken: verificationToken,
         },
       });
 
       await prisma.organizer.create({
         data: { userId: user.id },
+      });
+
+      await sendEmailConfirmationEmail({
+        recipientEmail: user.email,
+        verificationToken,
+        userId: user.id,
       });
 
       return {
@@ -40,25 +46,19 @@ const signUp = async ({
     };
   }
 
-  const { hackerId: newHackerId } = await createHackerForActiveHackathon(
-    prisma,
-    email,
-    {
-      password: hashedPassword,
-    }
-  );
+  const { user } = await createHackerForActiveHackathon(prisma, email, {
+    password: hashedPassword,
+  });
 
-  if (localApplicationData && localApplicationData.length > 0) {
-    const application = await prisma.application.create({
-      data: {
-        hackerId: newHackerId,
-        statusId: 1,
-      },
-    });
-    for (const fieldValue of localApplicationData) {
-      await saveFormFieldValue(prisma, application.id, fieldValue);
-    }
+  if (!user.emailVerificationToken) {
+    throw new Error("Email verification token not found");
   }
+
+  await sendEmailConfirmationEmail({
+    recipientEmail: user.email,
+    verificationToken: user.emailVerificationToken,
+    userId: user.id,
+  });
 };
 
 export default signUp;

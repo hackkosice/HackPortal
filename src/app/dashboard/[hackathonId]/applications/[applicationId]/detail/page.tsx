@@ -1,6 +1,5 @@
 import React from "react";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import ApplicationDetailCard from "@/scenes/Dashboard/scenes/ApplicationDetail/ApplicationDetailCard";
 
@@ -13,9 +12,7 @@ const ApplicationDetailPage = async ({
 }: {
   params: { applicationId: string; hackathonId: string };
 }) => {
-  if (!(await requireOrganizerApp())) {
-    redirect("/application");
-  }
+  await requireOrganizerApp();
   return (
     <ApplicationDetailCard
       applicationId={Number(params.applicationId)}

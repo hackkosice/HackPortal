@@ -1,6 +1,5 @@
 import React from "react";
 import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import FormStepEditor from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
 
@@ -13,9 +12,7 @@ const FormEditorStepPage = async ({
 }: {
   params: { stepId: string; hackathonId: string };
 }) => {
-  if (!(await requireOrganizerApp())) {
-    redirect("/application");
-  }
+  await requireOrganizerApp();
 
   return (
     <FormStepEditor

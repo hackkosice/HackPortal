@@ -19,7 +19,8 @@ const config = {
     "!src/components/stories/**/*.{ts,tsx}",
     "!src/app/**/*.{ts,tsx}",
     "!**/*.d.ts",
-    "!**/node_modules/**"
+    "!**/node_modules/**",
+    "!src/services/emails/types/**/*.{ts,tsx}",
   ],
   coverageThreshold: {
     global: {

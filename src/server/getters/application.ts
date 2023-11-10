@@ -21,7 +21,10 @@ export type ApplicationStepData = {
 
 export type ApplicationData = {
   message: string;
-  signedIn: boolean;
+  authStatus: {
+    signedIn: boolean;
+    emailVerified: boolean;
+  };
   data: {
     application: {
       status: string;
@@ -77,7 +80,10 @@ const getApplicationData = async (): Promise<ApplicationData> => {
 
     return {
       message: "Application found",
-      signedIn: false,
+      authStatus: {
+        signedIn: false,
+        emailVerified: false,
+      },
       data: {
         application: {
           status: "open",
@@ -148,11 +154,15 @@ const getApplicationData = async (): Promise<ApplicationData> => {
 
   // If all steps are completed, the application can be submitted
 
-  const canSubmit = steps.every((step) => step.isCompleted);
+  const canSubmit =
+    steps.every((step) => step.isCompleted) && session.emailVerified;
 
   return {
     message: "Application found",
-    signedIn: true,
+    authStatus: {
+      signedIn: true,
+      emailVerified: session.emailVerified,
+    },
     data: {
       application: {
         status: applicationObject.status.name,

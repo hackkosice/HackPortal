@@ -1,10 +1,4 @@
-import NextAuth, {
-  User,
-  AdapterUser,
-  DefaultSession,
-  DefaultUser,
-} from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { User, DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
   /**
@@ -12,6 +6,7 @@ declare module "next-auth" {
    */
   interface Session extends DefaultSession {
     id: number;
+    emailVerified: boolean;
   }
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
@@ -32,5 +27,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: number;
     email: string;
+    emailVerified: boolean;
   }
 }

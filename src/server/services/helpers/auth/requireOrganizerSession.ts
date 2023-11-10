@@ -9,6 +9,10 @@ const requireOrganizerSession = async () => {
     throw new Error("User has to be signed in");
   }
 
+  if (!session?.emailVerified) {
+    throw new Error("User has to verify their email");
+  }
+
   const organizer = await prisma.organizer.findUnique({
     where: {
       userId: session.id,
