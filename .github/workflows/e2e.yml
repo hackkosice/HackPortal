@@ -11,6 +11,9 @@ jobs:
     env:
       DATABASE_URL: "file:./prod.db"
       NEXTAUTH_SECRET: playwright-secret
+      NEXTAUTH_URL: http://localhost:3000
+      BASE_URL: http://localhost:3000
+      BREVO_API_KEY: test-api-key
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v3

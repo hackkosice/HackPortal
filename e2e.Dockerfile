@@ -34,6 +34,9 @@ COPY . .
 RUN cp .env.template .env
 RUN echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)\n" >> .env
 RUN echo "DATABASE_URL=\"file:./prod.db\"" >> .env
+ENV NEXTAUTH_URL http://localhost:3004
+ENV BREVO_API_KEY test-api-key
+ENV BASE_URL http://localhost:3004
 
 # Setup database
 RUN npm run prisma:generate
@@ -82,5 +85,6 @@ ENV PORT 3004
 ENV HOSTNAME 0.0.0.0
 ENV NEXTAUTH_URL http://localhost:3004
 ENV BREVO_API_KEY test-api-key
+ENV BASE_URL http://localhost:3004
 
 CMD ["node", "server.js"]
