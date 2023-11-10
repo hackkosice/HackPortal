@@ -38,7 +38,7 @@ export const sendEmailConfirmationEmail = async ({
   userId: number;
 }) => {
   const link = `${
-    process.env.HOSTNAME ?? "https://apply.hackkosice.com"
+    process.env.BASE_URL ?? "https://apply.hackkosice.com"
   }/auth/${userId}/verify?token=${verificationToken}`;
   await sendEmailSafely(async () => {
     await emailClient.smtp.sendTransacEmail({

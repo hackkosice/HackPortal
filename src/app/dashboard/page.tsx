@@ -1,5 +1,5 @@
 import React from "react";
-import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
+import requireOrganizer from "@/services/helpers/requireOrganizer";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import Dashboard from "@/scenes/Dashboard/Dashboard";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const DashboardPage = async () => {
-  await requireOrganizerApp();
+  await requireOrganizer();
 
   const { hackathons } = await getHackathons();
   if (hackathons.length > 0) {

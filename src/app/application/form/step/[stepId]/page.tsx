@@ -1,9 +1,8 @@
 import React from "react";
 import ApplicationFormStep from "@/scenes/ApplicationFormStep/ApplicationFormStep";
-import { redirect } from "next/navigation";
-import requireOrganizerApp from "@/services/helpers/requireOrganizerApp";
 import getApplicationFormStep from "@/server/getters/applicationFormStep";
 import { Metadata } from "next";
+import requireNonOrganizer from "@/services/helpers/requireNonOrganizer";
 
 export const metadata: Metadata = {
   title: "Application Form",
@@ -14,9 +13,7 @@ const ApplicationFormStepPage = async ({
 }: {
   params: { stepId: string };
 }) => {
-  if (await requireOrganizerApp()) {
-    redirect("/dashboard");
-  }
+  await requireNonOrganizer();
   const applicationFormStepData = await getApplicationFormStep(
     Number(params.stepId)
   );

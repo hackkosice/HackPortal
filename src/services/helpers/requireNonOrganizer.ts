@@ -3,27 +3,31 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
 import { redirect } from "next/navigation";
 
-const requireOrganizerApp = async (): Promise<boolean> => {
+const requireNonOrganizer = async (): Promise<void> => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/application");
-  }
-
-  if (!session.emailVerified) {
-    redirect("/org-verify-email");
+    return;
   }
 
   const user = await prisma.user.findFirst({
     where: {
       id: session.id,
     },
-    include: {
+    select: {
       organizer: true,
     },
   });
 
-  return Boolean(user?.organizer);
+  if (!user?.organizer) {
+    return;
+  }
+
+  if (!session.emailVerified) {
+    redirect("/org-verify-email");
+  }
+
+  redirect("/dashboard");
 };
 
-export default requireOrganizerApp;
+export default requireNonOrganizer;
