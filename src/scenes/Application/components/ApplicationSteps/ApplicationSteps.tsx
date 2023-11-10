@@ -4,16 +4,24 @@ import { Stack } from "@/components/ui/stack";
 import ApplicationStep from "@/scenes/Application/components/ApplicationSteps/components/ApplicationStep";
 import getApplicationData from "@/server/getters/application";
 import ApplicationSubmitButton from "@/scenes/Application/components/ApplicationSteps/components/ApplicationSubmitButton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import UnverifiedEmailAlert from "@/components/common/UnverifiedEmailAlert";
 
 const ApplicationSteps = async () => {
-  const { data, signedIn } = await getApplicationData();
+  const {
+    data,
+    authStatus: { signedIn, emailVerified },
+  } = await getApplicationData();
   return (
     <>
       {!signedIn && (
-        <Text type="error" weight="bold">
-          You are not signed in.
-        </Text>
+        <Alert variant="destructive">
+          <AlertTitle>You are not signed in!</AlertTitle>
+          <AlertDescription>Please create an account.</AlertDescription>
+        </Alert>
       )}
+      {signedIn && !emailVerified && <UnverifiedEmailAlert />}
+
       <Text>Application status: {data.application.status}</Text>
       {data.application.status === "open" && (
         <Stack spacing="medium" direction="column">

@@ -38,7 +38,11 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        return { id: user.id, email: user.email };
+        return {
+          id: user.id,
+          email: user.email,
+          emailVerified: user.emailVerified,
+        };
       },
     }),
     GitHubProvider({
@@ -54,6 +58,7 @@ export const authOptions: AuthOptions = {
         });
         if (dbUser) {
           token.id = Number(dbUser.id);
+          token.emailVerified = dbUser.emailVerified;
         }
       }
 
@@ -62,6 +67,7 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.id = token.id;
+        session.emailVerified = token.emailVerified;
       }
 
       return session;

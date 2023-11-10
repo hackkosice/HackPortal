@@ -1,12 +1,17 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
+import { redirect } from "next/navigation";
 
 const requireOrganizerApp = async (): Promise<boolean> => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return false;
+    redirect("/application");
+  }
+
+  if (!session.emailVerified) {
+    redirect("/org-verify-email");
   }
 
   const user = await prisma.user.findFirst({

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
-import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,14 +23,6 @@ import signUp from "@/server/actions/signUp";
 export const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(4).max(12),
-  localApplicationData: z
-    .array(
-      z.object({
-        fieldId: z.number(),
-        value: z.string(),
-      })
-    )
-    .optional(),
 });
 
 export type SignUpSchema = z.infer<typeof signupSchema>;
@@ -44,11 +35,7 @@ const SignUp = () => {
 
   const onSubmit = useCallback(
     async (data: SignUpSchema) => {
-      const localApplicationData = getLocalApplicationData();
-      await signUp({
-        ...data,
-        localApplicationData,
-      });
+      await signUp(data);
 
       // TODO handle error states
       clearLocalApplicationData();

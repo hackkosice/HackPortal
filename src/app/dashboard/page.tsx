@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 };
 
 const DashboardPage = async () => {
-  if (!(await requireOrganizerApp())) {
-    redirect("/application");
-  }
+  await requireOrganizerApp();
 
   const { hackathons } = await getHackathons();
   if (hackathons.length > 0) {
