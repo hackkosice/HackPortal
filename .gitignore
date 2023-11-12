@@ -38,8 +38,8 @@ next-env.d.ts
 
 .env
 
-prisma/dev.db
-prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
 /test-results/
 /e2e/test-results/
 /e2e/test-reports/
