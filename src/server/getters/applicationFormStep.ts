@@ -54,6 +54,7 @@ export type ApplicationFormStepData = {
   signedIn: boolean;
   data: {
     title: string;
+    description: string | null;
     position: number;
     formFields: FormFieldData[];
   };
@@ -68,6 +69,7 @@ const getApplicationFormStep = async (
     select: {
       id: true,
       title: true,
+      description: true,
       position: true,
       formFields: {
         select: {
@@ -204,6 +206,7 @@ const getApplicationFormStep = async (
     signedIn: true,
     data: {
       title: stepFormFields.title,
+      description: stepFormFields.description,
       position: stepFormFields.position,
       formFields: resultFields,
     },

@@ -24,16 +24,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import editStep from "@/server/actions/dashboard/applicationFormEditor/editStep";
+import { Textarea } from "@/components/ui/textarea";
 
 const titleEditFormSchema = z.object({
   title: z.string(),
+  description: z.string(),
 });
 
 type TitleEditForm = z.infer<typeof titleEditFormSchema>;
 
 export type Props = {
   stepId: number;
-  initialValue?: string;
+  initialValue?: TitleEditForm;
 };
 
 const EditTitleDialog = ({ initialValue, stepId }: Props) => {
@@ -41,12 +43,13 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
   const form = useForm<TitleEditForm>({
     resolver: zodResolver(titleEditFormSchema),
     defaultValues: {
-      title: initialValue ?? "",
+      title: initialValue?.title ?? "",
+      description: initialValue?.description ?? "",
     },
   });
 
-  const onEditTitleModalSave = async ({ title }: TitleEditForm) => {
-    await editStep({ stepId, title });
+  const onEditTitleModalSave = async (data: TitleEditForm) => {
+    await editStep({ ...data, stepId });
     setIsOpened(false);
   };
 
@@ -55,12 +58,12 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
       <DialogTrigger asChild>
         <Button variant="outline" size="small">
           <PencilSquareIcon className="w-4 h-4 mr-1 text-hkOrange inline" />
-          Edit title
+          Edit info
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit title of the step</DialogTitle>
+          <DialogTitle>Edit info of the step</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onEditTitleModalSave)}>
@@ -69,9 +72,22 @@ const EditTitleDialog = ({ initialValue, stepId }: Props) => {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New title</FormLabel>
+                  <FormLabel>Step title</FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="Title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

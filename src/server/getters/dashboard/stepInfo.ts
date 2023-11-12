@@ -19,6 +19,7 @@ export type FormFieldData = {
 
 export type StepInfoData = {
   title: string;
+  description: string | null;
   formFields: FormFieldData[];
 };
 
@@ -31,6 +32,7 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
     },
     select: {
       title: true,
+      description: true,
       formFields: {
         select: {
           id: true,
