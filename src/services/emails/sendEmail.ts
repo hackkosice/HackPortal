@@ -5,6 +5,10 @@ type SendEmailParams = {
   recipientEmail: string;
 };
 const sendEmailSafely = async (callback: () => Promise<void>) => {
+  if (process.env.EMAIL_DEBUG) {
+    console.log("Email debug mode enabled, not sending email");
+    return;
+  }
   try {
     await callback();
   } catch (e) {

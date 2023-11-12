@@ -115,25 +115,29 @@ const ApplicationsTable = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide() && column.id !== "Actions")
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize cursor-pointer"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => {
-                    column.toggleVisibility(value);
-                    saveColumnVisibility(column.id, value);
-                  }}
-                  onSelect={(event) => event.preventDefault()}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+          <ScrollArea className="max-w-[70vw] md:max-w-[400px] max-h-[400px]">
+            {table
+              .getAllColumns()
+              .filter(
+                (column) => column.getCanHide() && column.id !== "Actions"
+              )
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize cursor-pointer"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => {
+                      column.toggleVisibility(value);
+                      saveColumnVisibility(column.id, value);
+                    }}
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenu>
       <ScrollArea className="max-h-[400px] w-[96vw] md:max-w-[61vw]">

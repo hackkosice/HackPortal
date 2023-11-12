@@ -142,12 +142,11 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
   },
   {
     header: "Option list",
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const { optionList } = row.original;
       if (!optionList) {
         return null;
       }
-      console.log(table);
       return (
         <Link
           href={`/option-lists/${optionList.id}/edit`}
