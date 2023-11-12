@@ -109,6 +109,7 @@ model ApplicationStatus {
 model ApplicationFormStep {
   id          Int         @id @default(autoincrement())
   title       String
+  description String?
   position    Int
   formFields  FormField[]
   hackathon   Hackathon   @relation(fields: [hackathonId], references: [id])
@@ -121,8 +122,10 @@ model FormField {
   id              Int                         @id @default(autoincrement())
   position        Int
   label           String
+  description     String?
   name            String
   required        Boolean
+  shownInList     Boolean                     @default(false)
   step            ApplicationFormStep         @relation(fields: [stepId], references: [id])
   stepId          Int
   type            FormFieldType               @relation(fields: [typeId], references: [id])
