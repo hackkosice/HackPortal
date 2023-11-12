@@ -51,7 +51,7 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
   };
 
   return (
-    <Card className="m-auto">
+    <Card className="mx-auto mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mb-10">
       <CardHeader>
         <CardTitle>{data?.title}</CardTitle>
         {data?.description && <Text>{data.description}</Text>}
@@ -63,11 +63,13 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
             formFields={data.formFields}
             onSubmit={onFormSubmit}
             actionButtons={
-              <Stack direction="row">
+              <Stack direction="row" className="w-full" justify="end">
                 <Button asChild variant="outline">
                   <Link href="/application">Back</Link>
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit" className="px-6">
+                  Save
+                </Button>
               </Stack>
             }
           />

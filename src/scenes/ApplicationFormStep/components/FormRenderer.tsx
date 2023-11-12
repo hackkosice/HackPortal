@@ -98,13 +98,15 @@ const FormRenderer = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack direction="column">
-          {formFields.map((formField: any) => (
-            <DynamicFormField
-              key={formField.id}
-              form={form}
-              formField={formField}
-            />
-          ))}
+          <Stack direction="column" className="md:px-20 w-full">
+            {formFields.map((formField: any) => (
+              <DynamicFormField
+                key={formField.id}
+                form={form}
+                formField={formField}
+              />
+            ))}
+          </Stack>
           {actionButtons}
         </Stack>
       </form>

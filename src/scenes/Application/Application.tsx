@@ -6,7 +6,7 @@ import { Stack } from "@/components/ui/stack";
 
 const Application = () => {
   return (
-    <Card className="m-auto">
+    <Card className="mx-auto mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] mb-20">
       <CardHeader>
         <CardTitle>Welcome to Hack Kosice Application portal!</CardTitle>
       </CardHeader>

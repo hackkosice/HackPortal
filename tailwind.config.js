@@ -42,6 +42,12 @@ const config = {
         default: ["var(--font-roboto)", ...fontFamily.mono],
         title: ["var(--font-league-spartan)", ...fontFamily.mono],
       },
+      spacing: {
+        navbarHeight: "90px",
+        navbarHeightMobile: "70px",
+        navbarHeightOffset: "120px",
+        navbarHeightOffsetMobile: "90px",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
