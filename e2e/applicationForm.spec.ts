@@ -40,15 +40,18 @@ test.describe("application form", () => {
 
     await expect(page.getByRole("heading", { name: "Step #2" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Edit title" }).click();
+    await page.getByRole("button", { name: "Edit info" }).click();
 
-    await page.getByLabel("New title").fill("Experience");
+    await page.getByLabel("Step title").fill("Experience");
+    await page.getByLabel("Description").fill("Experience - description");
 
     await page.getByRole("button", { name: "Save" }).click();
 
     await expect(
       page.getByRole("heading", { name: "Experience" })
     ).toBeVisible();
+
+    await expect(page.getByText("Experience - description")).toBeVisible();
 
     // Adding new fields
     await page.getByRole("button", { name: "Create new field" }).click();
@@ -229,6 +232,7 @@ test.describe("application form", () => {
     ).toBeDisabled();
     await expect(page.getByTestId("Step 2 completed icon")).not.toBeVisible();
     await page.getByText("Experience").click();
+    await expect(page.getByText("Experience - description")).toBeVisible();
     await page
       .getByLabel("What is your experience with coding?")
       .fill("It's good");
@@ -321,6 +325,7 @@ test.describe("application form", () => {
     await expect(page.getByTestId("Step 2 completed icon")).toBeVisible();
 
     await page.getByText("Experience").click();
+    await expect(page.getByText("Experience - description")).toBeVisible();
     await expect(
       page.getByLabel("What is your experience with coding?")
     ).toHaveValue("I am awesome");

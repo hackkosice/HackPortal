@@ -41,6 +41,14 @@ import {
 import { Check } from "lucide-react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Stack } from "@/components/ui/stack";
 
 export type Props = {
   formField: FormFieldData;
@@ -50,6 +58,16 @@ export type Props = {
 const DynamicFormField = ({ form, formField }: Props) => {
   const [openCombobox, setOpenCombobox] = useState(false);
   const { label, name, type, optionList, required } = formField;
+  const tooltip = formField.description ? (
+    <TooltipProvider delayDuration={400}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <InformationCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
+        </TooltipTrigger>
+        <TooltipContent>{formField.description}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : null;
   switch (type) {
     case FormFieldTypeEnum.text:
       return (
@@ -58,7 +76,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required={required}>{label}</FormLabel>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>{label}</FormLabel>
+                {tooltip}
+              </Stack>
               <FormControl>
                 <Input {...field} type="text" value={field.value as string} />
               </FormControl>
@@ -74,7 +95,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required={required}>{label}</FormLabel>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>{label}</FormLabel>
+                {tooltip}
+              </Stack>
               <FormControl>
                 <Textarea
                   {...field}
@@ -94,7 +118,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel required={required}>{label}</FormLabel>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>{label}</FormLabel>
+                {tooltip}
+              </Stack>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -128,7 +155,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel required={required}>{label}</FormLabel>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>{label}</FormLabel>
+                {tooltip}
+              </Stack>
               <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -191,7 +221,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required={required}>{label}</FormLabel>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>{label}</FormLabel>
+                {tooltip}
+              </Stack>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value as string}

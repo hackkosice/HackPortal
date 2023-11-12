@@ -68,9 +68,16 @@ const getApplicationsList = async (
       label: true,
     },
     where: {
-      step: {
-        hackathonId,
-      },
+      AND: [
+        {
+          step: {
+            hackathonId,
+          },
+        },
+        {
+          shownInList: true,
+        },
+      ],
     },
     orderBy: [
       {

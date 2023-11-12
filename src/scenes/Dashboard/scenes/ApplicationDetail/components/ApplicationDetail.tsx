@@ -10,11 +10,8 @@ const ApplicationDetail = async ({ applicationId }: ApplicationDetailProps) => {
   const applicationDetail = await getApplicationDetail(applicationId);
   return (
     <Stack direction="column" spacing="small">
-      {Object.keys(applicationDetail.values).map((key) => (
-        <Text key={key}>
-          <span className="font-bold mr-1">{key}:</span>
-          {applicationDetail.values[key]}
-        </Text>
+      {applicationDetail.properties.map((property) => (
+        <Text key={property.stepTitle}>{property.stepTitle}</Text>
       ))}
     </Stack>
   );
