@@ -12,7 +12,7 @@ const stackVariants = cva("flex", {
       none: "",
       small: "gap-2",
       medium: "gap-4",
-      large: "gap-7",
+      large: "gap-6",
     },
     alignItems: {
       center: "items-center",
