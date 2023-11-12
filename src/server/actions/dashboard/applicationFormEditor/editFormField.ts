@@ -12,6 +12,8 @@ type NewFormFieldInput = {
   required: boolean;
   optionListId?: number;
   newOptionListName?: string;
+  description?: string;
+  shouldBeShownInList?: boolean;
 };
 
 const editFormField = async ({
@@ -22,6 +24,8 @@ const editFormField = async ({
   required,
   optionListId,
   newOptionListName,
+  shouldBeShownInList,
+  description,
 }: NewFormFieldInput) => {
   await requireOrganizerSession();
 
@@ -47,9 +51,11 @@ const editFormField = async ({
     data: {
       typeId,
       label,
+      description,
       name,
       required,
       optionListId: newOptionListId ?? optionListId,
+      shownInList: shouldBeShownInList,
     },
     select: {
       step: {

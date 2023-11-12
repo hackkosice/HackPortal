@@ -25,6 +25,13 @@ import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scen
 import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import duplicateFormField from "@/server/actions/dashboard/applicationFormEditor/duplicateFormField";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];
@@ -46,7 +53,16 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
     setIsDeleteConfirmationDialogOpened,
   ] = useState(false);
   const [isNewFieldDialogOpened, setIsNewFieldDialogOpened] = useState(false);
-  const { id, name, label, required, optionList, type } = formField;
+  const {
+    id,
+    name,
+    label,
+    required,
+    optionList,
+    type,
+    description,
+    shouldBeShownInList,
+  } = formField;
   const { formFieldTypes, optionLists } = useContext(FormFieldsTableContext);
 
   return (
@@ -70,6 +86,8 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
         formFieldId={id}
         initialData={{
           label,
+          description: description ?? "",
+          shouldBeShownInList,
           typeId: formFieldTypes
             .find((fieldType) => fieldType.value === type)
             ?.id.toString() as string,
@@ -139,6 +157,29 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
   {
     header: "Required",
     accessorKey: "required",
+  },
+  {
+    header: "Shown in list",
+    accessorKey: "shouldBeShownInList",
+  },
+  {
+    header: "Tooltip",
+    cell: ({ row }) => {
+      const { description } = row.original;
+      if (!description) {
+        return null;
+      }
+      return (
+        <TooltipProvider delayDuration={400}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <QuestionMarkCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
+            </TooltipTrigger>
+            <TooltipContent>{description}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
   },
   {
     header: "Option list",

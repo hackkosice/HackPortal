@@ -8,6 +8,7 @@ export type FormFieldData = {
   id: number;
   position: number;
   label: string;
+  description: string | null;
   name: string;
   required: boolean;
   optionList: {
@@ -15,6 +16,7 @@ export type FormFieldData = {
     name: string;
   } | null;
   type: FormFieldType;
+  shouldBeShownInList: boolean;
 };
 
 export type StepInfoData = {
@@ -38,6 +40,8 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
           id: true,
           position: true,
           label: true,
+          description: true,
+          shownInList: true,
           name: true,
           required: true,
           type: {
@@ -65,7 +69,14 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
   return {
     ...step,
     formFields: step.formFields.map((field) => ({
-      ...field,
+      id: field.id,
+      label: field.label,
+      description: field.description,
+      name: field.name,
+      required: field.required,
+      shouldBeShownInList: field.shownInList,
+      optionList: field.optionList,
+      position: field.position,
       type: field.type.value as FormFieldType,
     })),
   };

@@ -43,6 +43,7 @@ export type FormFieldData = {
   position: number;
   name: string;
   label: string;
+  description: string | null;
   type: FormFieldType;
   initialValue: FormFieldValueType;
   optionList: { value: string; label: string }[] | undefined;
@@ -77,6 +78,7 @@ const getApplicationFormStep = async (
           position: true,
           label: true,
           name: true,
+          description: true,
           required: true,
           type: {
             select: {

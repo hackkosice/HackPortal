@@ -35,13 +35,16 @@ import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
 import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import editFormField from "@/server/actions/dashboard/applicationFormEditor/editFormField";
+import { Textarea } from "@/components/ui/textarea";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
+  description: z.string(),
   typeId: z.string().min(1),
   optionListId: z.string().min(1).optional(),
   newOptionListName: z.string().min(1).optional(),
   required: z.boolean().optional(),
+  shouldBeShownInList: z.boolean().optional(),
 });
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
@@ -89,6 +92,7 @@ const NewFieldDialog = ({
     defaultValues: {
       label: "",
       typeId: "",
+      description: "",
       required: false,
     },
   });
@@ -109,6 +113,8 @@ const NewFieldDialog = ({
     required,
     optionListId,
     newOptionListName,
+    shouldBeShownInList,
+    description,
   }: NewFieldForm) => {
     if (mode === "edit" && formFieldId) {
       await editFormField({
@@ -120,6 +126,8 @@ const NewFieldDialog = ({
         optionListId: optionListId ? Number(optionListId) : undefined,
         newOptionListName:
           optionListId === "new" ? newOptionListName : undefined,
+        description: description === "" ? undefined : description,
+        shouldBeShownInList,
       });
     } else if (mode === "create" && stepId) {
       await createNewFormField({
@@ -131,6 +139,8 @@ const NewFieldDialog = ({
         optionListId: optionListId ? Number(optionListId) : undefined,
         newOptionListName:
           optionListId === "new" ? newOptionListName : undefined,
+        description: description === "" ? undefined : description,
+        shouldBeShownInList,
       });
     }
 
@@ -164,6 +174,19 @@ const NewFieldDialog = ({
                     <FormLabel>Label</FormLabel>
                     <FormControl>
                       <Input type="text" placeholder="Field label" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Field label" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,6 +294,30 @@ const NewFieldDialog = ({
                       </FormControl>
                       <FormLabel className="ml-1 !mt-0 cursor-pointer">
                         Required
+                      </FormLabel>
+                    </span>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shouldBeShownInList"
+                render={({ field }) => (
+                  <FormItem>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Should be shown in application list and detail
                       </FormLabel>
                     </span>
                     <FormMessage />

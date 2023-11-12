@@ -9,7 +9,14 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 export type ApplicationDetailData = {
   id: number;
   status: string;
-  values: ApplicationFormValuesObject;
+  properties: {
+    stepTitle: string;
+    values: {
+      label: string;
+      value: string | null;
+      shownInList: boolean;
+    }[];
+  }[];
 };
 
 const getApplicationDetail = async (
@@ -73,6 +80,7 @@ const getApplicationDetail = async (
     select: {
       id: true,
       label: true,
+      shownInList: true,
     },
     where: {
       step: {
@@ -94,7 +102,7 @@ const getApplicationDetail = async (
   return {
     id: application.id,
     status: application.status.name,
-    values: createFormValuesObject(application.formValues, formFields),
+    properties: [],
   };
 };
 
