@@ -7,8 +7,9 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 type EditStepInput = {
   stepId: number;
   title: string;
+  description: string;
 };
-const editStep = async ({ stepId, title }: EditStepInput) => {
+const editStep = async ({ stepId, title, description }: EditStepInput) => {
   await requireOrganizerSession();
 
   const { hackathonId } = await prisma.applicationFormStep.update({
@@ -17,6 +18,7 @@ const editStep = async ({ stepId, title }: EditStepInput) => {
     },
     data: {
       title,
+      description,
     },
   });
 

@@ -13,6 +13,7 @@ import updateLocalApplicationData from "@/services/helpers/localData/updateLocal
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Text } from "@/components/ui/text";
 
 export type Props = {
   data: ApplicationFormStepData;
@@ -53,6 +54,7 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
     <Card className="m-auto">
       <CardHeader>
         <CardTitle>{data?.title}</CardTitle>
+        {data?.description && <Text>{data.description}</Text>}
       </CardHeader>
       <CardContent>
         {data && (

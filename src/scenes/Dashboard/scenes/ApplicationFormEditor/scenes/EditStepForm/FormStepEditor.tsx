@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import EditTitleDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";
 import { Stack } from "@/components/ui/stack";
@@ -23,7 +24,7 @@ export type Props = {
 };
 
 const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
-  const { title, formFields } = await getStepInfo(Number(stepId));
+  const { title, description, formFields } = await getStepInfo(Number(stepId));
   const formFieldTypes = await getFormFieldTypes();
   const optionLists = await getOptionLists();
   return (
@@ -31,8 +32,12 @@ const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
       <CardHeader>
         <Stack alignItems="center">
           <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
-          <EditTitleDialog initialValue={title} stepId={stepId} />
+          <EditTitleDialog
+            initialValue={{ title, description: description ?? "" }}
+            stepId={stepId}
+          />
         </Stack>
+        {description && <Text>{description}</Text>}
       </CardHeader>
       <CardContent>
         <Heading size="small" spaceAfter="medium">
