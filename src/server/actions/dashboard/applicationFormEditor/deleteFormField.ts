@@ -33,10 +33,18 @@ const deleteFormField = async ({ fieldId, force }: DeleteFormFieldInput) => {
     where: {
       id: fieldId,
     },
+    select: {
+      stepId: true,
+      position: true,
+    },
   });
 
   // Update step numbers of all steps after the deleted step
-  const fields = await prisma.formField.findMany();
+  const fields = await prisma.formField.findMany({
+    where: {
+      stepId: deletedField.stepId,
+    },
+  });
   for (const field of fields) {
     if (field.position > deletedField.position) {
       await prisma.formField.update({
