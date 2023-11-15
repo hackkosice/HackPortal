@@ -54,127 +54,70 @@ test.describe("application form", () => {
     await expect(page.getByText("Experience - description")).toBeVisible();
 
     // Adding new fields
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await dashboardPage.createNewFormField({
+      label: "What is your experience with hackathons?",
+      type: "textarea",
+      required: true,
+    });
 
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).toBeVisible();
-
-    await page
-      .getByLabel("Label")
-      .fill("What is your experience with hackathons?");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("textarea").getByText("textarea").click();
-    await page.getByLabel("Required").check();
-    await page.getByRole("button", { name: "Save new field" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
     await expect(
       page.getByText("What is your experience with hackathons?")
     ).toBeVisible();
     await expect(page.getByText("textarea")).toBeVisible();
 
-    await page.getByRole("button", { name: "Create new field" }).click();
-    await page
-      .getByLabel("Label")
-      .fill("I have been at the hackathon in the past.");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("checkbox").getByText("checkbox").click();
-    await page.getByRole("button", { name: "Save new field" }).click();
+    await dashboardPage.createNewFormField({
+      label: "I have been at the hackathon in the past.",
+      type: "checkbox",
+      required: false,
+    });
 
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
     await expect(
       page.getByText("I have been at the hackathon in the past.")
     ).toBeVisible();
     await expect(page.getByText("checkbox")).toBeVisible();
 
-    await page.getByRole("button", { name: "Create new field" }).click();
-    await page.getByLabel("Label").fill("What company do you work for?");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("text", { exact: true }).getByText("text").click();
-    await page.getByRole("button", { name: "Save new field" }).click();
+    await dashboardPage.createNewFormField({
+      label: "What company do you work for?",
+      type: "text",
+      required: false,
+    });
 
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
     await expect(page.getByText("What company do you work for?")).toBeVisible();
     await expect(page.getByText("text", { exact: true })).toBeVisible();
 
     // Deleting field
-    await page
-      .getByRole("button", {
-        name: "Open menu iHaveBeenAtTheHackathonInThePast form field",
-      })
-      .click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-    await expect(
-      page.getByText(
-        'Are you sure you want to delete form field "I have been at the hackathon in the past."? It may contain already filled values!'
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "No" }).click();
-    await expect(page.getByRole("button", { name: "No" })).not.toBeVisible();
+    await dashboardPage.deleteFormField({
+      name: "iHaveBeenAtTheHackathonInThePast",
+      acceptModal: false,
+    });
     await expect(
       page.getByText("I have been at the hackathon in the past.")
     ).toBeVisible();
-
-    await page
-      .getByRole("button", {
-        name: "Open menu iHaveBeenAtTheHackathonInThePast form field",
-      })
-      .click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-    await expect(
-      page.getByText(
-        'Are you sure you want to delete form field "I have been at the hackathon in the past."? It may contain already filled values!'
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Yes" }).click();
-    await expect(page.getByRole("button", { name: "Yes" })).not.toBeVisible();
+    await dashboardPage.deleteFormField({
+      name: "iHaveBeenAtTheHackathonInThePast",
+    });
     await expect(
       page.getByText("I have been at the hackathon in the past.")
     ).not.toBeVisible();
 
     // Recreating deleted field
-    await page.getByRole("button", { name: "Create new field" }).click();
-    await page
-      .getByLabel("Label")
-      .fill("I have been at the hackathon in the past.");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("checkbox").getByText("checkbox").click();
-    await page.getByRole("button", { name: "Save new field" }).click();
+    await dashboardPage.createNewFormField({
+      label: "I have been at the hackathon in the past.",
+      type: "checkbox",
+      required: false,
+    });
 
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
     await expect(
       page.getByText("I have been at the hackathon in the past.")
     ).toBeVisible();
     await expect(page.getByText("checkbox")).toBeVisible();
 
     // Editing field
-    await page
-      .getByRole("button", {
-        name: "Open menu whatIsYourExperienceWithHackathons form field",
-      })
-      .click();
-    await page.getByRole("menuitem", { name: "Edit field" }).click();
-    await expect(
-      page.getByRole("heading", { name: "Edit field" })
-    ).toBeVisible();
-    await expect(page.getByLabel("Label")).toHaveValue(
-      "What is your experience with hackathons?"
-    );
-    await page.getByLabel("Label").fill("What is your experience with coding?");
-    await page.getByRole("button", { name: "Save field" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Edit field" })
-    ).not.toBeVisible();
+    await dashboardPage.editFormFieldLabel({
+      name: "whatIsYourExperienceWithHackathons",
+      oldLabel: "What is your experience with hackathons?",
+      newLabel: "What is your experience with coding?",
+    });
     await expect(
       page.getByText("What is your experience with hackathons?")
     ).not.toBeVisible();

@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { Text } from "@/components/ui/text";
-import { Stack } from "@/components/ui/stack";
 import { Heading } from "@/components/ui/heading";
 
 type HiddenPropertiesCollapsibleProps = {
