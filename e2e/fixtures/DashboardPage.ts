@@ -27,6 +27,103 @@ export class DashboardPage {
     await this.page.waitForTimeout(2000);
   }
 
+  async createNewFormField({
+    label,
+    description,
+    type,
+    required,
+    shownInList = true,
+  }: {
+    label: string;
+    description?: string;
+    type: "text" | "textarea" | "select" | "checkbox" | "radio";
+    required: boolean;
+    shownInList?: boolean;
+  }) {
+    await this.page.getByRole("button", { name: "Create new field" }).click();
+
+    await expect(
+      this.page.getByRole("heading", { name: "Add new field" })
+    ).toBeVisible();
+
+    await this.page.getByLabel("Label").fill(label);
+    if (description) {
+      await this.page.getByLabel("Description").fill(label);
+    }
+    await this.page.getByText("Select a field type").click();
+    await this.page.getByLabel(type, { exact: true }).getByText(type).click();
+    if (required) {
+      await this.page.getByLabel("Required").check();
+    }
+    if (shownInList) {
+      await this.page
+        .getByLabel("Should be shown in application list and detail")
+        .check();
+    }
+    await this.page.getByRole("button", { name: "Save new field" }).click();
+    await expect(
+      this.page.getByRole("heading", { name: "Add new field" })
+    ).not.toBeVisible();
+  }
+
+  async editFormFieldLabel({
+    name,
+    oldLabel,
+    newLabel,
+  }: {
+    name: string;
+    oldLabel: string;
+    newLabel: string;
+  }) {
+    await this.page
+      .getByRole("button", {
+        name: `Open menu ${name} form field`,
+      })
+      .click();
+    await this.page.getByRole("menuitem", { name: "Edit field" }).click();
+    await expect(
+      this.page.getByRole("heading", { name: "Edit field" })
+    ).toBeVisible();
+    await expect(this.page.getByLabel("Label")).toHaveValue(oldLabel);
+    await this.page.getByLabel("Label").fill(newLabel);
+    await this.page.getByRole("button", { name: "Save field" }).click();
+
+    await expect(
+      this.page.getByRole("heading", { name: "Edit field" })
+    ).not.toBeVisible();
+  }
+
+  async deleteFormField({
+    name,
+    acceptModal = true,
+  }: {
+    name: string;
+    acceptModal?: boolean;
+  }) {
+    await this.page
+      .getByRole("button", {
+        name: `Open menu ${name} form field`,
+      })
+      .click();
+    await this.page.getByRole("menuitem", { name: "Delete" }).click();
+    await expect(
+      this.page.getByText(
+        'Are you sure you want to delete form field "I have been at the hackathon in the past."? It may contain already filled values!'
+      )
+    ).toBeVisible();
+    if (acceptModal) {
+      await this.page.getByRole("button", { name: "Yes" }).click();
+      await expect(
+        this.page.getByRole("button", { name: "Yes" })
+      ).not.toBeVisible();
+    } else {
+      await this.page.getByRole("button", { name: "No" }).click();
+      await expect(
+        this.page.getByRole("button", { name: "No" })
+      ).not.toBeVisible();
+    }
+  }
+
   async openOptionLists() {
     await this.page.getByRole("tab", { name: "Settings" }).click();
 

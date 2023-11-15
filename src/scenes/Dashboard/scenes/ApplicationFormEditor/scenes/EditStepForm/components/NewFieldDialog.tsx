@@ -186,7 +186,7 @@ const NewFieldDialog = ({
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Field label" {...field} />
+                      <Textarea placeholder="Field description" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

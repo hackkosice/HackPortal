@@ -128,6 +128,7 @@ export async function main(
         required: true,
         position: 1,
         typeId: formFieldTypeText.id,
+        shownInList: true,
       },
     });
   }
