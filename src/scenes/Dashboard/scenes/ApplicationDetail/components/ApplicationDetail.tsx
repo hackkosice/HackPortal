@@ -2,6 +2,8 @@ import React from "react";
 import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
 import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
+import { Heading } from "@/components/ui/heading";
+import HiddenPropertiesCollapsible from "@/scenes/Dashboard/scenes/ApplicationDetail/components/components/HiddenPropertiesCollapsible";
 
 type ApplicationDetailProps = {
   applicationId: number;
@@ -10,9 +12,21 @@ const ApplicationDetail = async ({ applicationId }: ApplicationDetailProps) => {
   const applicationDetail = await getApplicationDetail(applicationId);
   return (
     <Stack direction="column" spacing="small">
-      {applicationDetail.properties.map((property) => (
-        <Text key={property.stepTitle}>{property.stepTitle}</Text>
+      {applicationDetail.shownProperties.map((property) => (
+        <>
+          <Heading key={property.stepId} size="small">
+            {property.stepTitle}
+          </Heading>
+          {property.values.map(({ label, value }) => (
+            <Text key={value}>
+              <span className="font-bold">{label}</span>: {value}
+            </Text>
+          ))}
+        </>
       ))}
+      <HiddenPropertiesCollapsible
+        hiddenPropertiesValues={applicationDetail.hiddenPropertiesValues}
+      />
     </Stack>
   );
 };
