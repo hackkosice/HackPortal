@@ -116,6 +116,8 @@ model ApplicationFormStep {
   hackathonId Int
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  @@unique([hackathonId, position])
 }
 
 model FormField {
@@ -135,6 +137,8 @@ model FormField {
   formFieldValues ApplicationFormFieldValue[]
   createdAt       DateTime                    @default(now())
   updatedAt       DateTime                    @updatedAt
+
+  @@unique([stepId, position])
 }
 
 model FormFieldType {
