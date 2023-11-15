@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import FormRenderer from "../FormRenderer";
 import { Button } from "@/components/ui/button";
 import userEvent from "@testing-library/user-event";
@@ -22,6 +22,7 @@ describe("FormRenderer", () => {
             required: true,
             initialValue: "",
             optionList: [],
+            description: "",
           },
         ]}
         onSubmit={onSubmitMock}
@@ -34,16 +35,16 @@ describe("FormRenderer", () => {
     expect(input).toBeVisible();
     expect(button).toBeVisible();
 
-    await act(() => userEvent.click(button));
+    await userEvent.click(button);
     expect(onSubmitMock).not.toHaveBeenCalled();
     await waitFor(() =>
       expect(screen.getByText("This field is required")).toBeVisible()
     );
 
-    await act(() => userEvent.type(input, "John"));
+    await userEvent.type(input, "John");
     expect(input).toHaveValue("John");
 
-    await act(() => userEvent.click(button));
+    await userEvent.click(button);
     await waitFor(() => expect(onSubmitMock).toHaveBeenCalledTimes(1));
   });
 });

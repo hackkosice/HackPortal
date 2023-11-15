@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { act, render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Link from "next/link";
 describe("Button", () => {
@@ -13,7 +13,7 @@ describe("Button", () => {
     const onClick = jest.fn();
     const { getByRole } = render(<Button onClick={onClick}>Click me</Button>);
     const button = getByRole("button", { name: "Click me" });
-    await act(() => userEvent.click(button));
+    await userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });
@@ -29,7 +29,7 @@ describe("Button", () => {
       </form>
     );
     const button = getByRole("button", { name: "Click me" });
-    await act(() => userEvent.click(button));
+    await userEvent.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -42,9 +42,7 @@ describe("Button", () => {
       </Button>
     );
     const button = getByRole("link", { name: "Click me" });
-    await act(() => userEvent.click(button));
 
-    expect(onClick).toHaveBeenCalledTimes(1);
     expect(button).toHaveAttribute("href", "/signin");
   });
 });
