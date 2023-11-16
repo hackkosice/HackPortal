@@ -28,7 +28,7 @@ export type StepInfoData = {
 const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
   await requireOrganizerSession();
 
-  const step = await prisma.applicationFormStep.findFirst({
+  const step = await prisma.applicationFormStep.findUnique({
     where: {
       id: stepId,
     },

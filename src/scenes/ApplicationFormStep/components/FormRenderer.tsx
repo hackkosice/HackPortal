@@ -6,17 +6,18 @@ import { useForm } from "react-hook-form";
 import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
 import { Stack } from "@/components/ui/stack";
 import getLocalApplicationFieldData from "@/services/helpers/localData/getLocalApplicationFieldData";
-import { FormFieldData } from "@/server/getters/applicationFormStep";
 import { Form } from "@/components/ui/form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
+import { FormFieldData } from "@/server/services/helpers/applicationForm/getStepDataForForm";
 
 export type Props = {
   onSubmit: (data: any) => void;
   actionButtons: React.ReactNode;
   formFields: FormFieldData[];
   shouldUseLocalInitialValues?: boolean;
+  className?: string;
 };
 
 const mapToZodType = (formField: FormFieldData) => {
@@ -73,6 +74,7 @@ const FormRenderer = ({
   formFields,
   onSubmit,
   shouldUseLocalInitialValues,
+  className,
 }: Props) => {
   const zodSchema = useMemo(
     () =>
@@ -98,7 +100,7 @@ const FormRenderer = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack direction="column">
-          <Stack direction="column" className="md:px-20 w-full">
+          <Stack direction="column" className={className}>
             {formFields.map((formField: any) => (
               <DynamicFormField
                 key={formField.id}

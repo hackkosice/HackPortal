@@ -4,16 +4,14 @@ import React from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
-import {
-  ApplicationFormStepData,
-  FormFieldValueType,
-} from "@/server/getters/applicationFormStep";
+import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
 import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
+import { FormFieldValueType } from "@/server/services/helpers/applicationForm/getStepDataForForm";
 
 export type Props = {
   data: ApplicationFormStepData;
@@ -62,6 +60,7 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
             shouldUseLocalInitialValues={!signedIn}
             formFields={data.formFields}
             onSubmit={onFormSubmit}
+            className="w-full md:px-20"
             actionButtons={
               <Stack direction="row" className="w-full" justify="end">
                 <Button asChild variant="outline">
