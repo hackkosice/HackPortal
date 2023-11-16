@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.markdown-content a {
+    text-decoration: underline;
+    color: #EF611E;
+}
