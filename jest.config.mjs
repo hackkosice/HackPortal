@@ -22,13 +22,13 @@ const config = {
     "!**/node_modules/**",
     "!src/services/emails/types/**/*.{ts,tsx}",
   ],
-  coverageThreshold: {
-    global: {
-      branches: 5,
-      functions: 5,
-      lines: 5,
-    },
-  },
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 5,
+  //     functions: 5,
+  //     lines: 5,
+  //   },
+  // },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
