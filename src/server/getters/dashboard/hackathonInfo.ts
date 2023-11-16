@@ -5,8 +5,8 @@ import { prisma } from "@/services/prisma";
 type HackathonInfoData = {
   id: number;
   name: string;
-  title?: string;
-  description?: string;
+  title: string | null;
+  description: string;
   applicationStartDate: Date;
   applicationEndDate: Date;
   eventStartDate: Date;
@@ -25,7 +25,10 @@ const getHackathonInfo = async (
     throw new Error("Hackathon not found");
   }
 
-  return hackathon;
+  return {
+    ...hackathon,
+    description: hackathon.description ?? "",
+  };
 };
 
 export default getHackathonInfo;
