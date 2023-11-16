@@ -19,6 +19,7 @@ import FormFieldsTable from "@/scenes/Dashboard/scenes/ApplicationFormEditor/sce
 import NewFieldButton from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldButton";
 import FormPreview from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/FormPreview";
 import getStepDataForForm from "@/server/services/helpers/applicationForm/getStepDataForForm";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 export type Props = {
   stepId: number;
@@ -41,7 +42,11 @@ const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
               stepId={stepId}
             />
           </Stack>
-          {description && <Text>{description}</Text>}
+          {description && (
+            <Text>
+              <MarkDownRenderer markdown={description} />
+            </Text>
+          )}
         </CardHeader>
         <CardContent>
           <Heading size="small" spaceAfter="medium">
