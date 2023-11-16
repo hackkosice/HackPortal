@@ -20,9 +20,11 @@ const HackathonInfo = async ({ hackathonId }: HackathonInfoProps) => {
       </CardHeader>
       <CardContent>
         <Stack direction="column">
-          <Text>
-            <MarkDownRenderer markdown={hackathon.description} />
-          </Text>
+          {hackathon.description && (
+            <Text>
+              <MarkDownRenderer markdown={hackathon.description} />
+            </Text>
+          )}
           <Text>
             Start date: {hackathon.eventStartDate.toLocaleDateString("sk-SK")}
           </Text>
@@ -42,7 +44,8 @@ const HackathonInfo = async ({ hackathonId }: HackathonInfoProps) => {
             hackathonId={hackathonId}
             initialData={{
               name: hackathon.name,
-              description: hackathon.description,
+              title: hackathon.title ?? "",
+              description: hackathon.description ?? "",
               eventStartDate: hackathon.eventStartDate,
               eventEndDate: hackathon.eventEndDate,
               applicationStartDate: hackathon.applicationStartDate,

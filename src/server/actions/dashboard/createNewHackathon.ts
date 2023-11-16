@@ -6,7 +6,8 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 
 type CreateNewHackathonInput = {
   name: string;
-  description: string;
+  title?: string;
+  description?: string;
   eventStartDate: Date;
   eventEndDate: Date;
   applicationStartDate: Date;
@@ -14,6 +15,7 @@ type CreateNewHackathonInput = {
 };
 const createNewHackathon = async ({
   name,
+  title,
   description,
   eventStartDate,
   eventEndDate,
@@ -25,6 +27,7 @@ const createNewHackathon = async ({
   await prisma.hackathon.create({
     data: {
       name,
+      title,
       description,
       eventStartDate,
       eventEndDate,
