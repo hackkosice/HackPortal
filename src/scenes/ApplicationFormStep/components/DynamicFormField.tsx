@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/tooltip";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Stack } from "@/components/ui/stack";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 export type Props = {
   formField: FormFieldData;
@@ -77,7 +78,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem>
               <Stack direction="row" spacing="small" alignItems="center">
-                <FormLabel required={required}>{label}</FormLabel>
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
                 {tooltip}
               </Stack>
               <FormControl>
@@ -96,7 +99,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem>
               <Stack direction="row" spacing="small" alignItems="center">
-                <FormLabel required={required}>{label}</FormLabel>
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
                 {tooltip}
               </Stack>
               <FormControl>
@@ -119,7 +124,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem className="space-y-3">
               <Stack direction="row" spacing="small" alignItems="center">
-                <FormLabel required={required}>{label}</FormLabel>
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
                 {tooltip}
               </Stack>
               <FormControl>
@@ -156,7 +163,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <Stack direction="row" spacing="small" alignItems="center">
-                <FormLabel required={required}>{label}</FormLabel>
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
                 {tooltip}
               </Stack>
               <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
@@ -222,7 +231,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
           render={({ field }) => (
             <FormItem>
               <Stack direction="row" spacing="small" alignItems="center">
-                <FormLabel required={required}>{label}</FormLabel>
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
                 {tooltip}
               </Stack>
               <Select
@@ -254,9 +265,10 @@ const DynamicFormField = ({ form, formField }: Props) => {
           name={name}
           render={({ field }) => (
             <FormItem>
-              <span className="flex items-center">
+              <span className="flex items-start">
                 <FormControl>
                   <Checkbox
+                    className="mt-1"
                     checked={field.value as boolean}
                     onCheckedChange={(checked) => {
                       if (checked !== "indeterminate") {
@@ -265,11 +277,8 @@ const DynamicFormField = ({ form, formField }: Props) => {
                     }}
                   />
                 </FormControl>
-                <FormLabel
-                  className="ml-1 !mt-0 cursor-pointer"
-                  required={required}
-                >
-                  {label}
+                <FormLabel className="ml-1 cursor-pointer" required={required}>
+                  <MarkDownRenderer markdown={label} />
                 </FormLabel>
               </span>
               <FormMessage />

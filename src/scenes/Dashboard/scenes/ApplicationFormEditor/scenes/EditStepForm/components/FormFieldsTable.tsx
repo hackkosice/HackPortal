@@ -32,6 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];
@@ -148,7 +149,10 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
   },
   {
     header: "Label",
-    accessorKey: "label",
+    cell: ({ row }) => {
+      const { label } = row.original;
+      return <MarkDownRenderer markdown={label} />;
+    },
   },
   {
     header: "Type",
