@@ -28,7 +28,8 @@ model User {
 model Hackathon {
   id                   Int                   @id @default(autoincrement())
   name                 String                @unique
-  description          String
+  title                String?
+  description          String?
   eventStartDate       DateTime
   eventEndDate         DateTime
   applicationStartDate DateTime
