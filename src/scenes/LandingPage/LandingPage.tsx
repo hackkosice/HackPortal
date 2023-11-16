@@ -7,24 +7,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
 import Link from "next/link";
+import getLandingPageInfo from "@/server/getters/landingPageInfo";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
-const LandingPage = () => {
+const LandingPage = async () => {
+  const { title, description, ctaContent } = await getLandingPageInfo();
   return (
     <Card className="m-auto">
       <CardHeader>
-        <CardTitle>
-          Welcome to application portal for Hack Kosice 2023!
-        </CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Text>This is the place where you can apply for Hack Kosice 2023.</Text>
+        <MarkDownRenderer markdown={description} />
       </CardContent>
       <CardFooter>
-        <Button asChild>
-          <Link href="/application">Start application</Link>
-        </Button>
+        {ctaContent && (
+          <Button asChild>
+            <Link href="/application">{ctaContent}</Link>
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

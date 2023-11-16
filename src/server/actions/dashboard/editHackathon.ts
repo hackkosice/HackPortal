@@ -7,7 +7,8 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 type EditHackathonInput = {
   hackathonId: number;
   name: string;
-  description: string;
+  description?: string;
+  title?: string;
   eventStartDate: Date;
   eventEndDate: Date;
   applicationStartDate: Date;
@@ -16,6 +17,7 @@ type EditHackathonInput = {
 const editHackathon = async ({
   hackathonId,
   name,
+  title,
   description,
   eventStartDate,
   eventEndDate,
@@ -30,6 +32,7 @@ const editHackathon = async ({
     },
     data: {
       name,
+      title,
       description,
       eventStartDate,
       eventEndDate,

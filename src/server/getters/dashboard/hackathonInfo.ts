@@ -5,7 +5,8 @@ import { prisma } from "@/services/prisma";
 type HackathonInfoData = {
   id: number;
   name: string;
-  description: string;
+  title?: string;
+  description?: string;
   applicationStartDate: Date;
   applicationEndDate: Date;
   eventStartDate: Date;
