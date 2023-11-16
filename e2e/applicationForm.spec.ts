@@ -61,7 +61,9 @@ test.describe("application form", () => {
     });
 
     await expect(
-      page.getByText("What is your experience with hackathons?")
+      page.getByRole("cell", {
+        name: "What is your experience with hackathons?",
+      })
     ).toBeVisible();
     await expect(page.getByText("textarea")).toBeVisible();
 
@@ -72,7 +74,9 @@ test.describe("application form", () => {
     });
 
     await expect(
-      page.getByText("I have been at the hackathon in the past.")
+      page.getByRole("cell", {
+        name: "I have been at the hackathon in the past.",
+      })
     ).toBeVisible();
     await expect(page.getByText("checkbox")).toBeVisible();
 
@@ -82,7 +86,11 @@ test.describe("application form", () => {
       required: false,
     });
 
-    await expect(page.getByText("What company do you work for?")).toBeVisible();
+    await expect(
+      page.getByRole("cell", {
+        name: "What company do you work for?",
+      })
+    ).toBeVisible();
     await expect(page.getByText("text", { exact: true })).toBeVisible();
 
     // Deleting field
@@ -91,13 +99,17 @@ test.describe("application form", () => {
       acceptModal: false,
     });
     await expect(
-      page.getByText("I have been at the hackathon in the past.")
+      page.getByRole("cell", {
+        name: "I have been at the hackathon in the past.",
+      })
     ).toBeVisible();
     await dashboardPage.deleteFormField({
       name: "iHaveBeenAtTheHackathonInThePast",
     });
     await expect(
-      page.getByText("I have been at the hackathon in the past.")
+      page.getByRole("cell", {
+        name: "I have been at the hackathon in the past.",
+      })
     ).not.toBeVisible();
 
     // Recreating deleted field
@@ -108,7 +120,9 @@ test.describe("application form", () => {
     });
 
     await expect(
-      page.getByText("I have been at the hackathon in the past.")
+      page.getByRole("cell", {
+        name: "I have been at the hackathon in the past.",
+      })
     ).toBeVisible();
     await expect(page.getByText("checkbox")).toBeVisible();
 
@@ -119,10 +133,12 @@ test.describe("application form", () => {
       newLabel: "What is your experience with coding?",
     });
     await expect(
-      page.getByText("What is your experience with hackathons?")
+      page.getByRole("cell", {
+        name: "What is your experience with hackathons?",
+      })
     ).not.toBeVisible();
     await expect(
-      page.getByText("What is your experience with coding?")
+      page.getByRole("cell", { name: "What is your experience with coding?" })
     ).toBeVisible();
 
     await page.getByRole("link", { name: "Back to steps" }).click();

@@ -175,8 +175,16 @@ test.describe("Option Lists", () => {
     await expect(
       page.getByRole("heading", { name: "Add new field" })
     ).not.toBeVisible();
-    await expect(page.getByText("What is your school?")).toBeVisible();
-    await expect(page.getByText("select")).toBeVisible();
+    await expect(
+      page.getByRole("cell", {
+        name: "What is your school?",
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("cell", {
+        name: "select",
+      })
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: "schools" })).toBeVisible();
   });
 
@@ -220,8 +228,16 @@ test.describe("Option Lists", () => {
     await expect(
       page.getByRole("heading", { name: "Add new field" })
     ).not.toBeVisible();
-    await expect(page.getByText("What is your gender?")).toBeVisible();
-    await expect(page.getByText("radio")).toBeVisible();
+    await expect(
+      page.getByRole("cell", {
+        name: "What is your gender?",
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("cell", {
+        name: "radio",
+      })
+    ).toBeVisible();
     await expect(page.getByRole("link", { name: "genders" })).toBeVisible();
 
     await dashboardPage.openOptionLists();
