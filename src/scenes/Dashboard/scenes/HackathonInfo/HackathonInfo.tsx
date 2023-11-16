@@ -10,46 +10,47 @@ type HackathonInfoProps = {
   hackathonId: number;
 };
 const HackathonInfo = async ({ hackathonId }: HackathonInfoProps) => {
-  const hackathon = await getHackathonInfo(hackathonId);
+  const {
+    name,
+    description,
+    title,
+    applicationStartDate,
+    applicationEndDate,
+    eventStartDate,
+    eventEndDate,
+  } = await getHackathonInfo(hackathonId);
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-semibold text-3xl">
-          {hackathon.name}
-        </CardTitle>
+        <CardTitle className="font-semibold text-3xl">{name}</CardTitle>
       </CardHeader>
       <CardContent>
         <Stack direction="column">
-          {hackathon.description && (
-            <Text>
-              <MarkDownRenderer markdown={hackathon.description} />
-            </Text>
-          )}
-          <Text>
-            Start date: {hackathon.eventStartDate.toLocaleDateString("sk-SK")}
-          </Text>
-          <Text>
-            End date: {hackathon.eventEndDate.toLocaleDateString("sk-SK")}
-          </Text>
+          <Text className="font-bold">Landing page properties:</Text>
+          {title && <Text>{title}</Text>}
+          {description && <MarkDownRenderer markdown={description} />}
+          <Text className="font-bold">Important dates:</Text>
+          <Text>Start date: {eventStartDate.toLocaleDateString("sk-SK")}</Text>
+          <Text>End date: {eventEndDate.toLocaleDateString("sk-SK")}</Text>
           <Text>
             Application start date:{" "}
-            {hackathon.applicationStartDate.toLocaleDateString("sk-SK")}
+            {applicationStartDate.toLocaleDateString("sk-SK")}
           </Text>
           <Text>
             Application end date:{" "}
-            {hackathon.applicationEndDate.toLocaleDateString("sk-SK")}
+            {applicationEndDate.toLocaleDateString("sk-SK")}
           </Text>
           <NewHackathonDialog
             mode="edit"
             hackathonId={hackathonId}
             initialData={{
-              name: hackathon.name,
-              title: hackathon.title ?? "",
-              description: hackathon.description ?? "",
-              eventStartDate: hackathon.eventStartDate,
-              eventEndDate: hackathon.eventEndDate,
-              applicationStartDate: hackathon.applicationStartDate,
-              applicationEndDate: hackathon.applicationEndDate,
+              name: name,
+              title: title ?? "",
+              description: description ?? "",
+              eventStartDate: eventStartDate,
+              eventEndDate: eventEndDate,
+              applicationStartDate: applicationStartDate,
+              applicationEndDate: applicationEndDate,
             }}
           />
         </Stack>

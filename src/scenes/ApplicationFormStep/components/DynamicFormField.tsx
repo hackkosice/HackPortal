@@ -9,10 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  FormFieldData,
-  FormFieldValueType,
-} from "@/server/getters/applicationFormStep";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -50,6 +46,10 @@ import {
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Stack } from "@/components/ui/stack";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
+import {
+  FormFieldData,
+  FormFieldValueType,
+} from "@/server/services/helpers/applicationForm/getStepDataForForm";
 
 export type Props = {
   formField: FormFieldData;

@@ -16,7 +16,12 @@ const MarkDownRenderer = ({ markdown }: MarkDownRendererProps) => {
     .use(rehypeStringify)
     .processSync(markdown);
   let contentHtml = content.toString().trimEnd();
-  if (contentHtml.startsWith("<p>") && contentHtml.endsWith("</p>")) {
+  const numberOfParagraphs = contentHtml.split("<p>").length - 1;
+  if (
+    numberOfParagraphs === 1 &&
+    contentHtml.startsWith("<p>") &&
+    contentHtml.endsWith("</p>")
+  ) {
     contentHtml = contentHtml.slice(3, -4);
   }
 

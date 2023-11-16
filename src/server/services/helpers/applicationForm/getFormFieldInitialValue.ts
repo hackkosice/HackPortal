@@ -1,5 +1,5 @@
 import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
-import { FormFieldValueType } from "@/server/services/helpers/applicationForm/getStepFormFields";
+import { FormFieldValueType } from "@/server/services/helpers/applicationForm/getStepDataForForm";
 
 type FieldValue =
   | {
