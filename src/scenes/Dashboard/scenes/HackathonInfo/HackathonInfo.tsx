@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import NewHackathonDialog from "@/scenes/Dashboard/components/NewHackathonDialog";
 import { Stack } from "@/components/ui/stack";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 type HackathonInfoProps = {
   hackathonId: number;
@@ -19,7 +20,9 @@ const HackathonInfo = async ({ hackathonId }: HackathonInfoProps) => {
       </CardHeader>
       <CardContent>
         <Stack direction="column">
-          <Text>{hackathon.description}</Text>
+          <Text>
+            <MarkDownRenderer markdown={hackathon.description} />
+          </Text>
           <Text>
             Start date: {hackathon.eventStartDate.toLocaleDateString("sk-SK")}
           </Text>

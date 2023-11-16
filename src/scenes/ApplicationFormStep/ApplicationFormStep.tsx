@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { FormFieldValueType } from "@/server/services/helpers/applicationForm/getStepDataForForm";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 export type Props = {
   data: ApplicationFormStepData;
@@ -52,7 +53,11 @@ const ApplicationFormStep = ({ data: { data, signedIn } }: Props) => {
     <Card className="mx-auto mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mb-10">
       <CardHeader>
         <CardTitle>{data?.title}</CardTitle>
-        {data?.description && <Text>{data.description}</Text>}
+        {data?.description && (
+          <Text>
+            <MarkDownRenderer markdown={data.description} />
+          </Text>
+        )}
       </CardHeader>
       <CardContent>
         {data && (
