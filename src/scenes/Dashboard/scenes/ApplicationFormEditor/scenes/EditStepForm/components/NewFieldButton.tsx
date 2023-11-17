@@ -2,27 +2,33 @@
 
 import React, { useState } from "react";
 import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
-import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import { FormFieldTypesData } from "@/server/getters/dashboard/applicationFormEditor/formFieldTypes";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import { Button } from "@/components/ui/button";
+import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 
 type NewFieldButtonProps = {
   stepId: number;
   formFieldTypes: FormFieldTypesData;
   optionLists: OptionListsData;
+  potentialVisibilityRuleTargets: PotentialVisibilityRuleTargetsData;
 };
 const NewFieldButton = ({
   stepId,
   formFieldTypes,
   optionLists,
+  potentialVisibilityRuleTargets,
 }: NewFieldButtonProps) => {
   const [isNewFieldDialogOpened, setIsNewFieldDialogOpened] = useState(false);
   return (
     <>
       <NewFieldDialog
         stepId={stepId}
-        formFieldTypes={formFieldTypes}
-        optionLists={optionLists}
+        additionalData={{
+          formFieldTypes,
+          optionLists,
+          potentialVisibilityRuleTargets,
+        }}
         isOpened={isNewFieldDialogOpened}
         onOpenChange={setIsNewFieldDialogOpened}
       />

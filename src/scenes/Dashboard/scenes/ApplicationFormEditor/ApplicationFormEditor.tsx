@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Step from "./components/Step";
 import { Stack } from "@/components/ui/stack";
-import { ApplicationFormStepsData } from "@/server/getters/dashboard/applicationFormSteps";
+import { ApplicationFormStepsData } from "@/server/getters/dashboard/applicationFormEditor/applicationFormSteps";
 import createNewStep from "@/server/actions/dashboard/applicationFormEditor/createNewStep";
 
 type ApplicationFormEditorProps = {

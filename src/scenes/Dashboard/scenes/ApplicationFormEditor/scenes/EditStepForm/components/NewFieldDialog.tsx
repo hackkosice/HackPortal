@@ -31,11 +31,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import createNewFormField from "@/server/actions/dashboard/applicationFormEditor/createNewFormField";
-import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import { FormFieldTypesData } from "@/server/getters/dashboard/applicationFormEditor/formFieldTypes";
 import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import editFormField from "@/server/actions/dashboard/applicationFormEditor/editFormField";
 import { Textarea } from "@/components/ui/textarea";
+import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
@@ -45,19 +46,25 @@ const newFieldFormSchema = z.object({
   newOptionListName: z.string().min(1).optional(),
   required: z.boolean().optional(),
   shouldBeShownInList: z.boolean().optional(),
+  shouldHaveVisibilityRule: z.boolean().optional(),
+  visibilityRuleTargetFormFieldId: z.string().min(1).optional(),
+  visibilityRuleTargetOptionId: z.string().min(1).optional(),
 });
 
 type NewFieldForm = z.infer<typeof newFieldFormSchema>;
 
 export type Props = {
   stepId?: number;
-  formFieldTypes: FormFieldTypesData;
-  optionLists: OptionListsData;
   mode?: "create" | "edit";
   formFieldId?: number;
   initialData?: NewFieldForm;
   isOpened: boolean;
   onOpenChange: (isOpened: boolean) => void;
+  additionalData: {
+    formFieldTypes: FormFieldTypesData;
+    optionLists: OptionListsData;
+    potentialVisibilityRuleTargets: PotentialVisibilityRuleTargetsData;
+  };
 };
 
 const createName = (label: string) => {
@@ -79,8 +86,11 @@ const createName = (label: string) => {
 
 const NewFieldDialog = ({
   stepId,
-  formFieldTypes,
-  optionLists,
+  additionalData: {
+    formFieldTypes,
+    optionLists,
+    potentialVisibilityRuleTargets,
+  },
   mode = "create",
   formFieldId,
   initialData,
@@ -106,6 +116,10 @@ const NewFieldDialog = ({
     FormFieldTypesWithOptions.includes(selectedFieldType.value);
   const selectedOptionListId = form.watch("optionListId");
   const hasNewOptionList = selectedOptionListId === "new";
+  const hasVisibilityRule = form.watch("shouldHaveVisibilityRule");
+  const selectedVisibilityRuleTargetFormFieldId = form.watch(
+    "visibilityRuleTargetFormFieldId"
+  );
 
   const onNewFieldSubmit = async ({
     label,
@@ -115,6 +129,9 @@ const NewFieldDialog = ({
     newOptionListName,
     shouldBeShownInList,
     description,
+    shouldHaveVisibilityRule,
+    visibilityRuleTargetFormFieldId,
+    visibilityRuleTargetOptionId,
   }: NewFieldForm) => {
     if (mode === "edit" && formFieldId) {
       await editFormField({
@@ -128,6 +145,12 @@ const NewFieldDialog = ({
           optionListId === "new" ? newOptionListName : undefined,
         description: description === "" ? undefined : description,
         shouldBeShownInList,
+        visibilityRule: shouldHaveVisibilityRule
+          ? {
+              targetId: Number(visibilityRuleTargetFormFieldId),
+              optionId: Number(visibilityRuleTargetOptionId),
+            }
+          : undefined,
       });
     } else if (mode === "create" && stepId) {
       await createNewFormField({
@@ -141,6 +164,12 @@ const NewFieldDialog = ({
           optionListId === "new" ? newOptionListName : undefined,
         description: description === "" ? undefined : description,
         shouldBeShownInList,
+        visibilityRule: shouldHaveVisibilityRule
+          ? {
+              targetId: Number(visibilityRuleTargetFormFieldId),
+              optionId: Number(visibilityRuleTargetOptionId),
+            }
+          : undefined,
       });
     }
 
@@ -324,6 +353,102 @@ const NewFieldDialog = ({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="shouldHaveVisibilityRule"
+                render={({ field }) => (
+                  <FormItem>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Should have custom visibility rule
+                      </FormLabel>
+                    </span>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {hasVisibilityRule && (
+                <FormField
+                  control={form.control}
+                  name="visibilityRuleTargetFormFieldId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Visibility rule target</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a form field" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {potentialVisibilityRuleTargets.map((target) => (
+                            <SelectItem
+                              key={target.id}
+                              value={String(target.id)}
+                            >
+                              {target.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {hasVisibilityRule && selectedVisibilityRuleTargetFormFieldId && (
+                <FormField
+                  control={form.control}
+                  name="visibilityRuleTargetOptionId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Visible if field chosen above has selected:
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a form field" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {potentialVisibilityRuleTargets
+                            .filter(
+                              (target) =>
+                                String(target.id) ===
+                                selectedVisibilityRuleTargetFormFieldId
+                            )[0]
+                            .options.map((option) => (
+                              <SelectItem
+                                key={option.id}
+                                value={String(option.id)}
+                              >
+                                {option.value}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <DialogFooter>
                 <Button type="submit">
                   {mode === "create" ? "Save new field" : "Save field"}

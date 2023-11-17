@@ -16,6 +16,10 @@ type NewFormFieldInput = {
   newOptionListName?: string;
   description?: string;
   shouldBeShownInList?: boolean;
+  visibilityRule?: {
+    targetId: number;
+    optionId: number;
+  };
 };
 
 const createNewFormField = async ({
@@ -28,6 +32,7 @@ const createNewFormField = async ({
   newOptionListName,
   description,
   shouldBeShownInList,
+  visibilityRule,
 }: NewFormFieldInput) => {
   await requireOrganizerSession();
 
@@ -56,6 +61,7 @@ const createNewFormField = async ({
   }
 
   const {
+    id: newFormFieldId,
     step: { hackathonId },
   } = await prisma.formField.create({
     data: {
@@ -70,6 +76,7 @@ const createNewFormField = async ({
       shownInList: shouldBeShownInList,
     },
     select: {
+      id: true,
       step: {
         select: {
           hackathonId: true,
@@ -77,6 +84,16 @@ const createNewFormField = async ({
       },
     },
   });
+
+  if (visibilityRule) {
+    await prisma.formFieldVisibilityRule.create({
+      data: {
+        formFieldId: newFormFieldId,
+        targetFormFieldId: visibilityRule.targetId,
+        targetOptionId: visibilityRule.optionId,
+      },
+    });
+  }
 
   revalidatePath(
     `/dashboard/${hackathonId}/form-editor/step/${stepId}/edit`,

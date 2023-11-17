@@ -2,7 +2,7 @@ import React from "react";
 import requireOrganizer from "@/services/helpers/requireOrganizer";
 import { Metadata } from "next";
 import ApplicationFormEditor from "@/scenes/Dashboard/scenes/ApplicationFormEditor/ApplicationFormEditor";
-import getApplicationFormSteps from "@/server/getters/dashboard/applicationFormSteps";
+import getApplicationFormSteps from "@/server/getters/dashboard/applicationFormEditor/applicationFormSteps";
 
 export const metadata: Metadata = {
   title: "Edit application form",

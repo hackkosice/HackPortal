@@ -13,6 +13,10 @@ export type FormFieldData = {
   initialValue: FormFieldValueType;
   optionList: { value: string; label: string }[] | undefined;
   required: boolean;
+  formFieldVisibilityRule: {
+    targetFormFieldName: string;
+    targetOptionId: number;
+  } | null;
 };
 
 export type StepDataForForm = {
@@ -52,6 +56,16 @@ const getStepDataForForm = async (stepId: number): Promise<StepDataForForm> => {
               },
             },
           },
+          formFieldVisibilityRule: {
+            select: {
+              targetFormField: {
+                select: {
+                  name: true,
+                },
+              },
+              targetOptionId: true,
+            },
+          },
         },
       },
     },
@@ -67,13 +81,25 @@ const getStepDataForForm = async (stepId: number): Promise<StepDataForForm> => {
   return {
     ...stepData,
     formFields: stepData.formFields.map((field) => ({
-      ...field,
+      id: field.id,
+      position: field.position,
+      name: field.name,
+      label: field.label,
+      description: field.description,
+      required: field.required,
       type: field.type.value as FormFieldType,
       initialValue: null,
       optionList: field.optionList?.options.map((option) => ({
         value: String(option.id),
         label: option.value,
       })),
+      formFieldVisibilityRule: field.formFieldVisibilityRule
+        ? {
+            targetFormFieldName:
+              field.formFieldVisibilityRule.targetFormField.name,
+            targetOptionId: field.formFieldVisibilityRule.targetOptionId,
+          }
+        : null,
     })),
   };
 };
