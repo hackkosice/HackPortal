@@ -1,4 +1,5 @@
-import nextJest from "next/jest.js";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
@@ -9,10 +10,12 @@ const createJestConfig = nextJest({
 /** @type {import('jest').Config} */
 const config = {
   // Add more setup options before each test is run
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-jsdom",
-  testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
+  testMatch: [
+    "**/__tests__/**/*.+(ts|tsx|js)",
+    "**/?(*.)+(spec|test).+(ts|tsx|js)",
+  ],
   testPathIgnorePatterns: ["/node_modules/", "/.next/", "/e2e/"],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
@@ -22,14 +25,21 @@ const config = {
     "!**/node_modules/**",
     "!src/services/emails/types/**/*.{ts,tsx}",
   ],
-  // coverageThreshold: {
-  //   global: {
-  //     branches: 5,
-  //     functions: 5,
-  //     lines: 5,
-  //   },
-  // },
+  coverageThreshold: {
+    global: {
+      branches: 5,
+      functions: 5,
+      lines: 5,
+    },
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config);
+module.exports = async () => {
+  const finalConfig = await createJestConfig(config)();
+  finalConfig.transformIgnorePatterns = [
+    "/node_modules/(?!(rehype-external-links))/",
+    "^.+\\.module\\.(css|sass|scss)$",
+  ];
+  return finalConfig;
+};
