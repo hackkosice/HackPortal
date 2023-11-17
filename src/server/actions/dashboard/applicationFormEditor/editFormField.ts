@@ -4,7 +4,7 @@ import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
-type NewFormFieldInput = {
+type EditFormFieldInput = {
   formFieldId: number;
   label: string;
   name: string;
@@ -14,6 +14,10 @@ type NewFormFieldInput = {
   newOptionListName?: string;
   description?: string;
   shouldBeShownInList?: boolean;
+  visibilityRule?: {
+    targetId: number;
+    optionId: number;
+  };
 };
 
 const editFormField = async ({
@@ -26,7 +30,8 @@ const editFormField = async ({
   newOptionListName,
   shouldBeShownInList,
   description,
-}: NewFormFieldInput) => {
+  visibilityRule,
+}: EditFormFieldInput) => {
   await requireOrganizerSession();
 
   let newOptionListId: number | null = null;
@@ -66,6 +71,36 @@ const editFormField = async ({
       },
     },
   });
+
+  const existingVisibilityRule =
+    await prisma.formFieldVisibilityRule.findUnique({
+      where: {
+        formFieldId,
+      },
+    });
+
+  if (existingVisibilityRule && !visibilityRule) {
+    await prisma.formFieldVisibilityRule.delete({
+      where: {
+        formFieldId,
+      },
+    });
+  } else if (visibilityRule) {
+    await prisma.formFieldVisibilityRule.upsert({
+      where: {
+        formFieldId,
+      },
+      update: {
+        targetFormFieldId: visibilityRule.targetId,
+        targetOptionId: visibilityRule.optionId,
+      },
+      create: {
+        formFieldId,
+        targetFormFieldId: visibilityRule.targetId,
+        targetOptionId: visibilityRule.optionId,
+      },
+    });
+  }
 
   revalidatePath(
     `/dashboard/${hackathonId}/form-editor/step/${stepId}/edit`,

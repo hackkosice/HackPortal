@@ -5,10 +5,13 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 import getFormFieldValue, {
   FormFieldValue,
 } from "@/server/services/helpers/applications/getFormFieldValue";
+import { FormFieldType } from "@/services/types/formFields";
 
 export type PropertyValue = {
   label: string;
+  type: FormFieldType;
   value: FormFieldValue;
+  hasVisibilityRule: boolean;
 };
 
 type StepProperties = {
@@ -72,11 +75,21 @@ const getApplicationDetail = async (
       id: true,
       label: true,
       shownInList: true,
+      type: {
+        select: {
+          value: true,
+        },
+      },
       step: {
         select: {
           id: true,
           title: true,
           position: true,
+        },
+      },
+      formFieldVisibilityRule: {
+        select: {
+          id: true,
         },
       },
     },
@@ -109,6 +122,12 @@ const getApplicationDetail = async (
         (formValue) => formValue.field.id === formField.id
       ),
     });
+    const formFieldValueData: PropertyValue = {
+      label: formField.label,
+      value: formFieldValue,
+      type: formField.type.value as FormFieldType,
+      hasVisibilityRule: Boolean(formField.formFieldVisibilityRule),
+    };
     if (formField.shownInList) {
       const stepId = formField.step.id;
       const lastStepId =
@@ -119,24 +138,15 @@ const getApplicationDetail = async (
         shownProperties.push({
           stepTitle: formField.step.title,
           stepId: stepId,
-          values: [
-            {
-              label: formField.label,
-              value: formFieldValue,
-            },
-          ],
+          values: [formFieldValueData],
         });
       } else {
-        shownProperties[shownProperties.length - 1].values.push({
-          label: formField.label,
-          value: formFieldValue,
-        });
+        shownProperties[shownProperties.length - 1].values.push(
+          formFieldValueData
+        );
       }
     } else {
-      hiddenPropertiesValues.push({
-        label: formField.label,
-        value: formFieldValue,
-      });
+      hiddenPropertiesValues.push(formFieldValueData);
     }
   }
 

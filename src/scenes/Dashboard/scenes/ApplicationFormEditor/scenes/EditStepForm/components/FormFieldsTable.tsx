@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { FormFieldData } from "@/server/getters/dashboard/stepInfo";
+import { FormFieldData } from "@/server/getters/dashboard/applicationFormEditor/stepEditorInfo";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import Link from "next/link";
@@ -17,12 +17,13 @@ import { Button } from "@/components/ui/button";
 import {
   DocumentDuplicateIcon,
   EllipsisHorizontalCircleIcon,
+  MagnifyingGlassCircleIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import deleteFormField from "@/server/actions/dashboard/applicationFormEditor/deleteFormField";
 import NewFieldDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldDialog";
-import { FormFieldTypesData } from "@/server/getters/dashboard/formFieldTypes";
+import { FormFieldTypesData } from "@/server/getters/dashboard/applicationFormEditor/formFieldTypes";
 import { OptionListsData } from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import duplicateFormField from "@/server/actions/dashboard/applicationFormEditor/duplicateFormField";
 import {
@@ -33,19 +34,23 @@ import {
 } from "@/components/ui/tooltip";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
+import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];
   formFieldTypes: FormFieldTypesData;
   optionLists: OptionListsData;
+  potentialVisibilityRuleTargets: PotentialVisibilityRuleTargetsData;
 };
 
 const FormFieldsTableContext = React.createContext<{
   formFieldTypes: FormFieldTypesData;
   optionLists: OptionListsData;
+  potentialVisibilityRuleTargets: PotentialVisibilityRuleTargetsData;
 }>({
   formFieldTypes: [],
   optionLists: [],
+  potentialVisibilityRuleTargets: [],
 });
 
 const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
@@ -63,8 +68,10 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
     type,
     description,
     shouldBeShownInList,
+    formFieldVisibilityRule,
   } = formField;
-  const { formFieldTypes, optionLists } = useContext(FormFieldsTableContext);
+  const { formFieldTypes, optionLists, potentialVisibilityRuleTargets } =
+    useContext(FormFieldsTableContext);
 
   return (
     <>
@@ -79,8 +86,11 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
         isManuallyOpened={isDeleteConfirmationDialogOpened}
       />
       <NewFieldDialog
-        formFieldTypes={formFieldTypes}
-        optionLists={optionLists}
+        additionalData={{
+          formFieldTypes,
+          optionLists,
+          potentialVisibilityRuleTargets,
+        }}
         isOpened={isNewFieldDialogOpened}
         onOpenChange={setIsNewFieldDialogOpened}
         mode="edit"
@@ -94,6 +104,11 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
             ?.id.toString() as string,
           required,
           optionListId: optionList?.id ? optionList?.id.toString() : undefined,
+          shouldHaveVisibilityRule: Boolean(formFieldVisibilityRule),
+          visibilityRuleTargetFormFieldId:
+            formFieldVisibilityRule?.targetFormField.id.toString(),
+          visibilityRuleTargetOptionId:
+            formFieldVisibilityRule?.targetOption.id.toString(),
         }}
       />
       <DropdownMenu>
@@ -203,6 +218,28 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
     },
   },
   {
+    header: "Visibility rule",
+    cell: ({ row }) => {
+      const { formFieldVisibilityRule } = row.original;
+      if (!formFieldVisibilityRule) {
+        return null;
+      }
+      return (
+        <TooltipProvider delayDuration={400}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <MagnifyingGlassCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
+            </TooltipTrigger>
+            <TooltipContent>
+              Visible if {`"${formFieldVisibilityRule.targetFormField.label}"`}{" "}
+              has value {`"${formFieldVisibilityRule.targetOption.value}"`}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
+  },
+  {
     header: "Actions",
     cell: ({ row }) => {
       return <ActionsCell formField={row.original} />;
@@ -213,9 +250,12 @@ const FormFieldsTable = ({
   formFields,
   formFieldTypes,
   optionLists,
+  potentialVisibilityRuleTargets,
 }: FormFieldsTableProps) => {
   return (
-    <FormFieldsTableContext.Provider value={{ formFieldTypes, optionLists }}>
+    <FormFieldsTableContext.Provider
+      value={{ formFieldTypes, optionLists, potentialVisibilityRuleTargets }}
+    >
       <DataTable columns={formFieldColumns} data={formFields} />
     </FormFieldsTableContext.Provider>
   );

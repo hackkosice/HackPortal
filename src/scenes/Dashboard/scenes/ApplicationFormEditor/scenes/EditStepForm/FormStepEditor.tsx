@@ -12,14 +12,15 @@ import { Button } from "@/components/ui/button";
 import EditTitleDialog from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/EditTitleDialog";
 import { Stack } from "@/components/ui/stack";
 import Link from "next/link";
-import getStepInfo from "@/server/getters/dashboard/stepInfo";
-import getFormFieldTypes from "@/server/getters/dashboard/formFieldTypes";
+import getStepEditorInfo from "@/server/getters/dashboard/applicationFormEditor/stepEditorInfo";
+import getFormFieldTypes from "@/server/getters/dashboard/applicationFormEditor/formFieldTypes";
 import getOptionLists from "@/server/getters/dashboard/optionListManager/getOptionLists";
 import FormFieldsTable from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/FormFieldsTable";
 import NewFieldButton from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/NewFieldButton";
 import FormPreview from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/components/FormPreview";
 import getStepDataForForm from "@/server/services/helpers/applicationForm/getStepDataForForm";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
+import getPotentialVisibilityRuleTargets from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 
 export type Props = {
   stepId: number;
@@ -27,10 +28,12 @@ export type Props = {
 };
 
 const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
-  const { title, description, formFields } = await getStepInfo(stepId);
+  const { title, description, formFields } = await getStepEditorInfo(stepId);
   const { formFields: formFieldsForPreview } = await getStepDataForForm(stepId);
   const formFieldTypes = await getFormFieldTypes();
   const optionLists = await getOptionLists();
+  const potentialVisibilityRuleTargets =
+    await getPotentialVisibilityRuleTargets(stepId);
   return (
     <Stack justify="center" className="flex-wrap">
       <Card className="w-full md:w-[60%]">
@@ -56,6 +59,7 @@ const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
             formFields={formFields}
             formFieldTypes={formFieldTypes}
             optionLists={optionLists}
+            potentialVisibilityRuleTargets={potentialVisibilityRuleTargets}
           />
         </CardContent>
         <CardFooter>
@@ -64,6 +68,7 @@ const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
               stepId={stepId}
               formFieldTypes={formFieldTypes}
               optionLists={optionLists}
+              potentialVisibilityRuleTargets={potentialVisibilityRuleTargets}
             />
             <Button asChild variant="outline" size="small">
               <Link href={`/dashboard/${hackathonId}/form-editor`}>

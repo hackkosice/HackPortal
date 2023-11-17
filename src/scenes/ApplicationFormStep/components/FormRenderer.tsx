@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
 import { Stack } from "@/components/ui/stack";
@@ -96,18 +96,72 @@ const FormRenderer = ({
     ),
   });
 
+  const targetFormFieldNames = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          formFields
+            .map(
+              (formField) =>
+                formField.formFieldVisibilityRule?.targetFormFieldName
+            )
+            .filter(Boolean) as string[]
+        )
+      ),
+    [formFields]
+  );
+
+  const formValues = form.watch(targetFormFieldNames);
+  const targetFormFieldValues = useMemo(
+    () =>
+      Object.fromEntries(
+        targetFormFieldNames.map((targetFormFieldName, index) => [
+          targetFormFieldName,
+          formValues[index],
+        ])
+      ),
+    [formValues, targetFormFieldNames]
+  );
+  const hiddenFieldNames = useMemo(
+    () =>
+      formFields
+        .filter((formField) => {
+          if (!formField.formFieldVisibilityRule) {
+            return false;
+          }
+          const { targetOptionId, targetFormFieldName } =
+            formField.formFieldVisibilityRule;
+          const targetFormFieldValue =
+            targetFormFieldValues[targetFormFieldName];
+          return targetFormFieldValue !== targetOptionId.toString();
+        })
+        .map((formField) => formField.name),
+    [formFields, targetFormFieldValues]
+  );
+
+  useEffect(() => {
+    for (const fieldName of hiddenFieldNames) {
+      form.setValue(fieldName, "");
+    }
+  }, [form, hiddenFieldNames]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack direction="column">
           <Stack direction="column" className={className}>
-            {formFields.map((formField: any) => (
-              <DynamicFormField
-                key={formField.id}
-                form={form}
-                formField={formField}
-              />
-            ))}
+            {formFields.map((formField) => {
+              if (hiddenFieldNames.includes(formField.name)) {
+                return null;
+              }
+              return (
+                <DynamicFormField
+                  key={formField.id}
+                  form={form}
+                  formField={formField}
+                />
+              );
+            })}
           </Stack>
           {actionButtons}
         </Stack>

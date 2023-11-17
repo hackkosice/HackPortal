@@ -17,6 +17,16 @@ export type FormFieldData = {
   } | null;
   type: FormFieldType;
   shouldBeShownInList: boolean;
+  formFieldVisibilityRule: {
+    targetFormField: {
+      id: number;
+      label: string;
+    };
+    targetOption: {
+      id: number;
+      value: string;
+    };
+  } | null;
 };
 
 export type StepInfoData = {
@@ -25,7 +35,7 @@ export type StepInfoData = {
   formFields: FormFieldData[];
 };
 
-const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
+const getStepEditorInfo = async (stepId: number): Promise<StepInfoData> => {
   await requireOrganizerSession();
 
   const step = await prisma.applicationFormStep.findUnique({
@@ -55,6 +65,22 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
               name: true,
             },
           },
+          formFieldVisibilityRule: {
+            select: {
+              targetFormField: {
+                select: {
+                  id: true,
+                  label: true,
+                },
+              },
+              targetOption: {
+                select: {
+                  id: true,
+                  value: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           position: SortOrder.asc,
@@ -78,8 +104,9 @@ const getStepInfo = async (stepId: number): Promise<StepInfoData> => {
       optionList: field.optionList,
       position: field.position,
       type: field.type.value as FormFieldType,
+      formFieldVisibilityRule: field.formFieldVisibilityRule,
     })),
   };
 };
 
-export default getStepInfo;
+export default getStepEditorInfo;
