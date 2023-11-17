@@ -122,22 +122,24 @@ model ApplicationFormStep {
 }
 
 model FormField {
-  id              Int                         @id @default(autoincrement())
-  position        Int
-  label           String
-  description     String?
-  name            String
-  required        Boolean
-  shownInList     Boolean                     @default(false)
-  step            ApplicationFormStep         @relation(fields: [stepId], references: [id])
-  stepId          Int
-  type            FormFieldType               @relation(fields: [typeId], references: [id])
-  typeId          Int
-  optionList      OptionList?                 @relation(fields: [optionListId], references: [id])
-  optionListId    Int?
-  formFieldValues ApplicationFormFieldValue[]
-  createdAt       DateTime                    @default(now())
-  updatedAt       DateTime                    @updatedAt
+  id                             Int                         @id @default(autoincrement())
+  position                       Int
+  label                          String
+  description                    String?
+  name                           String
+  required                       Boolean
+  shownInList                    Boolean                     @default(false)
+  step                           ApplicationFormStep         @relation(fields: [stepId], references: [id])
+  stepId                         Int
+  type                           FormFieldType               @relation(fields: [typeId], references: [id])
+  typeId                         Int
+  optionList                     OptionList?                 @relation(fields: [optionListId], references: [id])
+  optionListId                   Int?
+  formFieldValues                ApplicationFormFieldValue[]
+  createdAt                      DateTime                    @default(now())
+  updatedAt                      DateTime                    @updatedAt
+  formFieldVisibilityRule        FormFieldVisibilityRule?    @relation("formField")
+  formFieldVisibilityRuleTargets FormFieldVisibilityRule[]   @relation("targetFormField")
 
   @@unique([stepId, position])
 }
@@ -146,6 +148,16 @@ model FormFieldType {
   id         Int         @id @default(autoincrement())
   value      String      @unique
   formFields FormField[]
+}
+
+model FormFieldVisibilityRule {
+  id                Int       @id @default(autoincrement())
+  formFieldId       Int       @unique
+  formField         FormField @relation("formField", fields: [formFieldId], references: [id])
+  targetFormFieldId Int
+  targetFormField   FormField @relation("targetFormField", fields: [targetFormFieldId], references: [id])
+  targetOptionId    Int
+  targetOption      Option    @relation(fields: [targetOptionId], references: [id])
 }
 
 model File {
@@ -167,13 +179,14 @@ model OptionList {
 }
 
 model Option {
-  id              Int                         @id @default(autoincrement())
-  value           String
-  list            OptionList                  @relation(fields: [listId], references: [id])
-  listId          Int
-  formFieldValues ApplicationFormFieldValue[]
-  createdAt       DateTime                    @default(now())
-  updatedAt       DateTime                    @updatedAt
+  id                      Int                         @id @default(autoincrement())
+  value                   String
+  list                    OptionList                  @relation(fields: [listId], references: [id])
+  listId                  Int
+  formFieldValues         ApplicationFormFieldValue[]
+  createdAt               DateTime                    @default(now())
+  updatedAt               DateTime                    @updatedAt
+  FormFieldVisibilityRule FormFieldVisibilityRule[]
 }
 
 model ApplicationFormFieldValue {
