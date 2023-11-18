@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
+import FormRenderer from "@/components/common/FormRenderer/FormRenderer";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { FormFieldData } from "@/server/services/helpers/applicationForm/getStepDataForForm";
