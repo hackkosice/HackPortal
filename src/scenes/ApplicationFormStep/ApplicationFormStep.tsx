@@ -3,7 +3,7 @@
 import React from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
-import FormRenderer from "@/scenes/ApplicationFormStep/components/FormRenderer";
+import FormRenderer from "@/components/common/FormRenderer/FormRenderer";
 import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
 import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";

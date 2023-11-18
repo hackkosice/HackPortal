@@ -1,9 +1,9 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import DynamicFormField from "@/scenes/ApplicationFormStep/components/DynamicFormField";
+import DynamicFormField from "@/components/common/FormRenderer/DynamicFormField";
 import { Stack } from "@/components/ui/stack";
 import getLocalApplicationFieldData from "@/services/helpers/localData/getLocalApplicationFieldData";
 import { Form } from "@/components/ui/form";
@@ -11,6 +11,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
 import { FormFieldData } from "@/server/services/helpers/applicationForm/getStepDataForForm";
+import useHiddenFieldNames from "@/components/common/FormRenderer/services/hooks/useHiddenFieldNames";
 
 export type Props = {
   onSubmit: (data: any) => void;
@@ -38,6 +39,10 @@ const mapToZodType = (formField: FormFieldData) => {
         });
       }
       return z.boolean().nullable();
+    case FormFieldTypeEnum.file:
+      return z.custom<File>((v) => v instanceof File, {
+        message: "Image is required",
+      });
     default:
       return z.string();
   }
@@ -96,54 +101,7 @@ const FormRenderer = ({
     ),
   });
 
-  const targetFormFieldNames = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          formFields
-            .map(
-              (formField) =>
-                formField.formFieldVisibilityRule?.targetFormFieldName
-            )
-            .filter(Boolean) as string[]
-        )
-      ),
-    [formFields]
-  );
-
-  const formValues = form.watch(targetFormFieldNames);
-  const targetFormFieldValues = useMemo(
-    () =>
-      Object.fromEntries(
-        targetFormFieldNames.map((targetFormFieldName, index) => [
-          targetFormFieldName,
-          formValues[index],
-        ])
-      ),
-    [formValues, targetFormFieldNames]
-  );
-  const hiddenFieldNames = useMemo(
-    () =>
-      formFields
-        .filter((formField) => {
-          if (!formField.formFieldVisibilityRule) {
-            return false;
-          }
-          const { targetOptionId, targetFormFieldName } =
-            formField.formFieldVisibilityRule;
-          const targetFormFieldValue =
-            targetFormFieldValues[targetFormFieldName];
-          return targetFormFieldValue !== targetOptionId.toString();
-        })
-        .map((formField) => formField.name),
-    [formFields, targetFormFieldValues]
-  );
-
-  useEffect(() => {
-    for (const fieldName of hiddenFieldNames) {
-      form.setValue(fieldName, "");
-    }
-  }, [form, hiddenFieldNames]);
+  const hiddenFieldNames = useHiddenFieldNames(formFields, form);
 
   return (
     <Form {...form}>

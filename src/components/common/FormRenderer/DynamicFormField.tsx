@@ -53,7 +53,7 @@ import {
 
 export type Props = {
   formField: FormFieldData;
-  form: UseFormReturn<{ [p: string]: FormFieldValueType }>;
+  form: UseFormReturn<{ [p: string]: FormFieldValueType | File }>;
 };
 
 const DynamicFormField = ({ form, formField }: Props) => {
@@ -281,6 +281,38 @@ const DynamicFormField = ({ form, formField }: Props) => {
                   <MarkDownRenderer markdown={label} />
                 </FormLabel>
               </span>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    case FormFieldTypeEnum.file:
+      return (
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem>
+              <Stack direction="row" spacing="small" alignItems="center">
+                <FormLabel required={required}>
+                  <MarkDownRenderer markdown={label} />
+                </FormLabel>
+                {tooltip}
+              </Stack>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="file"
+                  value={field.value as string}
+                  className="cursor-pointer"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      field.onChange(file);
+                    }
+                  }}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
