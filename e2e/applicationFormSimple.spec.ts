@@ -40,18 +40,10 @@ test.describe("application form", () => {
 
     await expect(page.getByRole("heading", { name: "Step #2" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Edit info" }).click();
-
-    await page.getByLabel("Step title").fill("Experience");
-    await page.getByLabel("Description").fill("Experience - description");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Experience" })
-    ).toBeVisible();
-
-    await expect(page.getByText("Experience - description")).toBeVisible();
+    await dashboardPage.editStepInfo({
+      title: "Experience",
+      description: "Experience - description",
+    });
 
     // Adding new fields
     await dashboardPage.createNewFormField({
