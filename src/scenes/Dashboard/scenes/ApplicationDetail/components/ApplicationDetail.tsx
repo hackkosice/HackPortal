@@ -18,22 +18,38 @@ const ApplicationDetail = async ({ applicationId }: ApplicationDetailProps) => {
           <Heading key={property.stepId} size="small">
             {property.stepTitle}
           </Heading>
-          {property.values.map(({ label, value, type, hasVisibilityRule }) => {
-            if (hasVisibilityRule && !value) return null;
-            if (type === FormFieldTypeEnum.textarea) {
+          {property.values.map(
+            ({ label, value, type, hasVisibilityRule, fileUrl }) => {
+              if (hasVisibilityRule && !value) return null;
+              if (type === FormFieldTypeEnum.textarea) {
+                return (
+                  <Text key={value}>
+                    <span className="font-bold">{label}</span>:<br />
+                    {value}
+                  </Text>
+                );
+              }
+              if (type === FormFieldTypeEnum.file) {
+                return (
+                  <Text key={value}>
+                    <span className="font-bold">{label}</span>:{" "}
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      className="text-hkOrange underline"
+                    >
+                      {value}
+                    </a>
+                  </Text>
+                );
+              }
               return (
                 <Text key={value}>
-                  <span className="font-bold">{label}</span>:<br />
-                  {value}
+                  <span className="font-bold">{label}</span>: {value}
                 </Text>
               );
             }
-            return (
-              <Text key={value}>
-                <span className="font-bold">{label}</span>: {value}
-              </Text>
-            );
-          })}
+          )}
         </>
       ))}
       <HiddenPropertiesCollapsible

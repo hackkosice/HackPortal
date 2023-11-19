@@ -5,13 +5,15 @@ import requireOrganizerSession from "@/server/services/helpers/auth/requireOrgan
 import getFormFieldValue, {
   FormFieldValue,
 } from "@/server/services/helpers/applications/getFormFieldValue";
-import { FormFieldType } from "@/services/types/formFields";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
+import getPresignedDownloadUrl from "@/services/fileUpload/getPresignedDownloadUrl";
 
 export type PropertyValue = {
   label: string;
   type: FormFieldType;
   value: FormFieldValue;
   hasVisibilityRule: boolean;
+  fileUrl?: string;
 };
 
 type StepProperties = {
@@ -56,6 +58,12 @@ const getApplicationDetail = async (
           option: {
             select: {
               value: true,
+            },
+          },
+          file: {
+            select: {
+              name: true,
+              path: true,
             },
           },
         },
@@ -117,16 +125,21 @@ const getApplicationDetail = async (
   // otherwise add it to the hiddenPropertiesValues array
   // Assumes that the formFields array is ordered by step and position
   for (const formField of formFields) {
-    const formFieldValue = getFormFieldValue({
-      formValue: application.formValues.find(
-        (formValue) => formValue.field.id === formField.id
-      ),
-    });
+    const formFieldValue = application.formValues.find(
+      (formValue) => formValue.field.id === formField.id
+    );
+    if (!formFieldValue) {
+      continue;
+    }
     const formFieldValueData: PropertyValue = {
       label: formField.label,
-      value: formFieldValue,
+      value: getFormFieldValue({ formValue: formFieldValue }),
       type: formField.type.value as FormFieldType,
       hasVisibilityRule: Boolean(formField.formFieldVisibilityRule),
+      fileUrl:
+        formField.type.value === FormFieldTypeEnum.file
+          ? await getPresignedDownloadUrl(formFieldValue.file?.path as string)
+          : undefined,
     };
     if (formField.shownInList) {
       const stepId = formField.step.id;

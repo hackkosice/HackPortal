@@ -5,6 +5,7 @@ type GetFormFieldValueInput = {
     | {
         value: string | null;
         option: { value: string } | null;
+        file: { name: string; path: string } | null;
         field: { id: number };
       }
     | undefined;
@@ -14,7 +15,15 @@ const getFormFieldValue = ({ formValue }: GetFormFieldValueInput) => {
     return null;
   }
 
-  return formValue.option?.value ?? formValue.value;
+  if (formValue.option) {
+    return formValue.option.value;
+  }
+
+  if (formValue.file) {
+    return formValue.file.name;
+  }
+
+  return formValue.value;
 };
 
 export default getFormFieldValue;
