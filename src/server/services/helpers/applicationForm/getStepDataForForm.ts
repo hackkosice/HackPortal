@@ -22,6 +22,7 @@ export type FormFieldData = {
     targetOptionId: number;
   } | null;
   fileUploadUrl: string | null;
+  uploadedFileUrl?: string;
 };
 
 export type StepDataForForm = {

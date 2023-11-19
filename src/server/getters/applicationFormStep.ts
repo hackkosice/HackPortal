@@ -1,11 +1,12 @@
 import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { FormFieldType } from "@/services/types/formFields";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 import getFormFieldInitialValue from "@/server/services/helpers/applicationForm/getFormFieldInitialValue";
 import getStepDataForForm, {
   FormFieldData,
 } from "@/server/services/helpers/applicationForm/getStepDataForForm";
+import getPresignedDownloadUrl from "@/services/fileUpload/getPresignedDownloadUrl";
 
 export type ApplicationFormStepData = {
   message: string;
@@ -61,6 +62,7 @@ const getApplicationFormStep = async (
           select: {
             id: true,
             name: true,
+            path: true,
           },
         },
         field: {
@@ -98,12 +100,23 @@ const getApplicationFormStep = async (
     },
   }));
 
-  const resultFields = stepFormFields.formFields.map((field) => ({
-    ...field,
-    initialValue: getFormFieldInitialValue(
-      fieldValues.find((value) => value.field.id === field.id)
-    ),
-  }));
+  const resultFields = await Promise.all(
+    stepFormFields.formFields.map(async (field) => {
+      const fieldValue = fieldValues.find(
+        (value) => value.field.id === field.id
+      );
+      return {
+        ...field,
+        initialValue: getFormFieldInitialValue(
+          fieldValues.find((value) => value.field.id === field.id)
+        ),
+        uploadedFileUrl:
+          field.type === FormFieldTypeEnum.file && fieldValue?.file?.path
+            ? await getPresignedDownloadUrl(fieldValue.file.path)
+            : undefined,
+      };
+    })
+  );
 
   return {
     message: "Steps found",

@@ -301,8 +301,14 @@ const DynamicFormField = ({ form, formField }: Props) => {
               {tooltip}
             </Stack>
             <Text size="small">
-              You have already uploaded file with name{" "}
-              <b>{`"${formField.initialValue}"`}</b>
+              You have already uploaded file:{" "}
+              <a
+                href={formField.uploadedFileUrl}
+                target="_blank"
+                className="font-bold underline"
+              >
+                {formField.initialValue}
+              </a>
             </Text>
             <Button
               variant="link"
