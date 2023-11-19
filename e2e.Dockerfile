@@ -36,6 +36,10 @@ RUN echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)\n" >> .env
 RUN echo "DATABASE_URL=\"file:./prod.db\"" >> .env
 ENV NEXTAUTH_URL http://localhost:3004
 ENV BREVO_API_KEY test-api-key
+ENV CLOUDFLARE_R2_BUCKET_NAME test-value
+ENV CLOUDFLARE_R2_ACCOUNT_ID test-value
+ENV CLOUDFLARE_R2_ACCESS_KEY_ID test-value
+ENV CLOUDFLARE_R2_SECRET_ACCESS_KEY test-value
 ENV BASE_URL http://localhost:3004
 
 # Setup database
@@ -85,6 +89,10 @@ ENV PORT 3004
 ENV HOSTNAME 0.0.0.0
 ENV NEXTAUTH_URL http://localhost:3004
 ENV BREVO_API_KEY test-api-key
+ENV CLOUDFLARE_R2_BUCKET_NAME test-value
+ENV CLOUDFLARE_R2_ACCOUNT_ID test-value
+ENV CLOUDFLARE_R2_ACCESS_KEY_ID test-value
+ENV CLOUDFLARE_R2_SECRET_ACCESS_KEY test-value
 ENV BASE_URL http://localhost:3004
 
 CMD ["node", "server.js"]

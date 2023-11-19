@@ -4,6 +4,8 @@ import { hash } from "argon2";
 const DAY = 1000 * 60 * 60 * 24;
 
 async function clearDb(prisma: PrismaClient) {
+  await prisma.formFieldVisibilityRule.deleteMany();
+  await prisma.file.deleteMany();
   await prisma.vote.deleteMany();
   await prisma.voteParameter.deleteMany();
   await prisma.applicationFormFieldValue.deleteMany();

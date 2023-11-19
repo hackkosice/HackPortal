@@ -14,6 +14,10 @@ jobs:
       NEXTAUTH_URL: http://localhost:3000
       BASE_URL: http://localhost:3000
       BREVO_API_KEY: test-api-key
+      CLOUDFLARE_R2_BUCKET_NAME: test-value
+      CLOUDFLARE_R2_ACCOUNT_ID: test-value
+      CLOUDFLARE_R2_ACCESS_KEY_ID: test-value
+      CLOUDFLARE_R2_SECRET_ACCESS_KEY: test-value
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v3

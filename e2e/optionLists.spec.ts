@@ -21,138 +21,30 @@ test.describe("Option Lists", () => {
 
     // Creating option list
 
-    await page.getByRole("button", { name: "Add new list" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Create new option list" })
-    ).toBeVisible();
-
-    await page.getByLabel("Option list name").fill("schools");
-
-    await page.getByRole("button", { name: "Create" }).click();
-
+    await dashboardPage.createNewOptionList({ name: "schools" });
+    await dashboardPage.createNewOptionList({ name: "jobs" });
     await expect(page.getByText("No results")).not.toBeVisible();
-    await expect(page.getByText("schools")).toBeVisible();
-
-    await page.getByRole("button", { name: "Add new list" }).click();
-    await page.getByLabel("Option list name").fill("jobs");
-    await page.getByRole("button", { name: "Create" }).click();
-
-    await expect(page.getByText("jobs")).toBeVisible();
 
     // Deleting option list
-    await page
-      .getByRole("button", { name: "Open menu jobs option list" })
-      .click();
-
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-
-    await expect(
-      page.getByText('Are you sure you want to delete option list "jobs"?')
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "No" }).click();
-
-    await expect(page.getByText("jobs", { exact: true })).toBeVisible();
-
-    await page
-      .getByRole("button", { name: "Open menu jobs option list" })
-      .click();
-
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-
-    await expect(
-      page.getByText('Are you sure you want to delete option list "jobs"?')
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "Yes" }).click();
-
-    await expect(page.getByText("jobs", { exact: true })).not.toBeVisible();
+    await dashboardPage.deleteOptionList({ name: "jobs" });
 
     // Editing option list
-    await page
-      .getByRole("button", { name: "Open menu schools option list" })
-      .click();
-    await page.getByRole("menuitem", { name: "Edit list" }).click();
-
-    // Adding options
-    await expect(
-      page.getByRole("heading", { name: "Option List Editor" })
-    ).toBeVisible();
-    await expect(page.getByText("No results")).toBeVisible();
-
-    for (const option of options) {
-      await page.getByRole("button", { name: "Add new option" }).click();
-      await expect(
-        page.getByRole("heading", { name: "Create new option" })
-      ).toBeVisible();
-
-      await page.getByLabel("Option value").fill(option);
-      await page.getByRole("button", { name: "Create" }).click();
-    }
-
-    await expect(page.getByText("No results")).not.toBeVisible();
-    for (const option of options) {
-      await expect(page.getByText(option)).toBeVisible();
-    }
+    await dashboardPage.addOptionsToOptionList({ name: "schools", options });
 
     const option = options[0];
     const optionEdited = "edited";
     // Editing option
-    await page
-      .getByRole("button", { name: `Open menu option ${option}` })
-      .click();
-    await page.getByRole("menuitem", { name: "Edit option" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Edit option" })
-    ).toBeVisible();
-
-    await expect(page.getByLabel("Option value")).toHaveValue(option);
-    await page.getByLabel("Option value").fill(optionEdited);
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(page.getByText(optionEdited)).toBeVisible();
-    await expect(page.getByText(option)).not.toBeVisible();
+    await dashboardPage.editOption({
+      option,
+      newOption: optionEdited,
+    });
 
     // Deleting option
-    await page
-      .getByRole("button", { name: `Open menu option ${optionEdited}` })
-      .click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
+    await dashboardPage.deleteOption({
+      option: optionEdited,
+    });
 
-    await expect(
-      page.getByText(
-        `Are you sure you want to delete option "${optionEdited}"?`
-      )
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "No" }).click();
-
-    await expect(page.getByText(optionEdited, { exact: true })).toBeVisible();
-
-    await page
-      .getByRole("button", { name: `Open menu option ${optionEdited}` })
-      .click();
-    await page.getByRole("menuitem", { name: "Delete" }).click();
-
-    await expect(
-      page.getByText(
-        `Are you sure you want to delete option "${optionEdited}"?`
-      )
-    ).toBeVisible();
-
-    await page.getByRole("button", { name: "Yes" }).click();
-
-    await expect(
-      page.getByText(optionEdited, { exact: true })
-    ).not.toBeVisible();
-
-    await page.getByRole("button", { name: "Add new option" }).click();
-    await page.getByLabel("Option value").fill(option);
-    await page.getByRole("button", { name: "Create" }).click();
-
-    await expect(page.getByText(option)).toBeVisible();
+    await dashboardPage.createNewOption({ option });
   });
 
   test("can connect option list to form field", async ({
@@ -161,20 +53,12 @@ test.describe("Option Lists", () => {
   }) => {
     await dashboardPage.openFormEditor();
     await page.getByText("General info").click();
-    await page.getByRole("button", { name: "Create new field" }).click();
-
-    await page.getByLabel("Label").fill("What is your school?");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("select").getByText("select").click();
-    await expect(page.getByLabel("Connected option list")).toBeVisible();
-    await page.getByText("Select an option list").click();
-    await page.getByLabel("schools").getByText("schools").click();
-
-    await page.getByRole("button", { name: "Save new field" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
+    await dashboardPage.createNewFormField({
+      label: "What is your school?",
+      type: "select",
+      optionList: "schools",
+      required: false,
+    });
     await expect(
       page.getByRole("cell", {
         name: "What is your school?",
@@ -192,7 +76,7 @@ test.describe("Option Lists", () => {
     page,
     applicationPage,
   }) => {
-    applicationPage.openSignedIn();
+    await applicationPage.openSignedIn();
     await page.getByText("General info").click();
     await page.getByLabel("Full name").fill("Test Testovic");
     await page.getByText("Select option").click();
@@ -209,25 +93,14 @@ test.describe("Option Lists", () => {
   }) => {
     await dashboardPage.openFormEditor();
     await page.getByText("General info").click();
-    await page.getByRole("button", { name: "Create new field" }).click();
+    await dashboardPage.createNewFormField({
+      label: "What is your gender?",
+      type: "radio",
+      optionList: "(New empty option list)",
+      newOptionListName: "genders",
+      required: false,
+    });
 
-    await page.getByLabel("Label").fill("What is your gender?");
-    await page.getByText("Select a field type").click();
-    await page.getByLabel("radio").getByText("radio").click();
-    await expect(page.getByLabel("Connected option list")).toBeVisible();
-    await page.getByText("Select an option list").click();
-    await page
-      .getByLabel("(New empty option list)")
-      .getByText("(New empty option list)")
-      .click();
-    await expect(page.getByLabel("New option list name")).toBeVisible();
-    await page.getByLabel("New option list name").fill("genders");
-
-    await page.getByRole("button", { name: "Save new field" }).click();
-
-    await expect(
-      page.getByRole("heading", { name: "Add new field" })
-    ).not.toBeVisible();
     await expect(
       page.getByRole("cell", {
         name: "What is your gender?",
