@@ -155,6 +155,7 @@ test.describe("application form", () => {
     applicationPage,
   }) => {
     await applicationPage.openSignedIn();
+    await expect(page.getByText("You are not signed in")).not.toBeVisible();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -170,6 +171,7 @@ test.describe("application form", () => {
 
     await expect(page.getByTestId("Step 1 completed icon")).toBeVisible();
 
+    await expect(page.getByText("You are not signed in")).not.toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
     ).toBeDisabled();

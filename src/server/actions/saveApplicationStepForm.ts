@@ -4,7 +4,6 @@ import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
 
 export type SaveApplicationStepFormInput = {
@@ -57,11 +56,8 @@ const saveApplicationStepForm = async ({
 
   revalidatePath("/application", "page");
   revalidatePath(`/application/form/step/${stepId}`, "page");
-  redirect("/application");
 
-  return {
-    message: "Values saved",
-  };
+  return;
 };
 
 export default saveApplicationStepForm;

@@ -100,11 +100,10 @@ const ApplicationFormStep = ({
 
     // If user is signedIn we can save the field values to the DB
     if (signedIn) {
-      saveApplicationStepForm({
+      await saveApplicationStepForm({
         fieldValues: payload,
         stepId,
       });
-      return;
     }
 
     setIsSubmitting(false);
