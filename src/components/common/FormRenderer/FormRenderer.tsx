@@ -21,6 +21,19 @@ export type Props = {
   className?: string;
 };
 
+const MAX_FILE_SIZE_IN_MB = 10;
+const MAX_FILE_SIZE = MAX_FILE_SIZE_IN_MB * 1024 * 1024; // 10 MB
+const fileValidator = z
+  .custom<File>((v) => v instanceof File, {
+    message: "File is required",
+  })
+  .refine((v) => v.size < MAX_FILE_SIZE, {
+    message: `File is too big - max ${MAX_FILE_SIZE_IN_MB} MB`,
+  })
+  .refine((v) => v.type === "application/pdf", {
+    message: "Only PDF files are allowed",
+  });
+
 const mapToZodType = (formField: FormFieldData) => {
   switch (formField.type) {
     case FormFieldTypeEnum.text:
@@ -40,9 +53,10 @@ const mapToZodType = (formField: FormFieldData) => {
       }
       return z.boolean().nullable();
     case FormFieldTypeEnum.file:
-      return z.custom<File>((v) => v instanceof File, {
-        message: "Image is required",
-      });
+      if (!formField.required || formField.initialValue) {
+        return fileValidator.nullable();
+      }
+      return fileValidator;
     default:
       return z.string();
   }
@@ -67,6 +81,8 @@ const getDefaultValues = (
           return [formField.name, initialValue ?? ""];
         case FormFieldTypeEnum.checkbox:
           return [formField.name, initialValue ?? false];
+        case FormFieldTypeEnum.file:
+          return [formField.name, null];
         default:
           return [formField.name, initialValue ?? ""];
       }

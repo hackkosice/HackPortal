@@ -29,7 +29,9 @@ export type Props = {
 
 const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
   const { title, description, formFields } = await getStepEditorInfo(stepId);
-  const { formFields: formFieldsForPreview } = await getStepDataForForm(stepId);
+  const { formFields: formFieldsForPreview } = await getStepDataForForm({
+    stepId,
+  });
   const formFieldTypes = await getFormFieldTypes();
   const optionLists = await getOptionLists();
   const potentialVisibilityRuleTargets =

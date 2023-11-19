@@ -1,5 +1,9 @@
-import { FormFieldType } from "@/services/types/formFields";
+import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 import { prisma } from "@/services/prisma";
+import getPresignedUploadUrl from "@/services/fileUpload/getPresignedUploadUrl";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import createKeyForFormFileUpload from "@/server/services/helpers/fileUpload/createKeyForFormFileUpload";
 
 export type FormFieldValueType = string | boolean | null;
 
@@ -17,6 +21,7 @@ export type FormFieldData = {
     targetFormFieldName: string;
     targetOptionId: number;
   } | null;
+  fileUploadUrl: string | null;
 };
 
 export type StepDataForForm = {
@@ -26,7 +31,16 @@ export type StepDataForForm = {
   formFields: FormFieldData[];
 };
 
-const getStepDataForForm = async (stepId: number): Promise<StepDataForForm> => {
+export type GetStepDataForFormParams = {
+  stepId: number;
+  shouldSendPresignedFileUploadUrls?: boolean;
+};
+const getStepDataForForm = async ({
+  stepId,
+  shouldSendPresignedFileUploadUrls = false,
+}: GetStepDataForFormParams): Promise<StepDataForForm> => {
+  const session = await getServerSession(authOptions);
+  const userId = session?.id;
   const stepData = await prisma.applicationFormStep.findUnique({
     select: {
       id: true,
@@ -78,9 +92,8 @@ const getStepDataForForm = async (stepId: number): Promise<StepDataForForm> => {
     throw new Error("Step not found");
   }
 
-  return {
-    ...stepData,
-    formFields: stepData.formFields.map((field) => ({
+  const formFields = await Promise.all(
+    stepData.formFields.map(async (field) => ({
       id: field.id,
       position: field.position,
       name: field.name,
@@ -100,7 +113,24 @@ const getStepDataForForm = async (stepId: number): Promise<StepDataForForm> => {
             targetOptionId: field.formFieldVisibilityRule.targetOptionId,
           }
         : null,
-    })),
+      fileUploadUrl:
+        shouldSendPresignedFileUploadUrls &&
+        field.type.value === FormFieldTypeEnum.file &&
+        userId
+          ? await getPresignedUploadUrl(
+              createKeyForFormFileUpload({
+                stepId,
+                fieldId: field.id,
+                userId: userId,
+              })
+            )
+          : null,
+    }))
+  );
+
+  return {
+    ...stepData,
+    formFields: formFields,
   };
 };
 

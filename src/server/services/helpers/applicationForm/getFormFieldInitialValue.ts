@@ -5,6 +5,7 @@ type FieldValue =
   | {
       value: string | null;
       option: { id: number; value: string } | null;
+      file: { id: number; name: string } | null;
       field: { type: FormFieldType; id: number };
     }
   | undefined;
@@ -19,6 +20,7 @@ const getFormFieldInitialValue = (
   const {
     value,
     option,
+    file,
     field: { type },
   } = fieldValue;
   if (type === FormFieldTypeEnum.checkbox) {
@@ -27,6 +29,10 @@ const getFormFieldInitialValue = (
 
   if (value) {
     return value;
+  }
+
+  if (file) {
+    return file.name;
   }
 
   if (option) {
