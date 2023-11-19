@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormField,
@@ -50,6 +51,7 @@ import {
   FormFieldData,
   FormFieldValueType,
 } from "@/server/services/helpers/applicationForm/getStepDataForForm";
+import formatBytesToString from "@/services/helpers/formatBytesToString";
 
 export type Props = {
   formField: FormFieldData;
@@ -57,6 +59,8 @@ export type Props = {
 };
 
 const DynamicFormField = ({ form, formField }: Props) => {
+  const [shouldOverrideUploadedFile, setShouldOverrideUploadedFile] =
+    useState(false);
   const [openCombobox, setOpenCombobox] = useState(false);
   const { label, name, type, optionList, required } = formField;
   const tooltip = formField.description ? (
@@ -287,11 +291,34 @@ const DynamicFormField = ({ form, formField }: Props) => {
         />
       );
     case FormFieldTypeEnum.file:
+      if (formField.initialValue && !shouldOverrideUploadedFile) {
+        return (
+          <FormItem>
+            <Stack direction="row" spacing="small" alignItems="center">
+              <FormLabel required={required}>
+                <MarkDownRenderer markdown={label} />
+              </FormLabel>
+              {tooltip}
+            </Stack>
+            <Text size="small">
+              You have already uploaded file with name{" "}
+              <b>{`"${formField.initialValue}"`}</b>
+            </Text>
+            <Button
+              variant="link"
+              size="small"
+              onClick={() => setShouldOverrideUploadedFile(true)}
+            >
+              Replace the uploaded file with new one
+            </Button>
+          </FormItem>
+        );
+      }
       return (
         <FormField
           control={form.control}
           name={name}
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...field } }) => (
             <FormItem>
               <Stack direction="row" spacing="small" alignItems="center">
                 <FormLabel required={required}>
@@ -303,16 +330,18 @@ const DynamicFormField = ({ form, formField }: Props) => {
                 <Input
                   {...field}
                   type="file"
-                  value={field.value as string}
                   className="cursor-pointer"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      field.onChange(file);
-                    }
-                  }}
+                  onChange={(event) =>
+                    onChange(event.currentTarget.files?.[0] ?? null)
+                  }
                 />
               </FormControl>
+              {value && (
+                <Text className="text-xs">
+                  Uploaded file: {(value as File).name} (
+                  {formatBytesToString((value as File).size)})
+                </Text>
+              )}
               <FormMessage />
             </FormItem>
           )}

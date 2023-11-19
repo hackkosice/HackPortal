@@ -23,7 +23,10 @@ const getApplicationFormStep = async (
 ): Promise<ApplicationFormStepData> => {
   const session = await getServerSession(authOptions);
 
-  const stepFormFields = await getStepDataForForm(stepId);
+  const stepFormFields = await getStepDataForForm({
+    stepId,
+    shouldSendPresignedFileUploadUrls: true,
+  });
 
   // If user is not signed in return steps with empty initial values
   if (!session?.id) {
@@ -52,6 +55,12 @@ const getApplicationFormStep = async (
           select: {
             id: true,
             value: true,
+          },
+        },
+        file: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         field: {

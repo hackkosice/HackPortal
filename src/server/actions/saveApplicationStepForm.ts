@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
 
 export type SaveApplicationStepFormInput = {
-  stepId: string;
+  stepId: number;
   fieldValues: {
     fieldId: number;
     value: string;
@@ -24,10 +24,11 @@ const saveApplicationStepForm = async ({
   if (!session?.id) {
     throw new Error("User not logged in");
   }
+  const userId = session.id;
 
   const hacker = await prisma.hacker.findUnique({
     where: {
-      userId: session.id,
+      userId,
     },
   });
 
@@ -46,7 +47,12 @@ const saveApplicationStepForm = async ({
   }
 
   for (const fieldValue of fieldValues) {
-    await saveFormFieldValue(prisma, application.id, fieldValue);
+    await saveFormFieldValue({
+      applicationId: application.id,
+      stepId: stepId,
+      userId,
+      fieldValue,
+    });
   }
 
   revalidatePath("/application", "page");

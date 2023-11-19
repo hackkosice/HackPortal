@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
+import { prisma } from "@/services/prisma";
+import createKeyForFormFileUpload from "@/server/services/helpers/fileUpload/createKeyForFormFileUpload";
 
 type FieldValue = {
   fieldId: number;
@@ -7,12 +8,12 @@ type FieldValue = {
 };
 
 const saveValue = async (
-  prisma: PrismaClient,
   applicationId: number,
   fieldId: number,
   values: {
     value?: string;
     optionId?: number;
+    fileId?: number;
   }
 ) => {
   await prisma.applicationFormFieldValue.upsert({
@@ -33,11 +34,19 @@ const saveValue = async (
   });
 };
 
-const saveFormFieldValue = async (
-  prisma: PrismaClient,
-  applicationId: number,
-  fieldValue: FieldValue
-) => {
+type SaveFormFieldValueInput = {
+  applicationId: number;
+  stepId: number;
+  userId: number;
+  fieldValue: FieldValue;
+};
+
+const saveFormFieldValue = async ({
+  applicationId,
+  stepId,
+  userId,
+  fieldValue,
+}: SaveFormFieldValueInput) => {
   const fieldType = await prisma.formField.findUnique({
     select: {
       type: {
@@ -58,7 +67,7 @@ const saveFormFieldValue = async (
     case FormFieldTypeEnum.text:
     case FormFieldTypeEnum.textarea:
     case FormFieldTypeEnum.checkbox: {
-      await saveValue(prisma, applicationId, fieldValue.fieldId, {
+      await saveValue(applicationId, fieldValue.fieldId, {
         value: fieldValue.value,
       });
       break;
@@ -80,10 +89,39 @@ const saveFormFieldValue = async (
       if (!option) {
         throw new Error("Option not found");
       }
-      await saveValue(prisma, applicationId, fieldValue.fieldId, {
+      await saveValue(applicationId, fieldValue.fieldId, {
         optionId: option.id,
       });
       break;
+    }
+    case FormFieldTypeEnum.file: {
+      const fileName = fieldValue.value;
+      if (!fileName) {
+        break;
+      }
+      await prisma.file.deleteMany({
+        where: {
+          formFieldValue: {
+            fieldId: fieldValue.fieldId,
+          },
+        },
+      });
+      const file = await prisma.file.create({
+        select: {
+          id: true,
+        },
+        data: {
+          name: fileName,
+          path: createKeyForFormFileUpload({
+            stepId,
+            fieldId: fieldValue.fieldId,
+            userId,
+          }),
+        },
+      });
+      await saveValue(applicationId, fieldValue.fieldId, {
+        fileId: file.id,
+      });
     }
   }
 };

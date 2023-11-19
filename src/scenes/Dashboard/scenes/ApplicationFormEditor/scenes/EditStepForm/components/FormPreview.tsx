@@ -16,7 +16,6 @@ const FormPreview = ({ formFields }: FormPreviewProps) => {
     <ScrollArea className="max-h-[564px] w-full px-1">
       <FormRenderer
         onSubmit={(data) => {
-          console.log(JSON.stringify(data, null, 2));
           toast({
             title: "Form submitted!",
             description: (

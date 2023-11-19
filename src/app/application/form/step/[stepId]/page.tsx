@@ -17,7 +17,12 @@ const ApplicationFormStepPage = async ({
   const applicationFormStepData = await getApplicationFormStep(
     Number(params.stepId)
   );
-  return <ApplicationFormStep data={applicationFormStepData} />;
+  return (
+    <ApplicationFormStep
+      data={applicationFormStepData}
+      stepId={Number(params.stepId)}
+    />
+  );
 };
 
 export default ApplicationFormStepPage;
