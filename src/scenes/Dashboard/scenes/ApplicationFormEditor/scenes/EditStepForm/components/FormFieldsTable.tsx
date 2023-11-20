@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import {
   DocumentDuplicateIcon,
   EllipsisHorizontalCircleIcon,
+  InformationCircleIcon,
   MagnifyingGlassCircleIcon,
   PencilSquareIcon,
   TrashIcon,
@@ -192,9 +193,11 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
         <TooltipProvider delayDuration={400}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <QuestionMarkCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
+              <InformationCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
             </TooltipTrigger>
-            <TooltipContent>{description}</TooltipContent>
+            <TooltipContent className="max-w-[300px]">
+              {description}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       );
@@ -230,7 +233,7 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
             <TooltipTrigger asChild>
               <MagnifyingGlassCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="max-w-[300px]">
               Visible if {`"${formFieldVisibilityRule.targetFormField.label}"`}{" "}
               has value {`"${formFieldVisibilityRule.targetOption.value}"`}
             </TooltipContent>

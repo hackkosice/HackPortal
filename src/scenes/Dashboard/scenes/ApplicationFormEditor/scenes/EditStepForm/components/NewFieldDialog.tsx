@@ -26,6 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -394,14 +395,16 @@ const NewFieldDialog = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {potentialVisibilityRuleTargets.map((target) => (
-                            <SelectItem
-                              key={target.id}
-                              value={String(target.id)}
-                            >
-                              {target.label}
-                            </SelectItem>
-                          ))}
+                          {potentialVisibilityRuleTargets
+                            .filter((target) => target.id !== formFieldId)
+                            .map((target) => (
+                              <SelectItem
+                                key={target.id}
+                                value={String(target.id)}
+                              >
+                                {target.label}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -428,20 +431,22 @@ const NewFieldDialog = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {potentialVisibilityRuleTargets
-                            .filter(
-                              (target) =>
-                                String(target.id) ===
-                                selectedVisibilityRuleTargetFormFieldId
-                            )[0]
-                            .options.map((option) => (
-                              <SelectItem
-                                key={option.id}
-                                value={String(option.id)}
-                              >
-                                {option.value}
-                              </SelectItem>
-                            ))}
+                          <SelectGroup className="overflow-y-auto max-h-[500px]">
+                            {potentialVisibilityRuleTargets
+                              .filter(
+                                (target) =>
+                                  String(target.id) ===
+                                  selectedVisibilityRuleTargetFormFieldId
+                              )[0]
+                              .options.map((option) => (
+                                <SelectItem
+                                  key={option.id}
+                                  value={String(option.id)}
+                                >
+                                  {option.value}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
                         </SelectContent>
                       </Select>
                       <FormMessage />
