@@ -7,6 +7,9 @@ import Link from "next/link";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteStep from "@/server/actions/dashboard/applicationFormEditor/deleteStep";
 import { useParams } from "next/navigation";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import moveFormField from "@/server/actions/dashboard/applicationFormEditor/moveFormField";
+import moveStep from "@/server/actions/dashboard/applicationFormEditor/moveStep";
 
 type StepProps = {
   stepId: number;
@@ -36,6 +39,24 @@ const Step = ({ title, position, stepId }: StepProps) => {
     }
   };
 
+  const onMoveUpClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await moveStep({
+      stepId,
+      direction: "up",
+    });
+  };
+
+  const onMoveDownClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await moveStep({
+      stepId,
+      direction: "down",
+    });
+  };
+
   const onConfirmClose = async (value: boolean) => {
     if (value) {
       await deleteStep({ stepId, force: true });
@@ -61,6 +82,24 @@ const Step = ({ title, position, stepId }: StepProps) => {
             <Text>{position}.</Text>
             <Text>{title}</Text>
             <div className="flex-grow" />
+            <Stack direction="column" spacing="none">
+              <Button
+                variant="unstyled"
+                size="smallest"
+                className="text-hkOrange hover:bg-slate-200"
+                onClick={onMoveUpClick}
+              >
+                <ChevronUpIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="unstyled"
+                size="smallest"
+                className="text-hkOrange hover:bg-slate-200"
+                onClick={onMoveDownClick}
+              >
+                <ChevronDownIcon className="h-4 w-4" />
+              </Button>
+            </Stack>
             <Button
               size="icon"
               variant="ghost"
