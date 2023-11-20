@@ -36,7 +36,11 @@ const Page = async ({
       <h1 className="text-2xl">Email verified!</h1>
       {result.isSignedIn ? (
         <p>
-          Take me back to my <Link href="/application">application</Link>.
+          Take me back to my{" "}
+          <Link href="/application" className="text-hkOrange underline">
+            application
+          </Link>
+          .
         </p>
       ) : (
         <p>

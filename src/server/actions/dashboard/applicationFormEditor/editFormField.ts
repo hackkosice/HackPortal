@@ -86,6 +86,9 @@ const editFormField = async ({
       },
     });
   } else if (visibilityRule) {
+    if (formFieldId === visibilityRule.targetId) {
+      throw new Error("Cannot set visibility rule to itself");
+    }
     await prisma.formFieldVisibilityRule.upsert({
       where: {
         formFieldId,

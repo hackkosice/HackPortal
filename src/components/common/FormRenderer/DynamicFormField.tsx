@@ -69,7 +69,9 @@ const DynamicFormField = ({ form, formField }: Props) => {
         <TooltipTrigger asChild>
           <InformationCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
         </TooltipTrigger>
-        <TooltipContent>{formField.description}</TooltipContent>
+        <TooltipContent className="max-w-[300px]">
+          {formField.description}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   ) : null;
