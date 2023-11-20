@@ -45,3 +45,6 @@ prisma/*.db-journal
 /e2e/test-reports/
 /playwright-report/
 /playwright/.cache/
+
+# Sentry Config File
+.sentryclirc

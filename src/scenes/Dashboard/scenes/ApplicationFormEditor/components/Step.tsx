@@ -8,7 +8,6 @@ import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import deleteStep from "@/server/actions/dashboard/applicationFormEditor/deleteStep";
 import { useParams } from "next/navigation";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import moveFormField from "@/server/actions/dashboard/applicationFormEditor/moveFormField";
 import moveStep from "@/server/actions/dashboard/applicationFormEditor/moveStep";
 
 type StepProps = {
