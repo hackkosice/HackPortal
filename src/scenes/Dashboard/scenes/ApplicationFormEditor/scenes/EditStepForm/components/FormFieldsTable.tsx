@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
+  ChevronDownIcon,
+  ChevronUpIcon,
   DocumentDuplicateIcon,
   EllipsisHorizontalCircleIcon,
   InformationCircleIcon,
@@ -36,6 +38,8 @@ import {
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
+import { Stack } from "@/components/ui/stack";
+import moveFormField from "@/server/actions/dashboard/applicationFormEditor/moveFormField";
 
 type FormFieldsTableProps = {
   formFields: FormFieldData[];
@@ -159,6 +163,46 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
 };
 
 const formFieldColumns: ColumnDef<FormFieldData>[] = [
+  {
+    header: "",
+    id: "reorder",
+    cell: ({ row }) => {
+      const { id } = row.original;
+      const onMoveUpClick = async () => {
+        await moveFormField({
+          formFieldId: id,
+          direction: "up",
+        });
+      };
+
+      const onMoveDownClick = async () => {
+        await moveFormField({
+          formFieldId: id,
+          direction: "down",
+        });
+      };
+      return (
+        <Stack direction="column" spacing="none">
+          <Button
+            variant="unstyled"
+            size="smallest"
+            className="text-hkOrange hover:bg-slate-200"
+            onClick={onMoveUpClick}
+          >
+            <ChevronUpIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="unstyled"
+            size="smallest"
+            className="text-hkOrange hover:bg-slate-200"
+            onClick={onMoveDownClick}
+          >
+            <ChevronDownIcon className="h-4 w-4" />
+          </Button>
+        </Stack>
+      );
+    },
+  },
   {
     header: "",
     accessorKey: "position",
