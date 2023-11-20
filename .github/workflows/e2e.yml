@@ -18,10 +18,10 @@ jobs:
       CLOUDFLARE_R2_ACCOUNT_ID: test-value
       CLOUDFLARE_R2_ACCESS_KEY_ID: test-value
       CLOUDFLARE_R2_SECRET_ACCESS_KEY: test-value
-      SENTRY_ENABLED: false
+      NEXT_PUBLIC_SENTRY_ENABLED: false
+      NEXT_PUBLIC_SENTRY_DSN: test-sentry
       SENTRY_ORGANIZATION: test-sentry
       SENTRY_PROJECT: test-sentry
-      SENTRY_DSN: test-sentry
       SENTRY_AUTH_TOKEN: test-sentry
     steps:
     - uses: actions/checkout@v4
