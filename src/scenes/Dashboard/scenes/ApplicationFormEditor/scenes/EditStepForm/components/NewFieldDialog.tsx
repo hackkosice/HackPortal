@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -38,6 +38,8 @@ import { OptionListsData } from "@/server/getters/dashboard/optionListManager/ge
 import editFormField from "@/server/actions/dashboard/applicationFormEditor/editFormField";
 import { Textarea } from "@/components/ui/textarea";
 import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Text } from "@/components/ui/text";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
@@ -98,6 +100,7 @@ const NewFieldDialog = ({
   isOpened,
   onOpenChange,
 }: Props) => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const form = useForm<NewFieldForm>({
     resolver: zodResolver(newFieldFormSchema),
     defaultValues: {
@@ -134,44 +137,60 @@ const NewFieldDialog = ({
     visibilityRuleTargetFormFieldId,
     visibilityRuleTargetOptionId,
   }: NewFieldForm) => {
+    if (required && visibilityRuleTargetFormFieldId) {
+      setSubmitError("Required fields cannot have visibility rules.");
+      return;
+    }
     if (mode === "edit" && formFieldId) {
-      await editFormField({
-        formFieldId,
-        label,
-        name: createName(label),
-        typeId: Number(typeId),
-        required: Boolean(required),
-        optionListId: optionListId ? Number(optionListId) : undefined,
-        newOptionListName:
-          optionListId === "new" ? newOptionListName : undefined,
-        description: description === "" ? undefined : description,
-        shouldBeShownInList,
-        visibilityRule: shouldHaveVisibilityRule
-          ? {
-              targetId: Number(visibilityRuleTargetFormFieldId),
-              optionId: Number(visibilityRuleTargetOptionId),
-            }
-          : undefined,
-      });
+      try {
+        await editFormField({
+          formFieldId,
+          label,
+          name: createName(label),
+          typeId: Number(typeId),
+          required: Boolean(required),
+          optionListId: optionListId ? Number(optionListId) : undefined,
+          newOptionListName:
+            optionListId === "new" ? newOptionListName : undefined,
+          description: description === "" ? undefined : description,
+          shouldBeShownInList,
+          visibilityRule: shouldHaveVisibilityRule
+            ? {
+                targetId: Number(visibilityRuleTargetFormFieldId),
+                optionId: Number(visibilityRuleTargetOptionId),
+              }
+            : undefined,
+        });
+      } catch (e) {
+        setSubmitError("Error editing the form field. Please try again later.");
+        return;
+      }
     } else if (mode === "create" && stepId) {
-      await createNewFormField({
-        label,
-        name: createName(label),
-        stepId,
-        typeId: Number(typeId),
-        required: Boolean(required),
-        optionListId: optionListId ? Number(optionListId) : undefined,
-        newOptionListName:
-          optionListId === "new" ? newOptionListName : undefined,
-        description: description === "" ? undefined : description,
-        shouldBeShownInList,
-        visibilityRule: shouldHaveVisibilityRule
-          ? {
-              targetId: Number(visibilityRuleTargetFormFieldId),
-              optionId: Number(visibilityRuleTargetOptionId),
-            }
-          : undefined,
-      });
+      try {
+        await createNewFormField({
+          label,
+          name: createName(label),
+          stepId,
+          typeId: Number(typeId),
+          required: Boolean(required),
+          optionListId: optionListId ? Number(optionListId) : undefined,
+          newOptionListName:
+            optionListId === "new" ? newOptionListName : undefined,
+          description: description === "" ? undefined : description,
+          shouldBeShownInList,
+          visibilityRule: shouldHaveVisibilityRule
+            ? {
+                targetId: Number(visibilityRuleTargetFormFieldId),
+                optionId: Number(visibilityRuleTargetOptionId),
+              }
+            : undefined,
+        });
+      } catch (e) {
+        setSubmitError(
+          "Error creating the form field. Please try again later."
+        );
+        return;
+      }
     }
 
     onOpenChange(false);
@@ -183,6 +202,7 @@ const NewFieldDialog = ({
     } else if (mode === "create" && isOpened) {
       form.reset();
     }
+    setSubmitError(null);
   }, [initialData, mode, form, isOpened]);
 
   return (
@@ -193,6 +213,14 @@ const NewFieldDialog = ({
             {mode === "create" ? "Add new field" : "Edit field"}
           </DialogTitle>
         </DialogHeader>
+        {submitError && (
+          <Alert variant="destructive">
+            <AlertTitle>Error submitting the form!</AlertTitle>
+            <AlertDescription>
+              <Text size="small">{submitError}</Text>
+            </AlertDescription>
+          </Alert>
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewFieldSubmit)}>
             <Stack direction="column">
