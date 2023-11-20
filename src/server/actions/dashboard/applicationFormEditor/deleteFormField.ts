@@ -3,6 +3,7 @@
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
 type DeleteFormFieldInput = {
   fieldId: number;
@@ -25,7 +26,9 @@ const deleteFormField = async ({ fieldId, force }: DeleteFormFieldInput) => {
         },
       });
     } else {
-      throw new Error("This form field has some values and force is false");
+      throw new ExpectedServerActionError(
+        "This form field has some values and force is false"
+      );
     }
   }
 

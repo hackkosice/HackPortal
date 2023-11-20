@@ -3,6 +3,7 @@
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
 type DeleteStepInput = {
   stepId: number;
@@ -33,7 +34,9 @@ const deleteStep = async ({ stepId, force }: DeleteStepInput) => {
         },
       });
     } else {
-      throw new Error("This step has some form fields and force is false");
+      throw new ExpectedServerActionError(
+        "This step has some form fields and force is false"
+      );
     }
   }
 
