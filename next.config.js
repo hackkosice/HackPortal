@@ -10,7 +10,7 @@ module.exports = nextConfig;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
-if (process.env.SENTRY_ENABLED === "true") {
+if (process.env.NEXT_PUBLIC_SENTRY_ENABLED === "true") {
   module.exports = withSentryConfig(
     module.exports,
     {
