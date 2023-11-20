@@ -88,6 +88,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
                 size="smallest"
                 className="text-hkOrange hover:bg-slate-200"
                 onClick={onMoveUpClick}
+                aria-label={`Move step ${title} up`}
               >
                 <ChevronUpIcon className="h-4 w-4" />
               </Button>
@@ -96,6 +97,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
                 size="smallest"
                 className="text-hkOrange hover:bg-slate-200"
                 onClick={onMoveDownClick}
+                aria-label={`Move step ${title} down`}
               >
                 <ChevronDownIcon className="h-4 w-4" />
               </Button>
@@ -104,7 +106,7 @@ const Step = ({ title, position, stepId }: StepProps) => {
               size="icon"
               variant="ghost"
               onClick={onStepDelete}
-              aria-label={`Delete step ${position}`}
+              aria-label={`Delete step ${title}`}
             >
               <TrashIcon className="w-4 h-4 text-hkOrange" />
             </Button>

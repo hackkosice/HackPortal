@@ -35,7 +35,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 import { Stack } from "@/components/ui/stack";
@@ -167,7 +166,7 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
     header: "",
     id: "reorder",
     cell: ({ row }) => {
-      const { id } = row.original;
+      const { id, name } = row.original;
       const onMoveUpClick = async () => {
         await moveFormField({
           formFieldId: id,
@@ -188,6 +187,7 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
             size="smallest"
             className="text-hkOrange hover:bg-slate-200"
             onClick={onMoveUpClick}
+            aria-label={`Move field ${name} up`}
           >
             <ChevronUpIcon className="h-4 w-4" />
           </Button>
@@ -196,6 +196,7 @@ const formFieldColumns: ColumnDef<FormFieldData>[] = [
             size="smallest"
             className="text-hkOrange hover:bg-slate-200"
             onClick={onMoveDownClick}
+            aria-label={`Move field ${name} down`}
           >
             <ChevronDownIcon className="h-4 w-4" />
           </Button>

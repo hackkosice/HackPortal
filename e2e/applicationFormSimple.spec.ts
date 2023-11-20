@@ -29,7 +29,7 @@ test.describe("application form", () => {
 
     await expect(page.getByText("Step #3")).toBeVisible();
 
-    await page.getByRole("button", { name: "Delete step 3" }).click();
+    await page.getByRole("button", { name: "Delete step Step #3" }).click();
 
     await expect(page.getByText("Step #3")).not.toBeVisible();
 
@@ -140,7 +140,7 @@ test.describe("application form", () => {
     await expect(page.getByText("Experience")).toBeVisible();
 
     // Deleting step with fields
-    await page.getByRole("button", { name: "Delete step 2" }).click();
+    await page.getByRole("button", { name: "Delete step Experience" }).click();
     // await expect(
     //   page.getByText(
     //     "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
