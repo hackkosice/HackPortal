@@ -41,6 +41,11 @@ ENV CLOUDFLARE_R2_ACCOUNT_ID test-value
 ENV CLOUDFLARE_R2_ACCESS_KEY_ID test-value
 ENV CLOUDFLARE_R2_SECRET_ACCESS_KEY test-value
 ENV BASE_URL http://localhost:3004
+ENV SENTRY_ENABLED false
+ENV SENTRY_ORGANIZATION test-sentry
+ENV SENTRY_PROJECT test-sentry
+ENV SENTRY_DSN test-sentry
+ENV SENTRY_AUTH_TOKEN test-sentry
 
 # Setup database
 RUN npm run prisma:generate
@@ -94,5 +99,10 @@ ENV CLOUDFLARE_R2_ACCOUNT_ID test-value
 ENV CLOUDFLARE_R2_ACCESS_KEY_ID test-value
 ENV CLOUDFLARE_R2_SECRET_ACCESS_KEY test-value
 ENV BASE_URL http://localhost:3004
+ENV SENTRY_ENABLED false
+ENV SENTRY_ORGANIZATION test-sentry
+ENV SENTRY_PROJECT test-sentry
+ENV SENTRY_DSN test-sentry
+ENV SENTRY_AUTH_TOKEN test-sentry
 
 CMD ["node", "server.js"]
