@@ -141,12 +141,12 @@ test.describe("application form", () => {
 
     // Deleting step with fields
     await page.getByRole("button", { name: "Delete step Experience" }).click();
-    // await expect(
-    //   page.getByText(
-    //     "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
-    //   )
-    // ).toBeVisible();
-    // await page.getByRole("button", { name: "No" }).click();
+    await expect(
+      page.getByText(
+        "This step contains fields, which may have some already filled values. Deleting it will also delete all the fields and their values. Do you want to proceed?"
+      )
+    ).toBeVisible();
+    await page.getByRole("button", { name: "No" }).click();
     await expect(page.getByText("Experience")).toBeVisible();
   });
 

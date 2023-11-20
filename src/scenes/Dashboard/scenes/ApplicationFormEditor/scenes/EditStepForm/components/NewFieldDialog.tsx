@@ -40,6 +40,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { PotentialVisibilityRuleTargetsData } from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Text } from "@/components/ui/text";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 const newFieldFormSchema = z.object({
   label: z.string().min(1),
@@ -142,53 +143,49 @@ const NewFieldDialog = ({
       return;
     }
     if (mode === "edit" && formFieldId) {
-      try {
-        await editFormField({
-          formFieldId,
-          label,
-          name: createName(label),
-          typeId: Number(typeId),
-          required: Boolean(required),
-          optionListId: optionListId ? Number(optionListId) : undefined,
-          newOptionListName:
-            optionListId === "new" ? newOptionListName : undefined,
-          description: description === "" ? undefined : description,
-          shouldBeShownInList,
-          visibilityRule: shouldHaveVisibilityRule
-            ? {
-                targetId: Number(visibilityRuleTargetFormFieldId),
-                optionId: Number(visibilityRuleTargetOptionId),
-              }
-            : undefined,
-        });
-      } catch (e) {
-        setSubmitError("Error editing the form field. Please try again later.");
+      const res = await callServerAction(editFormField, {
+        formFieldId,
+        label,
+        name: createName(label),
+        typeId: Number(typeId),
+        required: Boolean(required),
+        optionListId: optionListId ? Number(optionListId) : undefined,
+        newOptionListName:
+          optionListId === "new" ? newOptionListName : undefined,
+        description: description === "" ? undefined : description,
+        shouldBeShownInList,
+        visibilityRule: shouldHaveVisibilityRule
+          ? {
+              targetId: Number(visibilityRuleTargetFormFieldId),
+              optionId: Number(visibilityRuleTargetOptionId),
+            }
+          : undefined,
+      });
+      if (!res.success) {
+        setSubmitError(res.message);
         return;
       }
     } else if (mode === "create" && stepId) {
-      try {
-        await createNewFormField({
-          label,
-          name: createName(label),
-          stepId,
-          typeId: Number(typeId),
-          required: Boolean(required),
-          optionListId: optionListId ? Number(optionListId) : undefined,
-          newOptionListName:
-            optionListId === "new" ? newOptionListName : undefined,
-          description: description === "" ? undefined : description,
-          shouldBeShownInList,
-          visibilityRule: shouldHaveVisibilityRule
-            ? {
-                targetId: Number(visibilityRuleTargetFormFieldId),
-                optionId: Number(visibilityRuleTargetOptionId),
-              }
-            : undefined,
-        });
-      } catch (e) {
-        setSubmitError(
-          "Error creating the form field. Please try again later."
-        );
+      const res = await callServerAction(createNewFormField, {
+        label,
+        name: createName(label),
+        stepId,
+        typeId: Number(typeId),
+        required: Boolean(required),
+        optionListId: optionListId ? Number(optionListId) : undefined,
+        newOptionListName:
+          optionListId === "new" ? newOptionListName : undefined,
+        description: description === "" ? undefined : description,
+        shouldBeShownInList,
+        visibilityRule: shouldHaveVisibilityRule
+          ? {
+              targetId: Number(visibilityRuleTargetFormFieldId),
+              optionId: Number(visibilityRuleTargetOptionId),
+            }
+          : undefined,
+      });
+      if (!res.success) {
+        setSubmitError(res.message);
         return;
       }
     }

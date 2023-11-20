@@ -9,6 +9,8 @@ import deleteStep from "@/server/actions/dashboard/applicationFormEditor/deleteS
 import { useParams } from "next/navigation";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import moveStep from "@/server/actions/dashboard/applicationFormEditor/moveStep";
+import callServerAction from "@/services/helpers/server/callServerAction";
+import { useToast } from "@/components/ui/use-toast";
 
 type StepProps = {
   stepId: number;
@@ -20,21 +22,21 @@ const Step = ({ title, position, stepId }: StepProps) => {
   const [isConfirmationModalOpened, setIsConfirmationModalOpened] =
     useState(false);
   const params = useParams();
+  const { toast } = useToast();
   const onStepDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    try {
-      await deleteStep({ stepId, force: false });
-    } catch (err) {
-      if (err instanceof Error) {
-        if (
-          err.message === "This step has some form fields and force is false"
-        ) {
-          setIsConfirmationModalOpened(true);
-          return;
-        }
+    const res = await callServerAction(deleteStep, { stepId, force: false });
+    if (!res.success) {
+      if (res.message === "This step has some form fields and force is false") {
+        setIsConfirmationModalOpened(true);
+        return;
       }
-      throw err;
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message,
+      });
     }
   };
 

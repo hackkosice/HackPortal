@@ -13,6 +13,8 @@ import Step from "./components/Step";
 import { Stack } from "@/components/ui/stack";
 import { ApplicationFormStepsData } from "@/server/getters/dashboard/applicationFormEditor/applicationFormSteps";
 import createNewStep from "@/server/actions/dashboard/applicationFormEditor/createNewStep";
+import { useToast } from "@/components/ui/use-toast";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 type ApplicationFormEditorProps = {
   applicationFormSteps: ApplicationFormStepsData;
@@ -22,8 +24,17 @@ const ApplicationFormEditor = ({
   applicationFormSteps,
   hackathonId,
 }: ApplicationFormEditorProps) => {
-  const onCreateNewStepClick = () => {
-    createNewStep({ hackathonId });
+  const { toast } = useToast();
+  const onCreateNewStepClick = async () => {
+    const res = await callServerAction(createNewStep, { hackathonId });
+    if (!res.success) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message,
+      });
+      return;
+    }
   };
 
   return (
