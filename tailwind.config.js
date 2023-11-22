@@ -48,6 +48,10 @@ const config = {
         navbarHeightOffset: "120px",
         navbarHeightOffsetMobile: "90px",
       },
+      fontSize: {
+        sm: "0.9rem",
+        base: "1rem",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
