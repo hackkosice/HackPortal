@@ -47,6 +47,7 @@ import {
 } from "@/server/services/helpers/applicationForm/getStepDataForForm";
 import formatBytesToString from "@/services/helpers/formatBytesToString";
 import Tooltip from "@/components/common/Tooltip";
+import { Combobox } from "@/components/ui/combobox";
 
 export type Props = {
   formField: FormFieldData;
@@ -56,7 +57,6 @@ export type Props = {
 const DynamicFormField = ({ form, formField }: Props) => {
   const [shouldOverrideUploadedFile, setShouldOverrideUploadedFile] =
     useState(false);
-  const [openCombobox, setOpenCombobox] = useState(false);
   const { label, name, description, type, optionList, required } = formField;
   const tooltip = formField.description ? (
     <Tooltip
@@ -165,56 +165,13 @@ const DynamicFormField = ({ form, formField }: Props) => {
                 </FormLabel>
                 {tooltip}
               </Stack>
-              <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="combobox"
-                      role="combobox"
-                      className={cn(
-                        "justify-between",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value
-                        ? optionList?.find(({ value }) => value === field.value)
-                            ?.label
-                        : "Select option"}
-                      <ChevronUpDownIcon className="h-4 w-4" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-96 p-0">
-                  <Command>
-                    <CommandInput placeholder="Search option..." />
-                    <CommandEmpty>No options found.</CommandEmpty>
-                    <CommandGroup>
-                      <ScrollArea className="h-72">
-                        {optionList?.map(({ value, label: optionLabel }) => (
-                          <CommandItem
-                            value={optionLabel}
-                            key={value}
-                            onSelect={() => {
-                              form.setValue(name, value);
-                              setOpenCombobox(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                value === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {optionLabel}
-                          </CommandItem>
-                        ))}
-                      </ScrollArea>
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <Combobox
+                options={optionList ?? []}
+                selectedOption={field.value as string}
+                onSelectOption={(value) => {
+                  form.setValue(name, value);
+                }}
+              />
               <FormMessage />
             </FormItem>
           )}
