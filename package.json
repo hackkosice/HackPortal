@@ -19,7 +19,8 @@
     "test:jest": "jest",
     "test:jest:coverage": "jest --coverage",
     "test:local-e2e-docker": "chmod +x ./scripts/runE2ELocally.sh && ./scripts/runE2ELocally.sh --copy-tests",
-    "generate-brevo-api-types": "swagger-typescript-api -p https://api.brevo.com/v3/swagger_definition_v3.yml -o ./src/services/emails/types -n BrevoApi"
+    "generate-brevo-api-types": "swagger-typescript-api -p https://api.brevo.com/v3/swagger_definition_v3.yml -o ./src/services/emails/types -n BrevoApi",
+    "postinstall": "patch-package"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
