@@ -38,12 +38,6 @@ import {
 import { Check } from "lucide-react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Stack } from "@/components/ui/stack";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
@@ -52,6 +46,7 @@ import {
   FormFieldValueType,
 } from "@/server/services/helpers/applicationForm/getStepDataForForm";
 import formatBytesToString from "@/services/helpers/formatBytesToString";
+import Tooltip from "@/components/common/Tooltip";
 
 export type Props = {
   formField: FormFieldData;
@@ -62,18 +57,14 @@ const DynamicFormField = ({ form, formField }: Props) => {
   const [shouldOverrideUploadedFile, setShouldOverrideUploadedFile] =
     useState(false);
   const [openCombobox, setOpenCombobox] = useState(false);
-  const { label, name, type, optionList, required } = formField;
+  const { label, name, description, type, optionList, required } = formField;
   const tooltip = formField.description ? (
-    <TooltipProvider delayDuration={400}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <InformationCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
-        </TooltipTrigger>
-        <TooltipContent className="max-w-[300px]">
-          {formField.description}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip
+      trigger={
+        <InformationCircleIcon className="h-5 w-5 text-hkOrange cursor-pointer" />
+      }
+      content={description}
+    />
   ) : null;
   switch (type) {
     case FormFieldTypeEnum.text:
