@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -21,6 +21,10 @@ const DashboardTabs = ({ hackathonId }: DashboardTabsProps) => {
   const path = usePathname();
   const { push } = useRouter();
 
+  const [tabValue, setTabValue] = React.useState<string | undefined>(
+    getTabValue(path, hackathonId)
+  );
+
   const onTabChange = (value: string) => {
     switch (value) {
       case "info":
@@ -38,10 +42,14 @@ const DashboardTabs = ({ hackathonId }: DashboardTabsProps) => {
     }
   };
 
+  useEffect(() => {
+    setTabValue(getTabValue(path, hackathonId));
+  }, [path, hackathonId]);
+
   return (
     <Tabs
       className="w-full md:w-[70%] h-fit my-5 mx-auto"
-      defaultValue={getTabValue(path, hackathonId)}
+      value={tabValue}
       onValueChange={onTabChange}
     >
       <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-fit">
