@@ -1,0 +1,13 @@
+diff --git a/node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs b/node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs
+index aa181ce..d7d8eb0 100644
+--- a/node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs
++++ b/node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs
+@@ -78,7 +78,7 @@ const $d08ef79370b62062$export$d2469213b3befba9 = /*#__PURE__*/ $9kmUS$forwardRe
+         disabled: disabled
+     }, triggerProps, {
+         ref: $9kmUS$composeRefs(forwardedRef, context.triggerRef),
+-        onPointerDown: $9kmUS$composeEventHandlers(props.onPointerDown, (event)=>{
++        onClick: $9kmUS$composeEventHandlers(props.onClick, (event)=>{
+             // only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
+             // but not when the control key is pressed (avoiding MacOS right click)
+             if (!disabled && event.button === 0 && event.ctrlKey === false) {
