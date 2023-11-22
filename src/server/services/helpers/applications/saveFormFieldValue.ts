@@ -36,19 +36,18 @@ const saveValue = async (
 
 type SaveFormFieldValueInput = {
   applicationId: number;
-  stepId: number;
   userId: number;
   fieldValue: FieldValue;
 };
 
 const saveFormFieldValue = async ({
   applicationId,
-  stepId,
   userId,
   fieldValue,
 }: SaveFormFieldValueInput) => {
-  const fieldType = await prisma.formField.findUnique({
+  const field = await prisma.formField.findUnique({
     select: {
+      stepId: true,
       type: {
         select: {
           value: true,
@@ -59,10 +58,10 @@ const saveFormFieldValue = async ({
       id: fieldValue.fieldId,
     },
   });
-  if (!fieldType) {
+  if (!field) {
     throw new Error("Provided fieldId not found in database");
   }
-  const fieldTypeValue = fieldType.type.value as FormFieldType;
+  const fieldTypeValue = field.type.value as FormFieldType;
   switch (fieldTypeValue) {
     case FormFieldTypeEnum.text:
     case FormFieldTypeEnum.textarea:
@@ -103,6 +102,7 @@ const saveFormFieldValue = async ({
         where: {
           formFieldValue: {
             fieldId: fieldValue.fieldId,
+            applicationId,
           },
         },
       });
@@ -113,7 +113,7 @@ const saveFormFieldValue = async ({
         data: {
           name: fileName,
           path: createKeyForFormFileUpload({
-            stepId,
+            stepId: field.stepId,
             fieldId: fieldValue.fieldId,
             userId,
           }),

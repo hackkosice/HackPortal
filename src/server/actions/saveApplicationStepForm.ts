@@ -48,7 +48,6 @@ const saveApplicationStepForm = async ({
   for (const fieldValue of fieldValues) {
     await saveFormFieldValue({
       applicationId: application.id,
-      stepId: stepId,
       userId,
       fieldValue,
     });
