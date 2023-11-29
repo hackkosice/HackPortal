@@ -1,5 +1,5 @@
 import { screen, render } from "@testing-library/react";
-import ApplicationStep from "../ApplicationStep";
+import ApplicationStepCard from "../ApplicationStepCard";
 import getLocalApplicationDataStepCompleted from "@/services/helpers/localData/getLocalApplicationDataStepCompleted";
 
 jest.mock(
@@ -26,7 +26,7 @@ const renderComponent = ({
     formFields: [],
   };
   render(
-    <ApplicationStep
+    <ApplicationStepCard
       step={step}
       shouldUseLocalIsCompleted={shouldUseLocalIsCompleted}
     />

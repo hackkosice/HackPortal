@@ -13,6 +13,14 @@ import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import kickTeamMember from "@/server/actions/team/kickTeamMember";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import leaveTeam from "@/server/actions/team/leaveTeam";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Tooltip as TooltipBase,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/components/lib/utils";
 
 type TeamInfoProps = {
   team: TeamData;
@@ -89,6 +97,7 @@ const TeamInfo = ({
   const onLeaveTeamClick = async () => {
     await leaveTeam();
   };
+  const { toast } = useToast();
   return (
     <Stack direction="column" spacing="medium">
       <div>
@@ -102,16 +111,26 @@ const TeamInfo = ({
         </Stack>
         <Stack direction="row" alignItems="center" spacing="none">
           <Text>Team&apos;s code: {code}</Text>
-          <Button
-            onClick={() => {
-              navigator.clipboard.writeText(code);
-            }}
-            variant="ghost"
-            size="icon"
-            aria-label="Copy team code"
-          >
-            <DocumentDuplicateIcon className="w-4 h-4 mr-1 inline" />
-          </Button>
+          <TooltipProvider delayDuration={400}>
+            <TooltipBase>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => {
+                    toast({
+                      title: "Team code copied to clipboard",
+                    });
+                    navigator.clipboard.writeText(code);
+                  }}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Copy team code"
+                >
+                  <DocumentDuplicateIcon className="w-4 h-4 mr-1 inline" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Copy team code to clipboard</TooltipContent>
+            </TooltipBase>
+          </TooltipProvider>
         </Stack>
         <Text>Team members ({members.length}/4):</Text>
         <DataTable columns={teamMembersColumns} data={members} />

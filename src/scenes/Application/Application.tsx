@@ -1,26 +1,29 @@
 import React, { Suspense } from "react";
-import ApplicationSteps from "@/scenes/Application/components/ApplicationSteps/ApplicationSteps";
+import ApplicationForm from "@/scenes/Application/components/ApplicationForm/ApplicationForm";
 import TeamManager from "@/scenes/Application/components/TeamManager/TeamManager";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Stack } from "@/components/ui/stack";
+import { Heading } from "@/components/ui/heading";
+import ReimbursementRequestManager
+  from "@/scenes/Application/components/ReimbursementRequestManager/ReimbursementRequestManager";
 
 const Application = () => {
   return (
-    <Card className="mx-auto mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] mb-20">
-      <CardHeader>
-        <CardTitle>Welcome to Hack Kosice Application portal!</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Stack direction="column">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ApplicationSteps />
-          </Suspense>
-          <Suspense fallback={<div>Loading...</div>}>
-            <TeamManager />
-          </Suspense>
-        </Stack>
-      </CardContent>
-    </Card>
+    <Stack
+      direction="column"
+      className="mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full gap-20 mb-20 md:mb-40"
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        <ApplicationForm />
+      </Suspense>
+      <Stack className="flex-col gap-20 md:flex-row w-full md:w-[70vw] mx-auto">
+        <Suspense fallback={<div>Loading...</div>}>
+          <TeamManager />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ReimbursementRequestManager />
+        </Suspense>
+      </Stack>
+    </Stack>
   );
 };
 
