@@ -4,6 +4,7 @@ import { isStepCompleted } from "@/server/services/helpers/applications/isApplic
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
+import { ApplicationStatus } from "@/services/types/applicationStatus";
 
 export type ApplicationStepData = {
   id: number;
@@ -27,7 +28,7 @@ export type ApplicationData = {
   };
   data: {
     application: {
-      status: string;
+      status: ApplicationStatus;
     };
     steps: ApplicationStepData[];
     canSubmit: boolean;
@@ -165,7 +166,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
     },
     data: {
       application: {
-        status: applicationObject.status.name,
+        status: applicationObject.status.name as ApplicationStatus,
       },
       steps,
       canSubmit,

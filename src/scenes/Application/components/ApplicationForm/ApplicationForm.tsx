@@ -1,19 +1,22 @@
 import React from "react";
-import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
-import ApplicationStep from "@/scenes/Application/components/ApplicationSteps/components/ApplicationStep";
+import ApplicationStepCard from "@/scenes/Application/components/ApplicationForm/components/ApplicationStepCard";
 import getApplicationData from "@/server/getters/application";
-import ApplicationSubmitButton from "@/scenes/Application/components/ApplicationSteps/components/ApplicationSubmitButton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import UnverifiedEmailAlert from "@/components/common/UnverifiedEmailAlert";
+import ApplicationStatusCard from "@/scenes/Application/components/ApplicationForm/components/ApplicationStatusCard";
+import { Heading } from "@/components/ui/heading";
 
-const ApplicationSteps = async () => {
+const ApplicationForm = async () => {
   const {
     data,
     authStatus: { signedIn, emailVerified },
   } = await getApplicationData();
   return (
-    <>
+    <Stack className="w-full" direction="column">
+      <Heading className="mx-auto">
+        Your application for Hack Kosice 2024:
+      </Heading>
       {!signedIn && (
         <Alert variant="destructive">
           <AlertTitle>You are not signed in!</AlertTitle>
@@ -22,29 +25,27 @@ const ApplicationSteps = async () => {
       )}
       {signedIn && !emailVerified && <UnverifiedEmailAlert />}
 
-      <Text>Application status: {data.application.status}</Text>
+      <ApplicationStatusCard status={data.application.status} />
       {data.application.status === "open" && (
-        <Stack spacing="medium" direction="column">
-          <Text>Complete steps below to finish your application:</Text>
+        <div className="mx-auto">
           <Stack
-            direction="column"
+            justify="around"
             spaceAfter="medium"
-            spacing="small"
-            className="w-full"
+            className="md:flex-row flex-col w-full md:gap-10"
           >
             {data.steps.map((step) => (
-              <ApplicationStep
+              <ApplicationStepCard
                 key={step.id}
                 step={step}
                 shouldUseLocalIsCompleted={!signedIn}
               />
             ))}
+            <ApplicationStepCard key="submit" step="submit" />
           </Stack>
-          <ApplicationSubmitButton canSubmit={data.canSubmit} />
-        </Stack>
+        </div>
       )}
-    </>
+    </Stack>
   );
 };
 
-export default ApplicationSteps;
+export default ApplicationForm;
