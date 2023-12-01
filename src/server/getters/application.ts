@@ -3,8 +3,10 @@ import { Prisma } from ".prisma/client";
 import { isStepCompleted } from "@/server/services/helpers/applications/isApplicationComplete";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
-import { ApplicationStatus } from "@/services/types/applicationStatus";
+import {
+  ApplicationStatus,
+  ApplicationStatusEnum,
+} from "@/services/types/applicationStatus";
 
 export type ApplicationStepData = {
   id: number;
@@ -25,26 +27,27 @@ export type ApplicationData = {
   authStatus: {
     signedIn: boolean;
     emailVerified: boolean;
-  };
+  } | null;
   data: {
     application: {
       status: ApplicationStatus;
     };
     steps: ApplicationStepData[];
     canSubmit: boolean;
-  };
+  } | null;
 };
 
-const getApplicationData = async (): Promise<ApplicationData> => {
+type GetApplicationDataInput = {
+  applicationId: number | null;
+  hackathonId: number;
+};
+const getApplicationData = async ({
+  hackathonId,
+  applicationId,
+}: GetApplicationDataInput): Promise<ApplicationData> => {
   // Find all steps in the application form
 
   const session = await getServerSession(authOptions);
-
-  const hackathonId = await getActiveHackathonId(prisma);
-
-  if (!hackathonId) {
-    throw new Error("No active hackathon");
-  }
 
   const stepsDb = await prisma.applicationFormStep.findMany({
     select: {
@@ -73,7 +76,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
 
   // User is not signed in
 
-  if (!session?.id) {
+  if (!session?.id || !applicationId) {
     const steps = stepsDb.map((step) => ({
       ...step,
       isCompleted: false,
@@ -87,7 +90,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
       },
       data: {
         application: {
-          status: "open",
+          status: ApplicationStatusEnum.open,
         },
         steps,
         canSubmit: false,
@@ -95,56 +98,31 @@ const getApplicationData = async (): Promise<ApplicationData> => {
     };
   }
 
-  // If user is signed in it must be a hacker
-
-  // await requireHacker(ctx);
-
-  const hacker = await prisma.hacker.findUnique({
-    select: {
-      id: true,
-    },
-    where: {
-      userId: session.id,
-    },
-  });
-
-  if (!hacker) {
-    throw new Error("Hacker not found");
-  }
-
   // Find application or create one if it doesn't exist
 
-  const applicationSelect = {
-    id: true,
-    status: {
-      select: {
-        name: true,
+  const application = await prisma.application.findUnique({
+    select: {
+      id: true,
+      status: {
+        select: {
+          name: true,
+        },
       },
     },
-  };
-
-  let applicationObject = await prisma.application.findUnique({
-    select: applicationSelect,
     where: {
-      hackerId: hacker.id,
+      id: applicationId,
     },
   });
 
-  if (!applicationObject) {
-    applicationObject = await prisma.application.create({
-      data: {
-        hackerId: hacker.id,
-        statusId: 1,
-      },
-      select: applicationSelect,
-    });
+  if (!application) {
+    throw new Error("Application not found");
   }
 
   // Find all application form field values in order to check which steps are completed
 
   const fieldValues = await prisma.applicationFormFieldValue.findMany({
     where: {
-      applicationId: applicationObject.id,
+      applicationId: application.id,
     },
   });
 
@@ -166,7 +144,7 @@ const getApplicationData = async (): Promise<ApplicationData> => {
     },
     data: {
       application: {
-        status: applicationObject.status.name as ApplicationStatus,
+        status: application.status.name as ApplicationStatus,
       },
       steps,
       canSubmit,

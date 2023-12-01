@@ -6,6 +6,8 @@ import NavbarLogo from "@/components/common/Navbar/components/NavbarLogo";
 import SignoutButton from "@/components/common/Navbar/components/SignoutButton";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { Stack } from "@/components/ui/stack";
+import { Text } from "@/components/ui/text";
 const Navbar = async () => {
   const session = await getServerSession(authOptions);
 
@@ -18,7 +20,12 @@ const Navbar = async () => {
       </Heading>
       <div className="flex-grow"></div>
       {session ? (
-        <SignoutButton />
+        <Stack direction="row" alignItems="center">
+          <Text>
+            Signed in as <b>{session?.user?.email}</b>
+          </Text>
+          <SignoutButton />
+        </Stack>
       ) : (
         <Button asChild>
           <Link href="/signin">Sign in</Link>

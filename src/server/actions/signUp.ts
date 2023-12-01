@@ -1,64 +1,52 @@
 "use server";
 
 import { hash } from "argon2";
-import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
 import { prisma } from "@/services/prisma";
-import { SignUpSchema } from "@/scenes/SignUp/SignUp";
 import { randomBytes } from "crypto";
 import { sendEmailConfirmationEmail } from "@/services/emails/sendEmail";
+import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
-const signUp = async ({ email, password }: SignUpSchema) => {
+type SignUpInput = {
+  email: string;
+  password: string;
+};
+
+const signUp = async ({ email, password }: SignUpInput) => {
   const hashedPassword = await hash(password);
-  const isOrganizer = email.endsWith("@hackkosice.com");
-
-  if (isOrganizer) {
-    let user = await prisma.user.findFirst({
-      where: { email },
-    });
-    if (!user) {
-      const verificationToken = randomBytes(24).toString("hex");
-      user = await prisma.user.create({
-        data: {
-          password: hashedPassword,
-          email: email,
-          emailVerified: false,
-          emailVerificationToken: verificationToken,
-        },
-      });
-
-      await prisma.organizer.create({
-        data: { userId: user.id },
-      });
-
-      await sendEmailConfirmationEmail({
-        recipientEmail: user.email,
-        verificationToken,
-        userId: user.id,
-      });
-
-      return {
-        message: "Account created successfully",
-      };
-    }
-
-    return {
-      message: "Account already exists",
-    };
-  }
-
-  const { user } = await createHackerForActiveHackathon(prisma, email, {
-    password: hashedPassword,
+  const user = await prisma.user.findFirst({
+    where: { email },
   });
-
-  if (!user.emailVerificationToken) {
-    throw new Error("Email verification token not found");
+  if (user) {
+    throw new ExpectedServerActionError("User already exists");
   }
+
+  const verificationToken = randomBytes(24).toString("hex");
+  const newUser = await prisma.user.create({
+    data: {
+      password: hashedPassword,
+      email: email,
+      emailVerified: false,
+      emailVerificationToken: verificationToken,
+    },
+  });
 
   await sendEmailConfirmationEmail({
-    recipientEmail: user.email,
-    verificationToken: user.emailVerificationToken,
-    userId: user.id,
+    recipientEmail: newUser.email,
+    verificationToken,
+    userId: newUser.id,
   });
+
+  const isOrganizer =
+    email.endsWith("@hackkosice.com") || email.endsWith("@hackslovakia.com");
+  if (isOrganizer) {
+    await prisma.organizer.create({
+      data: { userId: newUser.id },
+    });
+  }
+
+  return {
+    message: "Account created successfully",
+  };
 };
 
 export default signUp;

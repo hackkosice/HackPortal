@@ -21,9 +21,13 @@ export type GetTeamData = {
   isOwnerSession: boolean;
 };
 
-const getTeam = async (): Promise<GetTeamData> => {
+type GetTeamInput = {
+  hackerId: number | null;
+};
+
+const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
   const session = await getServerSession(authOptions);
-  if (!session?.id) {
+  if (!session?.id || !hackerId) {
     return {
       status: "not_signed_in",
       team: null,
@@ -53,7 +57,7 @@ const getTeam = async (): Promise<GetTeamData> => {
       },
     },
     where: {
-      userId: session.id,
+      id: hackerId,
     },
   });
 

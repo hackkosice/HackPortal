@@ -9,8 +9,13 @@ import { Stack } from "@/components/ui/stack";
 import { Card } from "@/components/ui/card";
 import { UsersIcon } from "@heroicons/react/24/outline";
 
-const TeamManager = async () => {
-  const { status, team, isOwnerSession } = await getTeam();
+type TeamManagerProps = {
+  hackerId: number | null;
+};
+const TeamManager = async ({ hackerId }: TeamManagerProps) => {
+  const { status, team, isOwnerSession } = await getTeam({
+    hackerId,
+  });
   let teamPageContent = null;
   if (status === "not_signed_in") {
     teamPageContent = (

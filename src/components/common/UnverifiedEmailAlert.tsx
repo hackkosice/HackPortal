@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import resendVerificationLink from "@/server/actions/auth/resendVerificationLink";
+import { Card } from "@/components/ui/card";
 
 const UnverifiedEmailAlert = () => {
   const { toast } = useToast();
@@ -18,20 +18,33 @@ const UnverifiedEmailAlert = () => {
     });
   };
   return (
-    <Alert variant="destructive">
-      <AlertTitle>You have unverified email!</AlertTitle>
-      <AlertDescription>
-        <Text size="small">
-          Please check link in your email to verify your email address.
+    <Card className="p-5 w-[95vw] md:w-[50vw] md:mx-auto mb-5 bg-red-600">
+      <Stack
+        justify="center"
+        alignItems="center"
+        direction="column"
+        className="gap-2"
+      >
+        <Text className="font-title font-semibold text-xl md:text-2xl text-white">
+          You have unverified email!
         </Text>
-        <Stack direction="row" alignItems="center" spacing="small">
-          <Text size="small">Didn&apos;t receive any email?</Text>
-          <Button variant="link" onClick={onResendEmailClick}>
-            Resend email with verification link
-          </Button>
-        </Stack>
-      </AlertDescription>
-    </Alert>
+        <Text className="text-white text-sm md:text-base">
+          Please check link in your email to verify your email address. Without
+          verifying your email address you won&apos;t be able to submit your
+          application.
+        </Text>
+        <Text className="text-white text-sm">
+          Didn&apos;t receive any email?
+        </Text>
+        <Button
+          variant="link"
+          className="text-white"
+          onClick={onResendEmailClick}
+        >
+          Resend email with verification link
+        </Button>
+      </Stack>
+    </Card>
   );
 };
 
