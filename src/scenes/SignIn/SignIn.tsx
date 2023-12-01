@@ -14,23 +14,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useForm } from "react-hook-form";
-import { ClientSafeProvider, LiteralUnion, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import GithubButton from "./components/SocialButtons/GithubButton";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BuiltInProviderType } from "next-auth/providers";
 import { signinSchema, SignInSchema } from "@/server/schemas/auth";
 
-type SigninPageProps = {
-  providers: Record<
-    LiteralUnion<BuiltInProviderType>,
-    ClientSafeProvider
-  > | null;
-};
-
-const SignIn = ({ providers }: SigninPageProps) => {
+const SignIn = () => {
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -107,9 +99,7 @@ const SignIn = ({ providers }: SigninPageProps) => {
           <Button variant="outline" asChild>
             <Link href="/signup">Sign up with email</Link>
           </Button>
-          {providers && Object.keys(providers).includes("github") && (
-            <GithubButton onClick={() => signIn("github")} />
-          )}
+          <GithubButton onClick={() => signIn("github")} />
         </Stack>
       </CardContent>
     </Card>
