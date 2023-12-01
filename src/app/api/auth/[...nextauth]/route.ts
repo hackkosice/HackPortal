@@ -2,13 +2,16 @@ import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/services/prisma";
 import { verify } from "argon2";
-import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
-import createHackerForActiveHackathon from "@/services/helpers/database/createHackerForActiveHackathon";
+import GitHubProvider from "next-auth/providers/github";
 import { signinSchema } from "@/server/schemas/auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 export const authOptions: AuthOptions = {
   pages: {
     signIn: "/signin",
+  },
+  session: {
+    strategy: "jwt",
   },
   providers: [
     CredentialsProvider({
@@ -50,6 +53,7 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
     }),
   ],
+  adapter: PrismaAdapter(prisma),
   callbacks: {
     async jwt({ token }) {
       if (token.email) {
@@ -71,20 +75,6 @@ export const authOptions: AuthOptions = {
       }
 
       return session;
-    },
-    async signIn({ account, profile }) {
-      if (account?.provider === "github") {
-        const githubProfile = profile as GithubProfile;
-        await createHackerForActiveHackathon(
-          prisma,
-          githubProfile.email ?? "",
-          {
-            githubProfileId: githubProfile.id,
-          }
-        );
-      }
-
-      return true;
     },
   },
 };

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
-import clearLocalApplicationData from "@/services/helpers/localData/clearLocalApplicationData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,10 +18,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import signUp from "@/server/actions/signUp";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 export const signupSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(4).max(12),
+  password: z.string().min(6),
+  repeatPassword: z.string().min(6),
 });
 
 export type SignUpSchema = z.infer<typeof signupSchema>;
@@ -32,13 +33,23 @@ const SignUp = () => {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signupSchema),
   });
+  const [error, setError] = React.useState<string | null>(null);
 
   const onSubmit = useCallback(
     async (data: SignUpSchema) => {
-      await signUp(data);
+      if (data.password !== data.repeatPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+      const result = await callServerAction(signUp, {
+        email: data.email,
+        password: data.password,
+      });
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
 
-      // TODO handle error states
-      clearLocalApplicationData();
       router.push("/signin");
     },
     [router]
@@ -50,6 +61,7 @@ const SignUp = () => {
         <CardTitle>Sign Up</CardTitle>
       </CardHeader>
       <CardContent>
+        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Stack direction="column">
@@ -81,6 +93,24 @@ const SignUp = () => {
                       <Input
                         type="password"
                         placeholder="New password"
+                        autoComplete="new-password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="repeatPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Repeat password"
                         autoComplete="new-password"
                         {...field}
                       />

@@ -20,7 +20,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/components/lib/utils";
 
 type TeamInfoProps = {
   team: TeamData;
