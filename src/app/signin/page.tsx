@@ -14,8 +14,7 @@ const SignInPage = async () => {
   if (session) {
     redirect("/application");
   }
-  const providers = await getProviders();
-  return <SignIn providers={providers} />;
+  return <SignIn />;
 };
 
 export default SignInPage;
