@@ -1,4 +1,4 @@
-import { SaveApplicationStepFormInput } from "@/server/actions/saveApplicationStepForm";
+import { SaveApplicationStepFormInput } from "@/server/actions/applicationForm/saveApplicationStepForm";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 
 const updateLocalApplicationData = ({

@@ -5,11 +5,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
 import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
+import { FormFieldType } from "@/services/types/formFields";
 
 export type SaveApplicationStepFormInput = {
   stepId: number;
   fieldValues: {
     fieldId: number;
+    fieldType: FormFieldType;
     value: string;
   }[];
 };

@@ -3,7 +3,7 @@
 import React from "react";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
-import submitApplication from "@/server/actions/submitApplication";
+import submitApplication from "@/server/actions/applicationForm/submitApplication";
 
 type ApplicationSubmitButtonProps = { canSubmit: boolean };
 const ApplicationSubmitButton = ({

@@ -5,7 +5,7 @@ import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import FormRenderer from "@/components/common/FormRenderer/FormRenderer";
 import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
-import saveApplicationStepForm from "@/server/actions/saveApplicationStepForm";
+import saveApplicationStepForm from "@/server/actions/applicationForm/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -68,17 +68,20 @@ const ApplicationFormStep = ({
               }
               return {
                 fieldId: formField.id,
+                fieldType: formField.type,
                 value: file.name,
               };
             } else {
               return {
                 fieldId: formField.id,
+                fieldType: formField.type,
                 value: "",
               };
             }
           default:
             return {
               fieldId: formField.id,
+              fieldType: formField.type,
               value: String(formFieldValue),
             };
         }
