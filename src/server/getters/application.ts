@@ -26,7 +26,7 @@ export type ApplicationData = {
   message: string;
   authStatus: {
     signedIn: boolean;
-    emailVerified: boolean;
+    emailVerified: boolean | null;
   } | null;
   data: {
     application: {
@@ -118,6 +118,23 @@ const getApplicationData = async ({
     throw new Error("Application not found");
   }
 
+  const user = await prisma.user.findUnique({
+    select: {
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    where: {
+      id: session.id,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   // Find all application form field values in order to check which steps are completed
 
   const fieldValues = await prisma.applicationFormFieldValue.findMany({
@@ -132,9 +149,9 @@ const getApplicationData = async ({
   }));
 
   // If all steps are completed, the application can be submitted
+  const isEmailVerified = session.emailVerified || user.accounts.length > 0;
 
-  const canSubmit =
-    steps.every((step) => step.isCompleted) && session.emailVerified;
+  const canSubmit = steps.every((step) => step.isCompleted) && isEmailVerified;
 
   return {
     message: "Application found",
