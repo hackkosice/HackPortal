@@ -9,7 +9,7 @@ type HackerFromSessionData = {
   hackerId: number | null;
   applicationId: number | null;
   signedIn: boolean;
-  emailVerified: boolean;
+  emailVerified: boolean | null;
 };
 
 const getHackerForActiveHackathonFromSession =
