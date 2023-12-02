@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 import callServerAction from "@/services/helpers/server/callServerAction";
 import syncLocalApplicationDataWithServer from "@/server/actions/applicationForm/syncLocalApplicationDataWithServer";
