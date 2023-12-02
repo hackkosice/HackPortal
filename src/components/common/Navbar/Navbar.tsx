@@ -12,7 +12,7 @@ const Navbar = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <nav className="h-navbarHeightMobile md:h-navbarHeight fixed flex flex-row bg-hkLightGray w-full m-0 py-3 px-3 border-b-2 border-hkGray items-center md:py-6 md:px-5">
+    <nav className="z-50 h-navbarHeightMobile md:h-navbarHeight fixed flex flex-row bg-hkLightGray w-full m-0 py-3 px-3 border-b-2 border-hkGray items-center md:py-6 md:px-5">
       <NavbarLogo />
       <div className="mx-5 bg-gray-300 w-0.5"></div>
       <Heading size="small" className="m-auto">

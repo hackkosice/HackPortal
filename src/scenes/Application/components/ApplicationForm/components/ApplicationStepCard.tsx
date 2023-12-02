@@ -11,14 +11,19 @@ import Link from "next/link";
 import getLocalApplicationDataStepCompleted from "@/services/helpers/localData/getLocalApplicationDataStepCompleted";
 import { ApplicationStepData } from "@/server/getters/application";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import ConfirmationDialog from "@/components/common/ConfirmationDialog";
+import submitApplication from "@/server/actions/applicationForm/submitApplication";
 
 export type Props = {
   step: ApplicationStepData | "submit";
   shouldUseLocalIsCompleted?: boolean;
+  canSubmit?: boolean;
 };
 
 const ApplicationStepCard = ({
   step,
+  canSubmit,
   shouldUseLocalIsCompleted = false,
 }: Props) => {
   const [isCompleted, setIsCompleted] = React.useState(
@@ -34,21 +39,37 @@ const ApplicationStepCard = ({
     }
   }, [shouldUseLocalIsCompleted, step]);
 
+  const onSubmitConfirmationClose = async (value: boolean) => {
+    if (value) {
+      await submitApplication();
+    }
+  };
+
   if (step == "submit") {
     return (
-      <Card className="w-[95vw] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative bg-hkOrange cursor-pointer">
-        <Stack
-          justify="center"
-          alignItems="center"
-          spacing="small"
-          className="h-full md:flex-col flex-row"
+      <ConfirmationDialog
+        question={
+          "Are you sure you want to submit your application? After submitting the application will be locked for changes. You can still join, create and manage your team."
+        }
+        onAnswer={onSubmitConfirmationClose}
+      >
+        <Button
+          className="whitespace-normal w-[95vw] h-[68px] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative bg-hkOrange cursor-pointer"
+          disabled={!canSubmit}
         >
-          <Text className="text-center font-title font-semibold text-xl 2xl:text-2xl text-white">
-            Submit application
-          </Text>
-          <CursorArrowRaysIcon className="w-5 h-5 md:w-10 md:h-10 inline text-white" />
-        </Stack>
-      </Card>
+          <Stack
+            justify="center"
+            alignItems="center"
+            spacing="small"
+            className="md:flex-col flex-row"
+          >
+            <Text className="text-center font-title font-semibold text-xl 2xl:text-2xl text-white">
+              Submit application
+            </Text>
+            <CursorArrowRaysIcon className="w-5 h-5 md:w-10 md:h-10 inline text-white" />
+          </Stack>
+        </Button>
+      </ConfirmationDialog>
     );
   }
 
