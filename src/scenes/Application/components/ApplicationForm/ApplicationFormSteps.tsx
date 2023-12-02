@@ -25,12 +25,12 @@ const ApplicationFormSteps = async ({
         hackathonId={hackathonId}
       />
       <Stack className="w-full" direction="column">
-        <Heading className="mx-auto">
+        <Heading className="mx-auto md:mb-6">
           Your application for Hack Kosice 2024:
         </Heading>
 
         {data && (
-          <>
+          <Stack direction="column" className="gap-5 md:gap-20 w-full">
             <ApplicationStatusCard status={data.application.status} />
             {data.application.status === "open" && (
               <div className="mx-auto">
@@ -46,11 +46,15 @@ const ApplicationFormSteps = async ({
                       shouldUseLocalIsCompleted={!authStatus?.signedIn}
                     />
                   ))}
-                  <ApplicationStepCard key="submit" step="submit" />
+                  <ApplicationStepCard
+                    key="submit"
+                    step="submit"
+                    canSubmit={data.canSubmit}
+                  />
                 </Stack>
               </div>
             )}
-          </>
+          </Stack>
         )}
       </Stack>
     </>

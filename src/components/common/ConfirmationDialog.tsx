@@ -60,7 +60,11 @@ const ConfirmationDialog = ({
             <Button onClick={onActionClick}>Yes</Button>
           </AlertDialogAction>
           <AlertDialogCancel asChild>
-            <Button onClick={onCancelClick} variant="outline">
+            <Button
+              onClick={onCancelClick}
+              variant="outline"
+              className="mb-2 md:mb-0"
+            >
               No
             </Button>
           </AlertDialogCancel>
