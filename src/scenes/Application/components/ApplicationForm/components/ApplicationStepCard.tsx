@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import getLocalApplicationDataStepCompleted from "@/services/helpers/localData/getLocalApplicationDataStepCompleted";
-import { ApplicationStepData } from "@/server/getters/application";
+import { ApplicationStepData } from "@/server/getters/application/application";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";

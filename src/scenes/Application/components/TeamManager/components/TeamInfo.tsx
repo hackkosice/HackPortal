@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { TeamData, TeamMemberData } from "@/server/getters/team";
+import { TeamData, TeamMemberData } from "@/server/getters/application/team";
 import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import { Stack } from "@/components/ui/stack";

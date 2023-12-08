@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
 import FormRenderer from "@/components/common/FormRenderer/FormRenderer";
-import { ApplicationFormStepData } from "@/server/getters/applicationFormStep";
+import { ApplicationFormStepData } from "@/server/getters/application/applicationFormStep";
 import saveApplicationStepForm from "@/server/actions/applicationForm/saveApplicationStepForm";
 import updateLocalApplicationData from "@/services/helpers/localData/updateLocalApplicationData";
 import { useRouter } from "next/navigation";

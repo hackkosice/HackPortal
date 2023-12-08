@@ -1,5 +1,9 @@
 import Settings from "@/scenes/Dashboard/scenes/Settings/Settings";
 
+export const metadata = {
+  title: "Settings",
+};
+
 const SettingsPage = ({
   params: { hackathonId },
 }: {

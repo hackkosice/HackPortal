@@ -9,6 +9,10 @@ import {
   ApplicationStatus,
   ApplicationStatusEnum,
 } from "../src/services/types/applicationStatus";
+import {
+  TravelReimbursementRequestStatus,
+  TravelReimbursementRequestStatusEnum,
+} from "../src/services/types/travelReimbursementRequestStatus";
 const prisma = new PrismaClient();
 async function main() {
   const statuses: ApplicationStatus[] = Object.values(ApplicationStatusEnum);
@@ -30,6 +34,19 @@ async function main() {
       update: {},
       create: {
         value: fieldType,
+      },
+    });
+  }
+
+  const travelReimbursementRequestStatuses: TravelReimbursementRequestStatus[] =
+    Object.values(TravelReimbursementRequestStatusEnum);
+
+  for (const travelReimbursementRequestStatus of travelReimbursementRequestStatuses) {
+    await prisma.travelReimbursementRequestStatus.upsert({
+      where: { name: travelReimbursementRequestStatus },
+      update: {},
+      create: {
+        name: travelReimbursementRequestStatus,
       },
     });
   }

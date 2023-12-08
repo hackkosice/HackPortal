@@ -1,4 +1,4 @@
-import { ApplicationStepData } from "@/server/getters/application";
+import { ApplicationStepData } from "@/server/getters/application/application";
 import getLocalApplicationData from "@/services/helpers/localData/getLocalApplicationData";
 
 const getLocalApplicationDataStepCompleted = (

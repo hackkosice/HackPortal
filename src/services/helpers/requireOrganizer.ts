@@ -10,18 +10,30 @@ const requireOrganizer = async (): Promise<boolean> => {
     redirect("/application");
   }
 
-  if (!session.emailVerified) {
-    redirect("/org-verify-email");
-  }
-
   const user = await prisma.user.findFirst({
+    select: {
+      organizer: true,
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
     where: {
       id: session.id,
     },
-    include: {
-      organizer: true,
-    },
   });
+
+  if (!user) {
+    redirect("/application");
+  }
+
+  if (
+    (session.emailVerified === null && user.accounts.length === 0) ||
+    session.emailVerified === false
+  ) {
+    redirect("/org-verify-email");
+  }
 
   return Boolean(user?.organizer);
 };

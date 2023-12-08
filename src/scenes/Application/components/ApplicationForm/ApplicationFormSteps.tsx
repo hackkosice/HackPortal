@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack } from "@/components/ui/stack";
 import ApplicationStepCard from "@/scenes/Application/components/ApplicationForm/components/ApplicationStepCard";
-import getApplicationData from "@/server/getters/application";
+import getApplicationData from "@/server/getters/application/application";
 import ApplicationStatusCard from "@/scenes/Application/components/ApplicationForm/components/ApplicationStatusCard";
 import { Heading } from "@/components/ui/heading";
 import LocalApplicationDataSync from "@/scenes/Application/components/ApplicationForm/components/LocalApplicationDataSync";
