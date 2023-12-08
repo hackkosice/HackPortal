@@ -1,7 +1,7 @@
 import React from "react";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import getTeam from "@/server/getters/team";
+import getTeam from "@/server/getters/application/team";
 import NewTeamDialog from "@/scenes/Application/components/TeamManager/components/NewTeamDialog";
 import TeamInfo from "@/scenes/Application/components/TeamManager/components/TeamInfo";
 import JoinTeamDialog from "@/scenes/Application/components/TeamManager/components/JoinTeamDialog";

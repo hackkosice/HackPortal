@@ -9,21 +9,36 @@ const requireOrganizerSession = async () => {
     throw new Error("User has to be signed in");
   }
 
-  if (!session?.emailVerified) {
-    throw new Error("User has to verify their email");
-  }
-
-  const organizer = await prisma.organizer.findUnique({
+  const user = await prisma.user.findFirst({
+    select: {
+      organizer: true,
+      accounts: {
+        select: {
+          id: true,
+        },
+      },
+    },
     where: {
-      userId: session.id,
+      id: session.id,
     },
   });
 
-  if (!organizer) {
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (
+    (session.emailVerified === null && user.accounts.length === 0) ||
+    session.emailVerified === false
+  ) {
+    throw new Error("User has to verify their email");
+  }
+
+  if (!user.organizer) {
     throw new Error("Organizer not found");
   }
 
-  return organizer;
+  return user.organizer;
 };
 
 export default requireOrganizerSession;

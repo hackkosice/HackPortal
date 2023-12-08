@@ -21,6 +21,10 @@ const ApplicationStatusDescriptions: { [key in ApplicationStatus]: string } = {
     "Your attendance is confirmed. We are looking forward to seeing you at the event!",
   [ApplicationStatusEnum.declined]:
     "We are sorry to hear that you cannot attend. We hope to see you next time!",
+  [ApplicationStatusEnum.rejected]:
+    "Unfortunately, we cannot accept your application. If you have any questions, please contact us.",
+  [ApplicationStatusEnum.attended]:
+    "Thank you for attending our event! We hope you had a great time.",
 };
 const ApplicationStatusCard = ({ status }: ApplicationStatusCardProps) => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import ApplicationFormStep from "@/scenes/ApplicationFormStep/ApplicationFormStep";
-import getApplicationFormStep from "@/server/getters/applicationFormStep";
+import getApplicationFormStep from "@/server/getters/application/applicationFormStep";
 import { Metadata } from "next";
 import requireNonOrganizer from "@/services/helpers/requireNonOrganizer";
 

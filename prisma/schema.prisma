@@ -62,17 +62,18 @@ model Hackathon {
 }
 
 model Hacker {
-  id          Int          @id @default(autoincrement())
-  user        User         @relation(fields: [userId], references: [id])
-  userId      Int          @unique
-  team        Team?        @relation(fields: [teamId], references: [id])
-  ownedTeam   Team?        @relation(name: "TeamOwner")
-  teamId      Int?
-  application Application?
-  hackathonId Int
-  hackathon   Hackathon    @relation(fields: [hackathonId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id                         Int                         @id @default(autoincrement())
+  user                       User                        @relation(fields: [userId], references: [id])
+  userId                     Int                         @unique
+  team                       Team?                       @relation(fields: [teamId], references: [id])
+  ownedTeam                  Team?                       @relation(name: "TeamOwner")
+  teamId                     Int?
+  application                Application?
+  hackathonId                Int
+  hackathon                  Hackathon                   @relation(fields: [hackathonId], references: [id])
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  travelReimbursementRequest TravelReimbursementRequest?
 }
 
 model Team {
@@ -180,12 +181,13 @@ model FormFieldVisibilityRule {
 }
 
 model File {
-  id             Int                        @id @default(autoincrement())
-  name           String
-  path           String
-  formFieldValue ApplicationFormFieldValue?
-  createdAt      DateTime                   @default(now())
-  updatedAt      DateTime                   @updatedAt
+  id                         Int                         @id @default(autoincrement())
+  name                       String
+  path                       String
+  formFieldValue             ApplicationFormFieldValue?
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  travelReimbursementRequest TravelReimbursementRequest?
 }
 
 model OptionList {
@@ -254,4 +256,27 @@ model Vote {
   updatedAt       DateTime      @updatedAt
 
   @@unique([voteParameterId, applicationId, organizerId])
+}
+
+model TravelReimbursementRequest {
+  id                  Int                              @id @default(autoincrement())
+  hackerId            Int                              @unique
+  hacker              Hacker                           @relation(fields: [hackerId], references: [id])
+  statusId            Int
+  approvedAmount      Int?
+  financialDetails    String?
+  status              TravelReimbursementRequestStatus @relation(fields: [statusId], references: [id])
+  proofOfTravelFileId Int?                             @unique
+  proofOfTravelFile   File?                            @relation(fields: [proofOfTravelFileId], references: [id])
+  countryOfTravel     String
+  createdAt           DateTime                         @default(now())
+  updatedAt           DateTime                         @updatedAt
+}
+
+model TravelReimbursementRequestStatus {
+  id        Int                          @id @default(autoincrement())
+  name      String                       @unique
+  requests  TravelReimbursementRequest[]
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
 }

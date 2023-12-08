@@ -47,7 +47,7 @@ const Application = async () => {
             <TeamManager hackerId={hackerId} />
           </Suspense>
           <Suspense fallback={<div>Loading...</div>}>
-            <ReimbursementRequestManager />
+            <ReimbursementRequestManager hackerId={hackerId} />
           </Suspense>
         </Stack>
       </Stack>

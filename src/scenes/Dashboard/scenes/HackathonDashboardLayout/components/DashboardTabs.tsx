@@ -14,6 +14,8 @@ const getTabValue = (path: string, hackathonId: number) => {
   if (path.startsWith(`/dashboard/${hackathonId}/applications`))
     return "applications";
   if (path.startsWith(`/dashboard/${hackathonId}/settings`)) return "settings";
+  if (path.startsWith(`/dashboard/${hackathonId}/travel-reimbursements`))
+    return "reimbursements";
   return undefined;
 };
 
@@ -33,6 +35,9 @@ const DashboardTabs = ({ hackathonId }: DashboardTabsProps) => {
       case "applications":
         push(`/dashboard/${hackathonId}/applications`);
         break;
+      case "reimbursements":
+        push(`/dashboard/${hackathonId}/travel-reimbursements`);
+        break;
       case "form":
         push(`/dashboard/${hackathonId}/form-editor`);
         break;
@@ -48,12 +53,13 @@ const DashboardTabs = ({ hackathonId }: DashboardTabsProps) => {
 
   return (
     <Tabs
-      className="w-full md:w-[70%] h-fit my-5 mx-auto"
+      className="w-full md:w-[80%] h-fit my-5 mx-auto"
       value={tabValue}
       onValueChange={onTabChange}
     >
-      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-fit">
+      <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-fit">
         <TabsTrigger value="applications">Applications</TabsTrigger>
+        <TabsTrigger value="reimbursements">Travel reimbursements</TabsTrigger>
         <TabsTrigger value="form">Application form</TabsTrigger>
         <TabsTrigger value="info">Hackathon info</TabsTrigger>
         <TabsTrigger value="settings">Settings</TabsTrigger>

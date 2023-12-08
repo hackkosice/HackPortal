@@ -1,5 +1,6 @@
 import emailClient from "./emailClient";
 import { BrevoTemplateIds } from "@/services/emails/consts/brevoTemplateIds";
+import * as Sentry from "@sentry/nextjs";
 
 type SendEmailParams = {
   recipientEmail: string;
@@ -13,8 +14,10 @@ const sendEmailSafely = async (callback: () => Promise<void>) => {
     await callback();
   } catch (e) {
     if (e instanceof Error) {
+      Sentry.captureException(`Failed to send email: ${e.message}`);
       throw new Error(`Failed to send email: ${e.message}`);
     }
+    Sentry.captureException("Failed to send email unknown error");
     throw new Error(`Failed to send email - unknown error`);
   }
 };
@@ -23,7 +26,7 @@ export const sendInvitationEmail = async ({
 }: SendEmailParams) => {
   await sendEmailSafely(async () => {
     await emailClient.smtp.sendTransacEmail({
-      templateId: BrevoTemplateIds.INVITATION,
+      templateId: BrevoTemplateIds.APPLICATION_INVITED,
       to: [
         {
           email: recipientEmail,
