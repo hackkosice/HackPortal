@@ -33,7 +33,14 @@ const uploadFile = async (file: File, url: string) => {
 const ApplicationFormStep = ({
   stepId,
   data: {
-    data: { title, description, formFields, nextStepId, previousStepId },
+    data: {
+      title,
+      position,
+      description,
+      formFields,
+      nextStepId,
+      previousStepId,
+    },
     signedIn,
   },
 }: Props) => {
@@ -132,7 +139,9 @@ const ApplicationFormStep = ({
       </Link>
       <Card className="mx-auto w-full mb-10">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle>
+            {position}. {title}
+          </CardTitle>
           {description && (
             <Text>
               <MarkDownRenderer markdown={description} />
