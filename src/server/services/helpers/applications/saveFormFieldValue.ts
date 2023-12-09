@@ -2,8 +2,10 @@ import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 import { prisma } from "@/services/prisma";
 import createKeyForFormFileUpload from "@/server/services/helpers/fileUpload/createKeyForFormFileUpload";
 
-type FieldValue = {
+export type FieldValue = {
   fieldId: number;
+  stepId: number;
+  fieldType: FormFieldType;
   value: string;
 };
 
@@ -45,24 +47,7 @@ const saveFormFieldValue = async ({
   userId,
   fieldValue,
 }: SaveFormFieldValueInput) => {
-  const field = await prisma.formField.findUnique({
-    select: {
-      stepId: true,
-      type: {
-        select: {
-          value: true,
-        },
-      },
-    },
-    where: {
-      id: fieldValue.fieldId,
-    },
-  });
-  if (!field) {
-    throw new Error("Provided fieldId not found in database");
-  }
-  const fieldTypeValue = field.type.value as FormFieldType;
-  switch (fieldTypeValue) {
+  switch (fieldValue.fieldType) {
     case FormFieldTypeEnum.text:
     case FormFieldTypeEnum.textarea:
     case FormFieldTypeEnum.checkbox: {
@@ -113,7 +98,7 @@ const saveFormFieldValue = async ({
         data: {
           name: fileName,
           path: createKeyForFormFileUpload({
-            stepId: field.stepId,
+            stepId: fieldValue.stepId,
             fieldId: fieldValue.fieldId,
             userId,
           }),

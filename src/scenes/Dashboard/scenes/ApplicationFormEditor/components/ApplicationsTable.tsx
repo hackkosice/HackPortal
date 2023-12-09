@@ -3,8 +3,10 @@
 import React, { useEffect, useMemo } from "react";
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
   VisibilityState,
@@ -29,19 +31,49 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { Stack } from "@/components/ui/stack";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ApplicationStatus,
+  ApplicationStatusEnum,
+} from "@/services/types/applicationStatus";
+import inviteHacker from "@/server/actions/dashboard/inviteHacker";
 
 const ActionsCell = ({
   applicationValues,
 }: {
   applicationValues: ApplicationFormValuesObject;
 }) => {
+  const applicationStatus = applicationValues["status"] as ApplicationStatus;
   return (
-    <Link
-      href={`applications/${applicationValues.id}/detail`}
-      className="text-hkOrange"
-    >
-      Details
-    </Link>
+    <Stack>
+      <Link
+        href={`applications/${applicationValues.id}/detail`}
+        className="text-hkOrange"
+      >
+        Details
+      </Link>
+      {applicationStatus === ApplicationStatusEnum.submitted && (
+        <Button
+          variant="link"
+          onClick={async () => {
+            await inviteHacker({
+              hackerId: Number(applicationValues["hackerId"] as string),
+            });
+          }}
+          className="hover:no-underline"
+        >
+          Invite
+        </Button>
+      )}
+    </Stack>
   );
 };
 
@@ -68,6 +100,9 @@ const ApplicationsTable = ({
     ],
     [applications]
   );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const table = useReactTable({
@@ -75,8 +110,11 @@ const ApplicationsTable = ({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnVisibility,
+      columnFilters,
     },
     onColumnVisibilityChange: setColumnVisibility,
   });
@@ -107,42 +145,67 @@ const ApplicationsTable = ({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            Columns
-            <ChevronDown className="ml-2" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <ScrollArea className="max-w-[70vw] md:max-w-[400px] max-h-[400px]">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide() && column.id !== "Actions"
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize cursor-pointer"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => {
-                      column.toggleVisibility(value);
-                      saveColumnVisibility(column.id, value);
-                    }}
-                    onSelect={(event) => event.preventDefault()}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </ScrollArea>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <ScrollArea className="max-h-[400px] w-[96vw] md:max-w-[61vw]">
+      <Stack justify="between" className="w-full">
+        <Select
+          onValueChange={(value) =>
+            table
+              .getColumn("status")
+              ?.setFilterValue(value === "all" ? "" : value)
+          }
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">(all)</SelectItem>
+              {Object.keys(ApplicationStatusEnum).map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+                <ChevronDown className="ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <ScrollArea className="max-w-[70vw] md:max-w-[400px] max-h-[400px]">
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) => column.getCanHide() && column.id !== "Actions"
+                  )
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize cursor-pointer"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) => {
+                          column.toggleVisibility(value);
+                          saveColumnVisibility(column.id, value);
+                        }}
+                        onSelect={(event) => event.preventDefault()}
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </ScrollArea>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </Stack>
+      <ScrollArea className="max-h-[400px] w-[96vw] md:max-w-[81vw] xl:max-w-[61vw]">
         <div className="rounded-md border">
-          <Table className="w-[95vw] md:w-max md:min-w-[60vw]">
+          <Table className="w-[95vw] md:w-max md:min-w-[80vw] xl:min-w-[60vw]">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>

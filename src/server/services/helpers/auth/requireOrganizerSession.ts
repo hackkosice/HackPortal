@@ -1,3 +1,5 @@
+import "server-only";
+
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
@@ -27,10 +29,7 @@ const requireOrganizerSession = async () => {
     throw new Error("User not found");
   }
 
-  if (
-    (session.emailVerified === null && user.accounts.length === 0) ||
-    session.emailVerified === false
-  ) {
+  if (!session.emailVerified) {
     throw new Error("User has to verify their email");
   }
 

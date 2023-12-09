@@ -28,10 +28,7 @@ const requireOrganizer = async (): Promise<boolean> => {
     redirect("/application");
   }
 
-  if (
-    (session.emailVerified === null && user.accounts.length === 0) ||
-    session.emailVerified === false
-  ) {
+  if (!session.emailVerified) {
     redirect("/org-verify-email");
   }
 

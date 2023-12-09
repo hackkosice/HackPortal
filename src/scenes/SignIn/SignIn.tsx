@@ -60,7 +60,7 @@ const SignIn = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel required>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -78,7 +78,7 @@ const SignIn = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel required>Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -96,10 +96,16 @@ const SignIn = () => {
           </form>
         </Form>
         <Stack direction="column">
-          <Button variant="outline" asChild>
-            <Link href="/signup">Sign up with email</Link>
-          </Button>
-          <GithubButton onClick={() => signIn("github")} />
+          <GithubButton
+            onClick={() => signIn("github")}
+            content="Sign in with Github"
+          />
+          <Text className="text-center">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="text-hkOrange">
+              Sign up here
+            </Link>
+          </Text>
         </Stack>
       </CardContent>
     </Card>

@@ -5,6 +5,12 @@ import getLocalApplicationDataStepCompleted from "@/services/helpers/localData/g
 jest.mock(
   "../../../../../../services/helpers/localData/getLocalApplicationDataStepCompleted"
 );
+jest.mock(
+  "../../../../../../server/actions/applicationForm/submitApplication",
+  () => {
+    return jest.fn();
+  }
+);
 
 const renderComponent = ({
   isCompleted,
@@ -26,10 +32,7 @@ const renderComponent = ({
     formFields: [],
   };
   render(
-    <ApplicationStepCard
-      step={step}
-      shouldUseLocalIsCompleted={shouldUseLocalIsCompleted}
-    />
+    <ApplicationStepCard step={step} isSignedIn={!shouldUseLocalIsCompleted} />
   );
 };
 

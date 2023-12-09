@@ -9,7 +9,7 @@ import getPresignedUploadUrl from "@/services/fileUpload/getPresignedUploadUrl";
 import createKeyForReimbursementDocumentFileUpload from "@/server/services/helpers/fileUpload/createKeyForReimbursementDocumentFileUpload";
 
 type TravelReimbursementRequestData = {
-  status: "not_signed_in" | "success";
+  status: "not_signed_in" | "unverified_email" | "success";
   travelReimbursementRequest: {
     status: TravelReimbursementRequestStatus | null;
     approvedAmount: number | null;
@@ -28,6 +28,13 @@ const getTravelReimbursementRequest = async ({
   if (!session?.id || !hackerId) {
     return {
       status: "not_signed_in",
+      travelReimbursementRequest: null,
+      fileUploadLink: null,
+    };
+  }
+  if (!session.emailVerified) {
+    return {
+      status: "unverified_email",
       travelReimbursementRequest: null,
       fileUploadLink: null,
     };

@@ -43,13 +43,15 @@ const ApplicationFormSteps = async ({
                     <ApplicationStepCard
                       key={step.id}
                       step={step}
-                      shouldUseLocalIsCompleted={!authStatus?.signedIn}
+                      isSignedIn={authStatus?.signedIn}
                     />
                   ))}
                   <ApplicationStepCard
                     key="submit"
                     step="submit"
                     canSubmit={data.canSubmit}
+                    isSignedIn={authStatus?.signedIn}
+                    hasEmailVerified={authStatus?.emailVerified}
                   />
                 </Stack>
               </div>

@@ -14,17 +14,20 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import submitApplication from "@/server/actions/applicationForm/submitApplication";
+import Tooltip from "@/components/common/Tooltip";
 
 export type Props = {
   step: ApplicationStepData | "submit";
-  shouldUseLocalIsCompleted?: boolean;
+  isSignedIn?: boolean;
+  hasEmailVerified?: boolean;
   canSubmit?: boolean;
 };
 
 const ApplicationStepCard = ({
   step,
   canSubmit,
-  shouldUseLocalIsCompleted = false,
+  isSignedIn,
+  hasEmailVerified,
 }: Props) => {
   const [isCompleted, setIsCompleted] = React.useState(
     step == "submit" ? false : step.isCompleted
@@ -32,12 +35,12 @@ const ApplicationStepCard = ({
 
   useEffect(() => {
     if (step == "submit") return;
-    if (shouldUseLocalIsCompleted) {
+    if (!isSignedIn) {
       setIsCompleted(getLocalApplicationDataStepCompleted(step));
     } else {
       setIsCompleted(step.isCompleted);
     }
-  }, [shouldUseLocalIsCompleted, step]);
+  }, [isSignedIn, step]);
 
   const onSubmitConfirmationClose = async (value: boolean) => {
     if (value) {
@@ -46,6 +49,37 @@ const ApplicationStepCard = ({
   };
 
   if (step == "submit") {
+    const submitButton = (
+      <Button
+        className="whitespace-normal w-[95vw] h-[68px] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative bg-hkOrange cursor-pointer"
+        disabled={!canSubmit}
+      >
+        <Stack
+          justify="center"
+          alignItems="center"
+          spacing="small"
+          className="md:flex-col flex-row"
+        >
+          <Text className="text-center font-title font-semibold text-xl 2xl:text-2xl text-white">
+            Submit application
+          </Text>
+          <CursorArrowRaysIcon className="w-5 h-5 md:w-10 md:h-10 inline text-white" />
+        </Stack>
+      </Button>
+    );
+    if (!canSubmit) {
+      const submitButtonTooltipMessage = isSignedIn
+        ? hasEmailVerified
+          ? "You need to fill all the steps to submit your application"
+          : "You need to verify your email to submit your application"
+        : "You need to sign in to submit your application";
+      return (
+        <Tooltip
+          trigger={<span>{submitButton}</span>}
+          content={submitButtonTooltipMessage}
+        />
+      );
+    }
     return (
       <ConfirmationDialog
         question={
@@ -53,22 +87,7 @@ const ApplicationStepCard = ({
         }
         onAnswer={onSubmitConfirmationClose}
       >
-        <Button
-          className="whitespace-normal w-[95vw] h-[68px] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative bg-hkOrange cursor-pointer"
-          disabled={!canSubmit}
-        >
-          <Stack
-            justify="center"
-            alignItems="center"
-            spacing="small"
-            className="md:flex-col flex-row"
-          >
-            <Text className="text-center font-title font-semibold text-xl 2xl:text-2xl text-white">
-              Submit application
-            </Text>
-            <CursorArrowRaysIcon className="w-5 h-5 md:w-10 md:h-10 inline text-white" />
-          </Stack>
-        </Button>
+        {submitButton}
       </ConfirmationDialog>
     );
   }

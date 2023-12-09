@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import joinTeam from "@/server/actions/team/joinTeam";
+import Tooltip from "@/components/common/Tooltip";
 
 const joinTeamFormSchema = z.object({
   code: z.string().min(1),
@@ -30,7 +31,15 @@ const joinTeamFormSchema = z.object({
 
 type JoinTeamForm = z.infer<typeof joinTeamFormSchema>;
 
-const JoinTeamDialog = () => {
+type JoinTeamDialogProps = {
+  isSignedIn?: boolean;
+  hasEmailVerified?: boolean;
+};
+
+const JoinTeamDialog = ({
+  isSignedIn,
+  hasEmailVerified,
+}: JoinTeamDialogProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<JoinTeamForm>({
     resolver: zodResolver(joinTeamFormSchema),
@@ -48,10 +57,27 @@ const JoinTeamDialog = () => {
     if (isOpened) form.reset();
   }, [form, isOpened]);
 
+  const triggerButton = (
+    <Button variant="outline" disabled={!isSignedIn || !hasEmailVerified}>
+      Join existing team
+    </Button>
+  );
+
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button variant="outline">Join existing team</Button>
+        {isSignedIn && hasEmailVerified ? (
+          triggerButton
+        ) : (
+          <Tooltip
+            trigger={<span>{triggerButton}</span>}
+            content={
+              !isSignedIn
+                ? "You must be signed in to join a team"
+                : "You must verify your email to join a team"
+            }
+          />
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

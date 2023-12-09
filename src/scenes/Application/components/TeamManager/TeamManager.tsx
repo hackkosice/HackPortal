@@ -17,14 +17,7 @@ const TeamManager = async ({ hackerId }: TeamManagerProps) => {
     hackerId,
   });
   let teamPageContent = null;
-  if (status === "not_signed_in") {
-    teamPageContent = (
-      <div>
-        <Heading size="small">Your team</Heading>
-        <Text>You can create or join teams after you sign in</Text>
-      </div>
-    );
-  } else if (team === null) {
+  if (team === null) {
     teamPageContent = (
       <>
         <Text>
@@ -32,8 +25,14 @@ const TeamManager = async ({ hackerId }: TeamManagerProps) => {
           create your own team or join an existing team with your friends.
         </Text>
         <Stack direction="row" justify="around" className="">
-          <NewTeamDialog />
-          <JoinTeamDialog />
+          <NewTeamDialog
+            isSignedIn={status !== "not_signed_in"}
+            hasEmailVerified={status === "success"}
+          />
+          <JoinTeamDialog
+            isSignedIn={status !== "not_signed_in"}
+            hasEmailVerified={status === "success"}
+          />
         </Stack>
       </>
     );

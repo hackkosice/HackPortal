@@ -5,6 +5,7 @@ export const LOCAL_STORAGE_APPLICATION_DATA = "applicationData";
 export type LocalApplicationFieldData = {
   fieldId: number;
   fieldType: FormFieldType;
+  stepId: number;
   value: string;
 };
 

@@ -26,7 +26,7 @@ export type ApplicationData = {
   message: string;
   authStatus: {
     signedIn: boolean;
-    emailVerified: boolean | null;
+    emailVerified: boolean;
   } | null;
   data: {
     application: {
@@ -149,9 +149,8 @@ const getApplicationData = async ({
   }));
 
   // If all steps are completed, the application can be submitted
-  const isEmailVerified = session.emailVerified || user.accounts.length > 0;
-
-  const canSubmit = steps.every((step) => step.isCompleted) && isEmailVerified;
+  const canSubmit =
+    steps.every((step) => step.isCompleted) && session.emailVerified;
 
   return {
     message: "Application found",

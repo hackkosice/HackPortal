@@ -26,6 +26,7 @@ import createTeam from "@/server/actions/team/createTeam";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import editTeamName from "@/server/actions/team/editTeamName";
 import { PencilIcon } from "@heroicons/react/24/solid";
+import Tooltip from "@/components/common/Tooltip";
 
 const newTeamFormSchema = z.object({
   name: z.string().min(1),
@@ -36,11 +37,15 @@ type NewTeamForm = z.infer<typeof newTeamFormSchema>;
 type NewTeamDialogProps = {
   mode?: "create" | "edit";
   initialData?: NewTeamForm;
+  isSignedIn?: boolean;
+  hasEmailVerified?: boolean;
 };
 
 const NewTeamDialog = ({
   mode = "create",
   initialData,
+  isSignedIn,
+  hasEmailVerified,
 }: NewTeamDialogProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewTeamForm>({
@@ -68,19 +73,37 @@ const NewTeamDialog = ({
     }
   }, [form, initialData, isOpened, mode]);
 
+  const triggerButton =
+    mode === "create" ? (
+      <Button disabled={!isSignedIn || !hasEmailVerified}>
+        <PlusIcon className="w-4 h-4 mr-1 text-white inline" />
+        Create new team
+      </Button>
+    ) : (
+      <Button
+        variant="ghost"
+        size="small"
+        disabled={!isSignedIn || !hasEmailVerified}
+      >
+        <PencilIcon className="w-4 h-4 mr-1 inline" />
+        Edit team name
+      </Button>
+    );
+
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        {mode === "create" ? (
-          <Button>
-            <PlusIcon className="w-4 h-4 mr-1 text-white inline" />
-            Create new team
-          </Button>
+        {isSignedIn && hasEmailVerified ? (
+          triggerButton
         ) : (
-          <Button variant="ghost" size="small">
-            <PencilIcon className="w-4 h-4 mr-1 inline" />
-            Edit team name
-          </Button>
+          <Tooltip
+            trigger={<span>{triggerButton}</span>}
+            content={
+              !isSignedIn
+                ? "You must be signed in to create a team"
+                : "You must verify your email to create a team"
+            }
+          />
         )}
       </DialogTrigger>
       <DialogContent>

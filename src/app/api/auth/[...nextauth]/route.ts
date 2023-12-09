@@ -58,11 +58,21 @@ export const authOptions: AuthOptions = {
     async jwt({ token }) {
       if (token.email) {
         const dbUser = await prisma.user.findUnique({
+          select: {
+            id: true,
+            emailVerified: true,
+            accounts: {
+              select: {
+                id: true,
+              },
+            },
+          },
           where: { email: token.email },
         });
         if (dbUser) {
           token.id = Number(dbUser.id);
-          token.emailVerified = dbUser.emailVerified;
+          token.emailVerified =
+            dbUser.emailVerified || dbUser.accounts.length > 0;
         }
       }
 

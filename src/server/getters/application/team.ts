@@ -16,7 +16,7 @@ export type TeamData = {
   members: TeamMemberData[];
 };
 export type GetTeamData = {
-  status: "not_signed_in" | "success";
+  status: "not_signed_in" | "unverified_email" | "success";
   team: TeamData | null;
   isOwnerSession: boolean;
 };
@@ -30,6 +30,13 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
   if (!session?.id || !hackerId) {
     return {
       status: "not_signed_in",
+      team: null,
+      isOwnerSession: false,
+    };
+  }
+  if (!session.emailVerified) {
+    return {
+      status: "unverified_email",
       team: null,
       isOwnerSession: false,
     };
