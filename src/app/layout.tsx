@@ -4,6 +4,8 @@ import NextAuthProvider from "@/components/context/NextAuthProvider";
 import Navbar from "@/components/common/Navbar/Navbar";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
+import DatadogInit from "@/components/common/DatadogInit/DatadogInit";
+import SetDatadogUser from "@/components/common/DatadogInit/SetDatadogUser";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -27,7 +29,9 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${roboto.variable} ${leagueSpartan.variable}`}>
       <body>
+        <DatadogInit />
         <NextAuthProvider>
+          <SetDatadogUser />
           <main className={`font-default bg-hkLightGray relative`}>
             <Navbar />
             <div className="flex min-h-screen px-2 md:px-5">{children}</div>

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import ConfirmationDialog from "@/components/common/ConfirmationDialog";
 import submitApplication from "@/server/actions/applicationForm/submitApplication";
 import Tooltip from "@/components/common/Tooltip";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 export type Props = {
   step: ApplicationStepData | "submit";
@@ -32,6 +33,7 @@ const ApplicationStepCard = ({
   const [isCompleted, setIsCompleted] = React.useState(
     step == "submit" ? false : step.isCompleted
   );
+  const { log } = useLog();
 
   useEffect(() => {
     if (step == "submit") return;
@@ -93,7 +95,19 @@ const ApplicationStepCard = ({
   }
 
   return (
-    <Link href={`/application/form/step/${step.id}`}>
+    <Link
+      href={`/application/form/step/${step.id}`}
+      onClick={() => {
+        log({
+          action: LogAction.CardClicked,
+          detail: "Application card",
+          data: {
+            step: step.position,
+            title: step.title,
+          },
+        });
+      }}
+    >
       <Card
         className={`w-[95vw] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative cursor-pointer hover:bg-slate-200 ${
           isCompleted ? "bg-green-200 hover:bg-green-300" : ""
