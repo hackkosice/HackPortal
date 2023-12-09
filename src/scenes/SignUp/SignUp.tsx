@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Stack } from "@/components/ui/stack";
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import signUp from "@/server/actions/signUp";
 import callServerAction from "@/services/helpers/server/callServerAction";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import GithubButton from "@/scenes/SignIn/components/SocialButtons/GithubButton";
 import GoogleButton from "@/scenes/SignIn/components/SocialButtons/GoogleButton";
 import Link from "next/link";
@@ -39,31 +39,33 @@ const SignUp = () => {
     resolver: zodResolver(signupSchema),
   });
   const [error, setError] = React.useState<string | null>(null);
+  const { status: sessionStatus } = useSession();
 
-  const onSubmit = useCallback(
-    async (data: SignUpSchema) => {
-      if (data.password !== data.repeatPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-      const result = await callServerAction(signUp, {
-        email: data.email,
-        password: data.password,
-      });
-      if (!result.success) {
-        setError(result.message);
-        return;
-      }
+  const onSubmit = async (data: SignUpSchema) => {
+    if (data.password !== data.repeatPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    const result = await callServerAction(signUp, {
+      email: data.email,
+      password: data.password,
+    });
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
 
-      await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-      });
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+    });
+  };
 
+  useEffect(() => {
+    if (sessionStatus === "authenticated") {
       router.push("/application");
-    },
-    [router]
-  );
+    }
+  }, [sessionStatus, router]);
 
   return (
     <Card className="m-auto w-full md:w-[60vw]">
