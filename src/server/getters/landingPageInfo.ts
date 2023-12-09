@@ -19,6 +19,8 @@ const getLandingPageInfo = async (): Promise<LandingPageInfo> => {
     });
     if (organizer) {
       ctaContent = "Go to dashboard";
+    } else {
+      ctaContent = "Go to application";
     }
   }
   const hackathons = await prisma.hackathon.findMany();
