@@ -11,9 +11,8 @@ const getPresignedUploadUrl = (key: string): Promise<string> => {
     new PutObjectCommand({
       Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
       Key: key,
-      ContentLength: MAX_FILE_SIZE,
     }),
-    { expiresIn: 3600, signableHeaders: new Set(["content-length"]) }
+    { expiresIn: 3600 }
   );
 };
 

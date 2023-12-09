@@ -29,6 +29,8 @@ export type StepDataForForm = {
   title: string;
   description: string | null;
   position: number;
+  nextStepId: number | null;
+  previousStepId: number | null;
   formFields: FormFieldData[];
 };
 
@@ -48,6 +50,7 @@ const getStepDataForForm = async ({
       title: true,
       description: true,
       position: true,
+      hackathonId: true,
       formFields: {
         select: {
           id: true,
@@ -93,6 +96,41 @@ const getStepDataForForm = async ({
     throw new Error("Step not found");
   }
 
+  const nextStep = await prisma.applicationFormStep.findFirst({
+    select: {
+      id: true,
+    },
+    where: {
+      AND: [
+        {
+          hackathonId: stepData.hackathonId,
+        },
+        {
+          position: stepData.position + 1,
+        },
+      ],
+    },
+  });
+
+  const previousStep = await prisma.applicationFormStep.findFirst({
+    select: {
+      id: true,
+    },
+    where: {
+      AND: [
+        {
+          hackathonId: stepData.hackathonId,
+        },
+        {
+          position: stepData.position - 1,
+        },
+      ],
+    },
+  });
+
+  const nextStepId = nextStep?.id ?? null;
+  const previousStepId = previousStep?.id ?? null;
+
   const formFields = await Promise.all(
     stepData.formFields.map(async (field) => ({
       id: field.id,
@@ -131,6 +169,8 @@ const getStepDataForForm = async ({
 
   return {
     ...stepData,
+    nextStepId,
+    previousStepId,
     formFields: formFields,
   };
 };
