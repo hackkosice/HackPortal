@@ -105,7 +105,12 @@ const TeamInfo = ({
             Team name: <span className="font-bold">{name}</span>
           </Text>
           {isOwnerSession && (
-            <NewTeamDialog mode="edit" initialData={{ name }} />
+            <NewTeamDialog
+              mode="edit"
+              initialData={{ name }}
+              isSignedIn
+              hasEmailVerified
+            />
           )}
         </Stack>
         <Stack direction="row" alignItems="center" spacing="none">

@@ -6,7 +6,7 @@ declare module "next-auth" {
    */
   interface Session extends DefaultSession {
     id: number;
-    emailVerified: boolean | null;
+    emailVerified: boolean;
   }
   /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
@@ -27,6 +27,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: number;
     email: string;
-    emailVerified: boolean | null;
+    emailVerified: boolean;
   }
 }

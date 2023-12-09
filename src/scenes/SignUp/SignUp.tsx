@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import signUp from "@/server/actions/signUp";
 import callServerAction from "@/services/helpers/server/callServerAction";
+import { signIn } from "next-auth/react";
+import GithubButton from "@/scenes/SignIn/components/SocialButtons/GithubButton";
 
 export const signupSchema = z.object({
   email: z.string().email(),
@@ -50,17 +52,22 @@ const SignUp = () => {
         return;
       }
 
-      router.push("/signin");
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+      });
+
+      router.push("/application");
     },
     [router]
   );
 
   return (
-    <Card className="m-auto">
+    <Card className="m-auto w-full md:w-[60vw]">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="md:w-[80%] mx-auto">
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -70,7 +77,7 @@ const SignUp = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel required>Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -88,7 +95,7 @@ const SignUp = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel required>Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -106,7 +113,7 @@ const SignUp = () => {
                 name="repeatPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel required>Repeat password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -119,7 +126,11 @@ const SignUp = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Sign up</Button>
+              <Button type="submit">Sign up with email and password</Button>
+              <GithubButton
+                onClick={() => signIn("github")}
+                content="Sign up with Github"
+              />
             </Stack>
           </form>
         </Form>

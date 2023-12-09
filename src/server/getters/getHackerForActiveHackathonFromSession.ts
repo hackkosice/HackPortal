@@ -40,24 +40,6 @@ const getHackerForActiveHackathonFromSession =
 
     const userId = session.id;
 
-    const user = await prisma.user.findUnique({
-      select: {
-        accounts: {
-          select: {
-            provider: true,
-          },
-        },
-      },
-      where: {
-        id: userId,
-      },
-    });
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const userAccountProvider =
-      user.accounts.length > 0 ? user.accounts[0].provider : "credentials";
-
     const hacker = await prisma.hacker.findFirst({
       select: {
         id: true,
@@ -123,8 +105,7 @@ const getHackerForActiveHackathonFromSession =
       hackerId,
       applicationId,
       signedIn: true,
-      emailVerified:
-        userAccountProvider === "credentials" ? session.emailVerified : true,
+      emailVerified: session.emailVerified,
     };
   };
 

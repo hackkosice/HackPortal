@@ -6,6 +6,7 @@ import {
 import { Text } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { Stack } from "@/components/ui/stack";
+import ConfirmAttendanceButton from "@/scenes/Application/components/ApplicationForm/components/ConfirmAttendanceButton";
 
 type ApplicationStatusCardProps = {
   status: ApplicationStatus;
@@ -26,16 +27,30 @@ const ApplicationStatusDescriptions: { [key in ApplicationStatus]: string } = {
   [ApplicationStatusEnum.attended]:
     "Thank you for attending our event! We hope you had a great time.",
 };
+
+const ApplicationStatusEmojis: { [key in ApplicationStatus]: string | null } = {
+  [ApplicationStatusEnum.open]: null,
+  [ApplicationStatusEnum.submitted]: null,
+  [ApplicationStatusEnum.invited]: "🎉",
+  [ApplicationStatusEnum.confirmed]: "✅",
+  [ApplicationStatusEnum.declined]: null,
+  [ApplicationStatusEnum.rejected]: null,
+  [ApplicationStatusEnum.attended]: "💪",
+};
 const ApplicationStatusCard = ({ status }: ApplicationStatusCardProps) => {
   return (
     <Card className="p-5 w-[95vw] md:w-[50vw] lg:w-[40vw] xl:w-[30vw] md:mx-auto bg-primaryTitle">
       <Stack justify="center" alignItems="center" direction="column">
         <Text className="font-title font-semibold text-xl md:text-2xl text-white">
-          Application status: {status}
+          {ApplicationStatusEmojis[status]} Application status: {status}{" "}
+          {ApplicationStatusEmojis[status]}
         </Text>
         <Text className="text-white text-sm md:text-base">
           {ApplicationStatusDescriptions[status]}
         </Text>
+        {status === ApplicationStatusEnum.invited && (
+          <ConfirmAttendanceButton />
+        )}
       </Stack>
     </Card>
   );

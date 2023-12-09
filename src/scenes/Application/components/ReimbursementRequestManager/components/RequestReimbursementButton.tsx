@@ -23,9 +23,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import createTravelReimbursementRequest from "@/server/actions/travelReimbursement/createTravelReimbursementRequest";
+import Tooltip from "@/components/common/Tooltip";
 
 type RequestReimbursementButtonProps = {
-  isDisabled: boolean;
+  isSignedIn?: boolean;
+  hasEmailVerified?: boolean;
 };
 
 const requestReimbursementSchema = z.object({
@@ -35,7 +37,8 @@ const requestReimbursementSchema = z.object({
 type RequestReimbursementForm = z.infer<typeof requestReimbursementSchema>;
 
 const RequestReimbursementButton = ({
-  isDisabled,
+  isSignedIn,
+  hasEmailVerified,
 }: RequestReimbursementButtonProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<RequestReimbursementForm>({
@@ -57,12 +60,27 @@ const RequestReimbursementButton = ({
   useEffect(() => {
     if (isOpened) form.reset();
   }, [form, isOpened]);
+
+  const requestButton = (
+    <Button variant="outline" disabled={!isSignedIn || !hasEmailVerified}>
+      Request travel reimbursement
+    </Button>
+  );
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button variant="outline" disabled={isDisabled}>
-          Request travel reimbursement
-        </Button>
+        {!isSignedIn || !hasEmailVerified ? (
+          <Tooltip
+            trigger={<span>{requestButton}</span>}
+            content={
+              !isSignedIn
+                ? "You must be signed in to request travel reimbursement"
+                : "You must verify your email to request travel reimbursement"
+            }
+          />
+        ) : (
+          requestButton
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

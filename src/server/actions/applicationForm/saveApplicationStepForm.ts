@@ -1,45 +1,28 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
-import saveFormFieldValue from "@/server/services/helpers/applications/saveFormFieldValue";
-import { FormFieldType } from "@/services/types/formFields";
+import saveFormFieldValue, {
+  FieldValue,
+} from "@/server/services/helpers/applications/saveFormFieldValue";
+import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 
 export type SaveApplicationStepFormInput = {
   stepId: number;
-  fieldValues: {
-    fieldId: number;
-    fieldType: FormFieldType;
-    value: string;
-  }[];
+  fieldValues: Omit<FieldValue, "stepId">[];
 };
 
 const saveApplicationStepForm = async ({
   fieldValues,
   stepId,
 }: SaveApplicationStepFormInput) => {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.id) {
-    throw new Error("User not logged in");
-  }
-  const userId = session.id;
-
-  const hacker = await prisma.hacker.findUnique({
-    where: {
-      userId,
-    },
+  const { id: hackerId, userId } = await requireHackerSession({
+    verified: false,
   });
-
-  if (!hacker) {
-    throw new Error("Hacker not found");
-  }
 
   const application = await prisma.application.findUnique({
     where: {
-      hackerId: hacker.id,
+      hackerId: hackerId,
     },
   });
 
@@ -51,7 +34,10 @@ const saveApplicationStepForm = async ({
     await saveFormFieldValue({
       applicationId: application.id,
       userId,
-      fieldValue,
+      fieldValue: {
+        ...fieldValue,
+        stepId,
+      },
     });
   }
 

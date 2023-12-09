@@ -23,6 +23,7 @@ const getApplicationsList = async (
   const applicationsDb = await prisma.application.findMany({
     select: {
       id: true,
+      hackerId: true,
       status: {
         select: {
           name: true,
@@ -95,6 +96,7 @@ const getApplicationsList = async (
     properties: {
       ...createFormValuesObject(application.formValues, formFields),
       id: application.id.toString(),
+      hackerId: application.hackerId.toString(),
       score: calculateApplicationScore({ votes: application.votes }).toString(),
       team: null,
       status: application.status.name as ApplicationStatus,

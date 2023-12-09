@@ -67,7 +67,10 @@ const ReimbursementRequestManager = async ({
             )}
           </Text>
           {travelReimbursementRequest === null && (
-            <RequestReimbursementButton isDisabled={status !== "success"} />
+            <RequestReimbursementButton
+              isSignedIn={status !== "not_signed_in"}
+              hasEmailVerified={status === "success"}
+            />
           )}
           {travelReimbursementRequest?.status ===
             TravelReimbursementRequestStatusEnum.approvedWaitingForDocument && (
