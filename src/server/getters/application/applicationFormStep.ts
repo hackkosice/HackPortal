@@ -15,6 +15,8 @@ export type ApplicationFormStepData = {
     title: string;
     description: string | null;
     position: number;
+    nextStepId: number | null;
+    previousStepId: number | null;
     formFields: FormFieldData[];
   };
 };
@@ -125,6 +127,8 @@ const getApplicationFormStep = async (
       title: stepFormFields.title,
       description: stepFormFields.description,
       position: stepFormFields.position,
+      nextStepId: stepFormFields.nextStepId,
+      previousStepId: stepFormFields.previousStepId,
       formFields: resultFields,
     },
   };

@@ -20,6 +20,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
+import deleteTeam from "@/server/actions/team/deleteTeam";
 
 type TeamInfoProps = {
   team: TeamData;
@@ -96,6 +98,9 @@ const TeamInfo = ({
   const onLeaveTeamClick = async () => {
     await leaveTeam();
   };
+  const onDeleteTeamClick = async () => {
+    await deleteTeam();
+  };
   const { toast } = useToast();
   return (
     <Stack direction="column" spacing="medium">
@@ -139,7 +144,21 @@ const TeamInfo = ({
         <Text>Team members ({members.length}/4):</Text>
         <DataTable columns={teamMembersColumns} data={members} />
       </div>
-      {!isOwnerSession && (
+      {isOwnerSession ? (
+        <ConfirmationDialog
+          question="Are you sure you want to delete this team?"
+          onAnswer={async (answer) => {
+            if (answer) {
+              await onDeleteTeamClick();
+            }
+          }}
+        >
+          <Button variant="outline" className="text-red-500">
+            <TrashIcon className="h-4 w-4 mr-1" />
+            Delete team
+          </Button>
+        </ConfirmationDialog>
+      ) : (
         <ConfirmationDialog
           question="Are you sure you want to leave this team?"
           onAnswer={async (answer) => {

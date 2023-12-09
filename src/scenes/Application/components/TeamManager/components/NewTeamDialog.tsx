@@ -22,11 +22,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 import createTeam from "@/server/actions/team/createTeam";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import editTeamName from "@/server/actions/team/editTeamName";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import Tooltip from "@/components/common/Tooltip";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 const newTeamFormSchema = z.object({
   name: z.string().min(1),
@@ -47,6 +49,7 @@ const NewTeamDialog = ({
   isSignedIn,
   hasEmailVerified,
 }: NewTeamDialogProps) => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewTeamForm>({
     resolver: zodResolver(newTeamFormSchema),
@@ -57,9 +60,17 @@ const NewTeamDialog = ({
 
   const onNewTeamCreation = async (data: NewTeamForm) => {
     if (mode === "edit") {
-      await editTeamName({ newName: data.name });
+      const res = await callServerAction(editTeamName, { newName: data.name });
+      if (!res.success) {
+        setSubmitError(res.message);
+        return;
+      }
     } else if (mode === "create") {
-      await createTeam(data);
+      const res = await callServerAction(createTeam, data);
+      if (!res.success) {
+        setSubmitError(res.message);
+        return;
+      }
     }
 
     setIsOpened(false);
@@ -112,6 +123,11 @@ const NewTeamDialog = ({
             {mode === "create" ? "Create new team" : "Edit team name"}
           </DialogTitle>
         </DialogHeader>
+        {submitError && (
+          <Text size="small" className="text-red-500">
+            {submitError}
+          </Text>
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onNewTeamCreation)}>
             <FormField

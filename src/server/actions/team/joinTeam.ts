@@ -3,6 +3,7 @@
 import { prisma } from "@/services/prisma";
 import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 import { revalidatePath } from "next/cache";
+import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
 type JoinTeamInput = {
   code: string;
@@ -29,11 +30,11 @@ const joinTeam = async ({ code }: JoinTeamInput) => {
   });
 
   if (!team) {
-    throw new Error("Team not found");
+    throw new ExpectedServerActionError("Team not found");
   }
 
   if (team.members.length >= 4) {
-    throw new Error("Team is full");
+    throw new ExpectedServerActionError("Team is full");
   }
 
   await prisma.hacker.update({

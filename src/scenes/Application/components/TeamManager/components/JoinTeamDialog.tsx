@@ -22,8 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 import joinTeam from "@/server/actions/team/joinTeam";
 import Tooltip from "@/components/common/Tooltip";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 const joinTeamFormSchema = z.object({
   code: z.string().min(1),
@@ -40,6 +42,7 @@ const JoinTeamDialog = ({
   isSignedIn,
   hasEmailVerified,
 }: JoinTeamDialogProps) => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<JoinTeamForm>({
     resolver: zodResolver(joinTeamFormSchema),
@@ -49,7 +52,11 @@ const JoinTeamDialog = ({
   });
 
   const onEditTitleModalSave = async (data: JoinTeamForm) => {
-    await joinTeam(data);
+    const res = await callServerAction(joinTeam, data);
+    if (!res.success) {
+      setSubmitError(res.message);
+      return;
+    }
     setIsOpened(false);
   };
 
@@ -83,6 +90,11 @@ const JoinTeamDialog = ({
         <DialogHeader>
           <DialogTitle>Join existing team</DialogTitle>
         </DialogHeader>
+        {submitError && (
+          <Text className="text-red-500" size="small">
+            {submitError}
+          </Text>
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onEditTitleModalSave)}>
             <FormField

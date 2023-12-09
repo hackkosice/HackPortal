@@ -16,6 +16,7 @@ import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export type Props = {
   stepId: number;
@@ -32,7 +33,7 @@ const uploadFile = async (file: File, url: string) => {
 const ApplicationFormStep = ({
   stepId,
   data: {
-    data: { title, description, formFields },
+    data: { title, description, formFields, nextStepId, previousStepId },
     signedIn,
   },
 }: Props) => {
@@ -110,56 +111,91 @@ const ApplicationFormStep = ({
     }
 
     setIsSubmitting(false);
+
+    if (nextStepId) {
+      push(`/application/form/step/${nextStepId}`);
+      return;
+    }
     push("/application");
   };
 
   return (
-    <Card className="mx-auto mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mb-10">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {description && (
-          <Text>
-            <MarkDownRenderer markdown={description} />
-          </Text>
-        )}
-      </CardHeader>
-      <CardContent>
-        {formSubmitError && (
-          <Alert variant="destructive" className="mb-5">
-            <AlertTitle>Error submitting the form!</AlertTitle>
-            <AlertDescription>
-              <Text size="small">{formSubmitError}</Text>
-            </AlertDescription>
-          </Alert>
-        )}
-        <FormRenderer
-          shouldUseLocalInitialValues={!signedIn}
-          formFields={formFields}
-          onSubmit={(formData) => {
-            setIsSubmitting(true);
-            onFormSubmit(formData);
-          }}
-          className="w-full md:px-20"
-          actionButtons={
-            <Stack direction="row" className="w-full" justify="end">
-              <Button asChild variant="outline">
-                <Link href="/application">Back</Link>
-              </Button>
-              {isSubmitting ? (
-                <Button disabled={true} className="px-6">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </Button>
-              ) : (
-                <Button type="submit" className="px-6">
-                  Save
-                </Button>
-              )}
-            </Stack>
-          }
-        />
-      </CardContent>
-    </Card>
+    <Stack
+      direction="column"
+      className="mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mx-auto mb-20"
+    >
+      <Link href="/application" className="text-hkOrange">
+        <Stack direction="row" alignItems="center" spacing="small">
+          <ChevronLeftIcon className="h-5 w-5" />
+          Back to application
+        </Stack>
+      </Link>
+      <Card className="mx-auto w-full mb-10">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          {description && (
+            <Text>
+              <MarkDownRenderer markdown={description} />
+            </Text>
+          )}
+        </CardHeader>
+        <CardContent>
+          {formSubmitError && (
+            <Alert variant="destructive" className="mb-5">
+              <AlertTitle>Error submitting the form!</AlertTitle>
+              <AlertDescription>
+                <Text size="small">{formSubmitError}</Text>
+              </AlertDescription>
+            </Alert>
+          )}
+          <FormRenderer
+            shouldUseLocalInitialValues={!signedIn}
+            formFields={formFields}
+            onSubmit={(formData) => {
+              setIsSubmitting(true);
+              onFormSubmit(formData);
+            }}
+            className="w-full md:px-20"
+            actionButtons={
+              <Stack
+                direction="row"
+                className="w-full mt-5"
+                justify={previousStepId ? "between" : "end"}
+              >
+                {previousStepId && (
+                  <Button variant="outline" asChild>
+                    <Link href={`/application/form/step/${previousStepId}`}>
+                      <ChevronLeftIcon className="h-4 w-4 mr-2" />
+                      Previous step
+                    </Link>
+                  </Button>
+                )}
+                {isSubmitting ? (
+                  <Button disabled={true} className="px-6">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    className={nextStepId ? "pl-6" : "px-6"}
+                  >
+                    {nextStepId ? (
+                      <>
+                        Save and continue
+                        <ChevronRightIcon className="h-4 w-4 ml-2" />
+                      </>
+                    ) : (
+                      "Save"
+                    )}
+                  </Button>
+                )}
+              </Stack>
+            }
+          />
+        </CardContent>
+      </Card>
+    </Stack>
   );
 };
 
