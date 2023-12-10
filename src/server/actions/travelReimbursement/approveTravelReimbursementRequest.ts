@@ -4,6 +4,7 @@ import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 import { TravelReimbursementRequestStatusEnum } from "@/services/types/travelReimbursementRequestStatus";
 import { revalidatePath } from "next/cache";
+import { sendApprovedReimbursementEmail } from "@/services/emails/sendEmail";
 
 type ApproveTravelReimbursementRequestInput = {
   requestId: number;
@@ -27,7 +28,7 @@ const approveTravelReimbursementRequest = async ({
   }
 
   const {
-    hacker: { hackathonId },
+    hacker: { hackathonId, user },
   } = await prisma.travelReimbursementRequest.update({
     data: {
       statusId: approvedStatusId.id,
@@ -40,9 +41,18 @@ const approveTravelReimbursementRequest = async ({
       hacker: {
         select: {
           hackathonId: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
         },
       },
     },
+  });
+
+  void sendApprovedReimbursementEmail({
+    recipientEmail: user.email,
   });
 
   revalidatePath(`/dashboard/${hackathonId}/travel-reimbursements`, "page");

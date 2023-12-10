@@ -4,6 +4,7 @@ import { prisma } from "@/services/prisma";
 import isApplicationComplete from "@/server/services/helpers/applications/isApplicationComplete";
 import { revalidatePath } from "next/cache";
 import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
+import { sendSubmittedApplicationEmail } from "@/services/emails/sendEmail";
 
 const submitApplication = async () => {
   const { id: hackerId } = await requireHackerSession();
@@ -11,6 +12,18 @@ const submitApplication = async () => {
   const application = await prisma.application.findUnique({
     where: {
       hackerId: hackerId,
+    },
+    select: {
+      id: true,
+      hacker: {
+        select: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -39,6 +52,10 @@ const submitApplication = async () => {
     where: {
       id: application.id,
     },
+  });
+
+  void sendSubmittedApplicationEmail({
+    recipientEmail: application.hacker.user.email,
   });
 
   revalidatePath("/application");

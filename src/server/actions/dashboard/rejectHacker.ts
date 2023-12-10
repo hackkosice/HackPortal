@@ -4,10 +4,10 @@ import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
 import { revalidatePath } from "next/cache";
-import { sendInvitationEmail } from "@/services/emails/sendEmail";
+import { sendRejectedApplicationEmail } from "@/services/emails/sendEmail";
 
-type InviteHackerInput = { hackerId: number };
-const inviteHacker = async ({ hackerId }: InviteHackerInput) => {
+type RejectHackerInput = { hackerId: number };
+const rejectHacker = async ({ hackerId }: RejectHackerInput) => {
   await requireOrganizerSession();
 
   const hacker = await prisma.hacker.findUnique({
@@ -28,26 +28,26 @@ const inviteHacker = async ({ hackerId }: InviteHackerInput) => {
     throw new Error("Hacker not found");
   }
 
-  const statusInvited = await prisma.applicationStatus.findUnique({
+  const statusRejected = await prisma.applicationStatus.findUnique({
     where: {
-      name: ApplicationStatusEnum.invited,
+      name: ApplicationStatusEnum.rejected,
     },
   });
 
-  if (!statusInvited) {
+  if (!statusRejected) {
     throw new Error("Application invited status doesn't exist");
   }
 
   await prisma.application.update({
     data: {
-      statusId: statusInvited.id,
+      statusId: statusRejected.id,
     },
     where: {
       hackerId: hackerId,
     },
   });
 
-  void sendInvitationEmail({
+  void sendRejectedApplicationEmail({
     recipientEmail: hacker.user.email,
   });
 
@@ -55,4 +55,4 @@ const inviteHacker = async ({ hackerId }: InviteHackerInput) => {
   revalidatePath("/application");
 };
 
-export default inviteHacker;
+export default rejectHacker;
