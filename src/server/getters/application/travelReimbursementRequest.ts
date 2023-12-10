@@ -14,6 +14,7 @@ type TravelReimbursementRequestData = {
     status: TravelReimbursementRequestStatus | null;
     approvedAmount: number | null;
   } | null;
+  travelReimbursementRequestDescription: string | null;
   fileUploadLink: string | null;
 };
 
@@ -29,6 +30,7 @@ const getTravelReimbursementRequest = async ({
     return {
       status: "not_signed_in",
       travelReimbursementRequest: null,
+      travelReimbursementRequestDescription: null,
       fileUploadLink: null,
     };
   }
@@ -36,12 +38,18 @@ const getTravelReimbursementRequest = async ({
     return {
       status: "unverified_email",
       travelReimbursementRequest: null,
+      travelReimbursementRequestDescription: null,
       fileUploadLink: null,
     };
   }
   const hacker = await prisma.hacker.findUnique({
     select: {
       id: true,
+      hackathon: {
+        select: {
+          travelReimbursementDescription: true,
+        },
+      },
       travelReimbursementRequest: {
         select: {
           status: {
@@ -71,6 +79,8 @@ const getTravelReimbursementRequest = async ({
   return {
     status: "success",
     travelReimbursementRequest,
+    travelReimbursementRequestDescription:
+      hacker.hackathon.travelReimbursementDescription,
     fileUploadLink:
       travelReimbursementRequest?.status ===
       TravelReimbursementRequestStatusEnum.approvedWaitingForDocument

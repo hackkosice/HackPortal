@@ -49,8 +49,12 @@ const getContentMessage = (
 const ReimbursementRequestManager = async ({
   hackerId,
 }: ReimbursementRequestManagerProps) => {
-  const { status, travelReimbursementRequest, fileUploadLink } =
-    await getTravelReimbursementRequest({ hackerId });
+  const {
+    status,
+    travelReimbursementRequest,
+    fileUploadLink,
+    travelReimbursementRequestDescription,
+  } = await getTravelReimbursementRequest({ hackerId });
   return (
     <Card className="w-full p-5 relative pt-10">
       <GlobeEuropeAfricaIcon className="text-primaryTitle h-[100px] absolute opacity-20 top-[-50px] left-1/2 -translate-x-1/2" />
@@ -70,6 +74,9 @@ const ReimbursementRequestManager = async ({
             <RequestReimbursementButton
               isSignedIn={status !== "not_signed_in"}
               hasEmailVerified={status === "success"}
+              travelReimbursementRequestDescription={
+                travelReimbursementRequestDescription
+              }
             />
           )}
           {travelReimbursementRequest?.status ===

@@ -51,8 +51,8 @@ const rejectHacker = async ({ hackerId }: RejectHackerInput) => {
     recipientEmail: hacker.user.email,
   });
 
-  revalidatePath(`/dashboard/${hacker.hackathonId}/applications`);
-  revalidatePath("/application");
+  revalidatePath(`/dashboard/${hacker.hackathonId}/applications`, "page");
+  revalidatePath("/application", "page");
 };
 
 export default rejectHacker;

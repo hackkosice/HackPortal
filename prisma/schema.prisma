@@ -45,20 +45,21 @@ model User {
 }
 
 model Hackathon {
-  id                   Int                   @id @default(autoincrement())
-  name                 String                @unique
-  title                String?
-  description          String?
-  eventStartDate       DateTime
-  eventEndDate         DateTime
-  applicationStartDate DateTime
-  applicationEndDate   DateTime
-  hackers              Hacker[]
-  sponsors             Sponsor[]
-  applicationFormSteps ApplicationFormStep[]
-  voteParameters       VoteParameter[]
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
+  id                             Int                   @id @default(autoincrement())
+  name                           String                @unique
+  title                          String?
+  description                    String?
+  eventStartDate                 DateTime
+  eventEndDate                   DateTime
+  applicationStartDate           DateTime
+  applicationEndDate             DateTime
+  travelReimbursementDescription String?
+  hackers                        Hacker[]
+  sponsors                       Sponsor[]
+  applicationFormSteps           ApplicationFormStep[]
+  voteParameters                 VoteParameter[]
+  createdAt                      DateTime              @default(now())
+  updatedAt                      DateTime              @updatedAt
 }
 
 model Hacker {
