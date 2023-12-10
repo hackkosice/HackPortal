@@ -119,7 +119,7 @@ const UploadDetailsForReimbursementButton = ({
                       <Input
                         {...field}
                         type="file"
-                        className="cursor-pointer"
+                        className="cursor-pointer py-2 h-auto"
                         onChange={(event) =>
                           onChange(event.currentTarget.files?.[0] ?? null)
                         }
