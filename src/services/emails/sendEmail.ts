@@ -36,6 +36,81 @@ export const sendInvitationEmail = async ({
   });
 };
 
+export const sendSubmittedApplicationEmail = async ({
+  recipientEmail,
+}: SendEmailParams) => {
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.APPLICATION_SUBMITTED,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+    });
+  });
+};
+
+export const sendSubmittedReimbursementEmail = async ({
+  recipientEmail,
+}: SendEmailParams) => {
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.REIMBURSEMENT_SUBMITTED,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+    });
+  });
+};
+
+export const sendApprovedReimbursementEmail = async ({
+  recipientEmail,
+}: SendEmailParams) => {
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.REIMBURSEMENT_APPROVED,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+    });
+  });
+};
+
+export const sendDeclinedReimbursementEmail = async ({
+  recipientEmail,
+}: SendEmailParams) => {
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.REIMBURSEMENT_DECLINED,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+    });
+  });
+};
+
+export const sendRejectedApplicationEmail = async ({
+  recipientEmail,
+}: SendEmailParams) => {
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.APPLICATION_REJECTED,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+    });
+  });
+};
+
 export const sendEmailConfirmationEmail = async ({
   recipientEmail,
   verificationToken,

@@ -4,6 +4,7 @@ import { prisma } from "@/services/prisma";
 import requireHackerSession from "@/server/services/helpers/auth/requireHackerSession";
 import { TravelReimbursementRequestStatusEnum } from "@/services/types/travelReimbursementRequestStatus";
 import { revalidatePath } from "next/cache";
+import { sendSubmittedReimbursementEmail } from "@/services/emails/sendEmail";
 
 type CreateTravelReimbursementRequestInput = {
   country: string;
@@ -23,12 +24,27 @@ const createTravelReimbursementRequest = async ({
     throw new Error("Travel reimbursement request status not found");
   }
 
-  await prisma.travelReimbursementRequest.create({
+  const { hacker } = await prisma.travelReimbursementRequest.create({
     data: {
       countryOfTravel: country,
       hackerId,
       statusId: requestedStatusId.id,
     },
+    select: {
+      hacker: {
+        select: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  void sendSubmittedReimbursementEmail({
+    recipientEmail: hacker.user.email,
   });
 
   revalidatePath("/application");
