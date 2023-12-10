@@ -29,6 +29,7 @@ import editTeamName from "@/server/actions/team/editTeamName";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import Tooltip from "@/components/common/Tooltip";
 import callServerAction from "@/services/helpers/server/callServerAction";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 const newTeamFormSchema = z.object({
   name: z.string().min(1),
@@ -49,6 +50,7 @@ const NewTeamDialog = ({
   isSignedIn,
   hasEmailVerified,
 }: NewTeamDialogProps) => {
+  const { log } = useLog();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<NewTeamForm>({
@@ -86,7 +88,15 @@ const NewTeamDialog = ({
 
   const triggerButton =
     mode === "create" ? (
-      <Button disabled={!isSignedIn || !hasEmailVerified}>
+      <Button
+        disabled={!isSignedIn || !hasEmailVerified}
+        onClick={() => {
+          log({
+            action: LogAction.ButtonClicked,
+            detail: "Create team",
+          });
+        }}
+      >
         <PlusIcon className="w-4 h-4 mr-1 text-white inline" />
         Create new team
       </Button>
@@ -95,6 +105,12 @@ const NewTeamDialog = ({
         variant="ghost"
         size="small"
         disabled={!isSignedIn || !hasEmailVerified}
+        onClick={() => {
+          log({
+            action: LogAction.ButtonClicked,
+            detail: "Edit team name",
+          });
+        }}
       >
         <PencilIcon className="w-4 h-4 mr-1 inline" />
         Edit team name

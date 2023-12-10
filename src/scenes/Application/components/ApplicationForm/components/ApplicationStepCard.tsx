@@ -55,6 +55,12 @@ const ApplicationStepCard = ({
       <Button
         className="whitespace-normal w-[95vw] h-[68px] py-5 md:py-0 md:h-[180px] xl:h-[14vw] 2xl:h-[240px] md:w-[10vw] md:rounded-3xl relative bg-hkOrange cursor-pointer"
         disabled={!canSubmit}
+        onClick={() => {
+          log({
+            action: LogAction.CardClicked,
+            detail: "Submit",
+          });
+        }}
       >
         <Stack
           justify="center"

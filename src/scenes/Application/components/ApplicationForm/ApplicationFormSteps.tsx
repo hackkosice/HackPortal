@@ -5,6 +5,8 @@ import getApplicationData from "@/server/getters/application/application";
 import ApplicationStatusCard from "@/scenes/Application/components/ApplicationForm/components/ApplicationStatusCard";
 import { Heading } from "@/components/ui/heading";
 import LocalApplicationDataSync from "@/scenes/Application/components/ApplicationForm/components/LocalApplicationDataSync";
+import LogMount from "@/components/common/LogMount";
+import { LogAction } from "@/services/hooks/useLog";
 
 type ApplicationStepsProps = {
   hackathonId: number;
@@ -20,6 +22,15 @@ const ApplicationFormSteps = async ({
   });
   return (
     <>
+      <LogMount
+        action={LogAction.PageDisplayed}
+        detail="Application"
+        data={{
+          signedIn: authStatus?.signedIn,
+          emailVerified: authStatus?.emailVerified,
+          status: data?.application.status,
+        }}
+      />
       <LocalApplicationDataSync
         applicationId={applicationId}
         hackathonId={hackathonId}
