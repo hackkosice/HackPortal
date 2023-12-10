@@ -28,6 +28,7 @@ import formatBytesToString from "@/services/helpers/formatBytesToString";
 import { Loader2 } from "lucide-react";
 import uploadTravelReimbursementDetails from "@/server/actions/travelReimbursement/uploadTravelReimbursementDetails";
 import useLog, { LogAction } from "@/services/hooks/useLog";
+import requestFileUploadUrl from "@/server/actions/requestFileUploadUrl";
 
 const MAX_FILE_SIZE_IN_MB = 10;
 const MAX_FILE_SIZE = MAX_FILE_SIZE_IN_MB * 1024 * 1024; // 10 MB
@@ -48,10 +49,10 @@ const reimbursementDetailsSchema = z.object({
 type ReimbursementDetailsForm = z.infer<typeof reimbursementDetailsSchema>;
 
 type UploadDetailsForReimbursementButtonProps = {
-  fileUploadUrl: string;
+  fileUploadKey: string;
 };
 const UploadDetailsForReimbursementButton = ({
-  fileUploadUrl,
+  fileUploadKey,
 }: UploadDetailsForReimbursementButtonProps) => {
   const { log } = useLog();
   const [isUploading, setIsUploading] = useState(false);
@@ -67,7 +68,12 @@ const UploadDetailsForReimbursementButton = ({
     data: ReimbursementDetailsForm
   ) => {
     setIsUploading(true);
-    await fetch(fileUploadUrl, {
+    const file = data.travelDocument;
+    const { url } = await requestFileUploadUrl({
+      key: fileUploadKey,
+      fileSize: file.size,
+    });
+    await fetch(url, {
       method: "PUT",
       body: data.travelDocument,
     });

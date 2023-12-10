@@ -52,7 +52,7 @@ const ReimbursementRequestManager = async ({
   const {
     status,
     travelReimbursementRequest,
-    fileUploadLink,
+    fileUploadKey,
     travelReimbursementRequestDescription,
   } = await getTravelReimbursementRequest({ hackerId });
   return (
@@ -82,7 +82,7 @@ const ReimbursementRequestManager = async ({
           {travelReimbursementRequest?.status ===
             TravelReimbursementRequestStatusEnum.approvedWaitingForDocument && (
             <UploadDetailsForReimbursementButton
-              fileUploadUrl={fileUploadLink as string}
+              fileUploadKey={fileUploadKey as string}
             />
           )}
         </Stack>

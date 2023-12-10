@@ -32,6 +32,7 @@ import {
 import formatBytesToString from "@/services/helpers/formatBytesToString";
 import Tooltip from "@/components/common/Tooltip";
 import { Combobox } from "@/components/ui/combobox";
+import { AlertCircleIcon } from "lucide-react";
 
 export type Props = {
   formField: FormFieldData;
@@ -225,6 +226,40 @@ const DynamicFormField = ({ form, formField }: Props) => {
         />
       );
     case FormFieldTypeEnum.file:
+      if (!formField.fileUploadKey) {
+        return (
+          <FormField
+            control={form.control}
+            name={name}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            render={({ field: { value, onChange, ...field } }) => (
+              <FormItem>
+                <Stack direction="row" spacing="small" alignItems="center">
+                  <FormLabel required={required}>
+                    <MarkDownRenderer markdown={label} />
+                  </FormLabel>
+                  {tooltip}
+                </Stack>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="file"
+                    disabled
+                    className="cursor-pointer py-2 h-auto"
+                  />
+                </FormControl>
+                <Stack direction="row" alignItems="center" className="gap-1">
+                  <AlertCircleIcon className="text-red-500 h-5 w-5" />
+                  <Text size="small" className="text-red-500">
+                    You can upload files after you create an account
+                  </Text>
+                </Stack>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        );
+      }
       if (formField.initialValue && !shouldOverrideUploadedFile) {
         return (
           <FormItem>

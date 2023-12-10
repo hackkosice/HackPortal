@@ -5,7 +5,6 @@ import {
 } from "@/services/types/travelReimbursementRequestStatus";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import getPresignedUploadUrl from "@/services/fileUpload/getPresignedUploadUrl";
 import createKeyForReimbursementDocumentFileUpload from "@/server/services/helpers/fileUpload/createKeyForReimbursementDocumentFileUpload";
 
 type TravelReimbursementRequestData = {
@@ -15,7 +14,7 @@ type TravelReimbursementRequestData = {
     approvedAmount: number | null;
   } | null;
   travelReimbursementRequestDescription: string | null;
-  fileUploadLink: string | null;
+  fileUploadKey: string | null;
 };
 
 type TravelReimbursementRequestInput = {
@@ -31,7 +30,7 @@ const getTravelReimbursementRequest = async ({
       status: "not_signed_in",
       travelReimbursementRequest: null,
       travelReimbursementRequestDescription: null,
-      fileUploadLink: null,
+      fileUploadKey: null,
     };
   }
   if (!session.emailVerified) {
@@ -39,7 +38,7 @@ const getTravelReimbursementRequest = async ({
       status: "unverified_email",
       travelReimbursementRequest: null,
       travelReimbursementRequestDescription: null,
-      fileUploadLink: null,
+      fileUploadKey: null,
     };
   }
   const hacker = await prisma.hacker.findUnique({
@@ -81,14 +80,12 @@ const getTravelReimbursementRequest = async ({
     travelReimbursementRequest,
     travelReimbursementRequestDescription:
       hacker.hackathon.travelReimbursementDescription,
-    fileUploadLink:
+    fileUploadKey:
       travelReimbursementRequest?.status ===
       TravelReimbursementRequestStatusEnum.approvedWaitingForDocument
-        ? await getPresignedUploadUrl(
-            createKeyForReimbursementDocumentFileUpload({
-              hackerId: hackerId,
-            })
-          )
+        ? createKeyForReimbursementDocumentFileUpload({
+            hackerId: hackerId,
+          })
         : null,
   };
 };

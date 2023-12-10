@@ -28,7 +28,7 @@ const getApplicationFormStep = async (
 
   const stepFormFields = await getStepDataForForm({
     stepId,
-    shouldSendPresignedFileUploadUrls: true,
+    shouldSendFileUploadKey: true,
   });
 
   // If user is not signed in return steps with empty initial values

@@ -28,7 +28,7 @@ describe("FormRenderer", () => {
             optionList: [],
             description: "",
             formFieldVisibilityRule: null,
-            fileUploadUrl: null,
+            fileUploadKey: null,
           },
         ]}
         onSubmit={onSubmitMock}
@@ -78,7 +78,7 @@ describe("FormRenderer", () => {
             ],
             description: "",
             formFieldVisibilityRule: null,
-            fileUploadUrl: null,
+            fileUploadKey: null,
           },
           {
             id: 2,
@@ -94,7 +94,7 @@ describe("FormRenderer", () => {
               targetOptionId: 2,
               targetFormFieldName: "targetField",
             },
-            fileUploadUrl: null,
+            fileUploadKey: null,
           },
         ]}
         onSubmit={onSubmitMock}
