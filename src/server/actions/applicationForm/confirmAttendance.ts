@@ -24,8 +24,8 @@ const confirmAttendance = async () => {
     },
   });
 
-  revalidatePath(`/dashboard/${hackathonId}/applications`);
-  revalidatePath("/application");
+  revalidatePath(`/dashboard/${hackathonId}/applications`, "page");
+  revalidatePath("/application", "page");
 };
 
 export default confirmAttendance;

@@ -25,10 +25,12 @@ import * as z from "zod";
 import createTravelReimbursementRequest from "@/server/actions/travelReimbursement/createTravelReimbursementRequest";
 import Tooltip from "@/components/common/Tooltip";
 import useLog, { LogAction } from "@/services/hooks/useLog";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 
 type RequestReimbursementButtonProps = {
   isSignedIn?: boolean;
   hasEmailVerified?: boolean;
+  travelReimbursementRequestDescription: string | null;
 };
 
 const requestReimbursementSchema = z.object({
@@ -40,6 +42,7 @@ type RequestReimbursementForm = z.infer<typeof requestReimbursementSchema>;
 const RequestReimbursementButton = ({
   isSignedIn,
   hasEmailVerified,
+  travelReimbursementRequestDescription,
 }: RequestReimbursementButtonProps) => {
   const { log } = useLog();
   const [isOpened, setIsOpened] = useState(false);
@@ -97,6 +100,9 @@ const RequestReimbursementButton = ({
         <DialogHeader>
           <DialogTitle>Travel reimbursement request</DialogTitle>
         </DialogHeader>
+        {travelReimbursementRequestDescription && (
+          <MarkDownRenderer markdown={travelReimbursementRequestDescription} />
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onRequestTravelReimbursement)}>
             <FormField

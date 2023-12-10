@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Stack } from "@/components/ui/stack";
 import fixFormFieldPositions from "@/server/actions/dashboard/applicationFormEditor/fixFormFieldPositions";
+import TravelReimbursementRequestDescriptionDialog from "@/scenes/Dashboard/scenes/Settings/components/TravelReimbursementRequestDescriptionDialog";
+import MarkDownRenderer from "@/components/common/MarkDownRenderer";
+import { Heading } from "@/components/ui/heading";
 
 type SettingsProps = {
   hackathonId: number;
+  travelReimbursementRequestDescription: string | null;
 };
 
-const Settings = ({ hackathonId }: SettingsProps) => {
+const Settings = ({
+  hackathonId,
+  travelReimbursementRequestDescription,
+}: SettingsProps) => {
   return (
     <Card>
       <CardHeader></CardHeader>
@@ -28,6 +35,18 @@ const Settings = ({ hackathonId }: SettingsProps) => {
           <Button onClick={async () => await fixFormFieldPositions()}>
             Fix form fields
           </Button>
+          <Heading size="small">
+            Travel reimbursement request description
+          </Heading>
+          {travelReimbursementRequestDescription && (
+            <MarkDownRenderer
+              markdown={travelReimbursementRequestDescription}
+            />
+          )}
+          <TravelReimbursementRequestDescriptionDialog
+            initialDescription={travelReimbursementRequestDescription}
+            hackathonId={hackathonId}
+          />
         </Stack>
       </CardContent>
     </Card>

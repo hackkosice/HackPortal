@@ -58,7 +58,7 @@ const submitApplication = async () => {
     recipientEmail: application.hacker.user.email,
   });
 
-  revalidatePath("/application");
+  revalidatePath("/application", "page");
 
   return {
     message: "Application submitted successfully",
