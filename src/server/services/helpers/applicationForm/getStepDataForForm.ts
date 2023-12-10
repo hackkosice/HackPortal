@@ -1,6 +1,5 @@
 import { FormFieldType, FormFieldTypeEnum } from "@/services/types/formFields";
 import { prisma } from "@/services/prisma";
-import getPresignedUploadUrl from "@/services/fileUpload/getPresignedUploadUrl";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import createKeyForFormFileUpload from "@/server/services/helpers/fileUpload/createKeyForFormFileUpload";
@@ -21,7 +20,7 @@ export type FormFieldData = {
     targetFormFieldName: string;
     targetOptionId: number;
   } | null;
-  fileUploadUrl: string | null;
+  fileUploadKey: string | null;
   uploadedFileUrl?: string;
 };
 
@@ -36,11 +35,11 @@ export type StepDataForForm = {
 
 export type GetStepDataForFormParams = {
   stepId: number;
-  shouldSendPresignedFileUploadUrls?: boolean;
+  shouldSendFileUploadKey?: boolean;
 };
 const getStepDataForForm = async ({
   stepId,
-  shouldSendPresignedFileUploadUrls = false,
+  shouldSendFileUploadKey = false,
 }: GetStepDataForFormParams): Promise<StepDataForForm> => {
   const session = await getServerSession(authOptions);
   const userId = session?.id;
@@ -131,41 +130,37 @@ const getStepDataForForm = async ({
   const nextStepId = nextStep?.id ?? null;
   const previousStepId = previousStep?.id ?? null;
 
-  const formFields = await Promise.all(
-    stepData.formFields.map(async (field) => ({
-      id: field.id,
-      position: field.position,
-      name: field.name,
-      label: field.label,
-      description: field.description,
-      required: field.required,
-      type: field.type.value as FormFieldType,
-      initialValue: null,
-      optionList: field.optionList?.options.map((option) => ({
-        value: String(option.id),
-        label: option.value,
-      })),
-      formFieldVisibilityRule: field.formFieldVisibilityRule
-        ? {
-            targetFormFieldName:
-              field.formFieldVisibilityRule.targetFormField.name,
-            targetOptionId: field.formFieldVisibilityRule.targetOptionId,
-          }
+  const formFields = stepData.formFields.map((field) => ({
+    id: field.id,
+    position: field.position,
+    name: field.name,
+    label: field.label,
+    description: field.description,
+    required: field.required,
+    type: field.type.value as FormFieldType,
+    initialValue: null,
+    optionList: field.optionList?.options.map((option) => ({
+      value: String(option.id),
+      label: option.value,
+    })),
+    formFieldVisibilityRule: field.formFieldVisibilityRule
+      ? {
+          targetFormFieldName:
+            field.formFieldVisibilityRule.targetFormField.name,
+          targetOptionId: field.formFieldVisibilityRule.targetOptionId,
+        }
+      : null,
+    fileUploadKey:
+      shouldSendFileUploadKey &&
+      field.type.value === FormFieldTypeEnum.file &&
+      userId
+        ? createKeyForFormFileUpload({
+            stepId,
+            fieldId: field.id,
+            userId: userId,
+          })
         : null,
-      fileUploadUrl:
-        shouldSendPresignedFileUploadUrls &&
-        field.type.value === FormFieldTypeEnum.file &&
-        userId
-          ? await getPresignedUploadUrl(
-              createKeyForFormFileUpload({
-                stepId,
-                fieldId: field.id,
-                userId: userId,
-              })
-            )
-          : null,
-    }))
-  );
+  }));
 
   return {
     ...stepData,

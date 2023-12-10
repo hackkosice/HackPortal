@@ -19,13 +19,18 @@ import { Loader2 } from "lucide-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import LogMount from "@/components/common/LogMount";
 import useLog, { LogAction } from "@/services/hooks/useLog";
+import requestFileUploadUrl from "@/server/actions/requestFileUploadUrl";
 
 export type Props = {
   stepId: number;
   data: ApplicationFormStepData;
 };
 
-const uploadFile = async (file: File, url: string) => {
+const uploadFile = async (file: File, key: string) => {
+  const { url } = await requestFileUploadUrl({
+    key,
+    fileSize: file.size,
+  });
   await fetch(url, {
     method: "PUT",
     body: file,
@@ -67,10 +72,10 @@ const ApplicationFormStep = ({
         }
         switch (formField.type) {
           case FormFieldTypeEnum.file:
-            if (formField.fileUploadUrl) {
+            if (formField.fileUploadKey) {
               const file = formFieldValue as File;
               try {
-                await uploadFile(file, formField.fileUploadUrl);
+                await uploadFile(file, formField.fileUploadKey);
               } catch (e) {
                 setFormSubmitError(
                   "Error uploading file. Please try again later."
