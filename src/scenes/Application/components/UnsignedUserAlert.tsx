@@ -1,11 +1,15 @@
+"use client";
+
 import React from "react";
 import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 const UnsignedUserAlert = () => {
+  const { log } = useLog();
   return (
     <Card className="p-5 w-[95vw] md:w-[50vw] md:mx-auto mb-5 bg-red-600">
       <Stack justify="center" alignItems="center" direction="column">
@@ -19,7 +23,17 @@ const UnsignedUserAlert = () => {
           teams without signing in.
         </Text>
         <Button asChild>
-          <Link href="/signup">Create an account</Link>
+          <Link
+            href="/signup"
+            onClick={() => {
+              log({
+                action: LogAction.ButtonClicked,
+                detail: "Create account",
+              });
+            }}
+          >
+            Create an account
+          </Link>
         </Button>
       </Stack>
     </Card>

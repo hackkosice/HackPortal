@@ -26,6 +26,7 @@ import { Text } from "@/components/ui/text";
 import joinTeam from "@/server/actions/team/joinTeam";
 import Tooltip from "@/components/common/Tooltip";
 import callServerAction from "@/services/helpers/server/callServerAction";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 const joinTeamFormSchema = z.object({
   code: z.string().min(1),
@@ -42,6 +43,7 @@ const JoinTeamDialog = ({
   isSignedIn,
   hasEmailVerified,
 }: JoinTeamDialogProps) => {
+  const { log } = useLog();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<JoinTeamForm>({
@@ -65,7 +67,16 @@ const JoinTeamDialog = ({
   }, [form, isOpened]);
 
   const triggerButton = (
-    <Button variant="outline" disabled={!isSignedIn || !hasEmailVerified}>
+    <Button
+      variant="outline"
+      disabled={!isSignedIn || !hasEmailVerified}
+      onClick={() => {
+        log({
+          action: LogAction.ButtonClicked,
+          detail: "Join existing team",
+        });
+      }}
+    >
       Join existing team
     </Button>
   );

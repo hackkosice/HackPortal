@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 type NavbarMobileDropdownMenuProps = {
   isSignedIn: boolean;
@@ -21,9 +22,30 @@ const NavbarMobileDropdownMenu = ({
   isSignedIn,
   email,
 }: NavbarMobileDropdownMenuProps) => {
+  const { log } = useLog();
   const [isDropdownMenuOpened, setIsDropdownMenuOpened] = React.useState(false);
   const onSignOutClick = async () => {
+    log({
+      action: LogAction.ButtonClicked,
+      detail: "Sign out",
+    });
     await signOut({ callbackUrl: "/signin" });
+    setIsDropdownMenuOpened(false);
+  };
+
+  const onSignInClick = () => {
+    log({
+      action: LogAction.ButtonClicked,
+      detail: "Sign in",
+    });
+    setIsDropdownMenuOpened(false);
+  };
+
+  const onMyApplicationClick = () => {
+    log({
+      action: LogAction.ButtonClicked,
+      detail: "My application",
+    });
     setIsDropdownMenuOpened(false);
   };
 
@@ -43,7 +65,7 @@ const NavbarMobileDropdownMenu = ({
             <DropdownMenuLabel className="font-default">
               Signed in as {email}
             </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDropdownMenuOpened(false)}>
+            <DropdownMenuItem onClick={onMyApplicationClick}>
               <Link href="/application">My application</Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onSignOutClick}>
@@ -53,7 +75,7 @@ const NavbarMobileDropdownMenu = ({
         ) : (
           <>
             <DropdownMenuLabel>You are not signed in</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setIsDropdownMenuOpened(false)}>
+            <DropdownMenuItem onClick={onSignInClick}>
               <Link href="/signin">Sign in</Link>
             </DropdownMenuItem>
           </>

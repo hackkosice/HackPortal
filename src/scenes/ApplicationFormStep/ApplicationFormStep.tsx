@@ -17,6 +17,8 @@ import { FormFieldTypeEnum } from "@/services/types/formFields";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import LogMount from "@/components/common/LogMount";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 export type Props = {
   stepId: number;
@@ -44,6 +46,7 @@ const ApplicationFormStep = ({
     signedIn,
   },
 }: Props) => {
+  const { log } = useLog();
   const { push } = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitError, setFormSubmitError] = useState<string | null>(null);
@@ -127,84 +130,129 @@ const ApplicationFormStep = ({
   };
 
   return (
-    <Stack
-      direction="column"
-      className="mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mx-auto mb-20"
-    >
-      <Link href="/application" className="text-hkOrange">
-        <Stack direction="row" alignItems="center" spacing="small">
-          <ChevronLeftIcon className="h-5 w-5" />
-          Back to application
-        </Stack>
-      </Link>
-      <Card className="mx-auto w-full mb-10">
-        <CardHeader>
-          <CardTitle>
-            {position}. {title}
-          </CardTitle>
-          {description && (
-            <Text>
-              <MarkDownRenderer markdown={description} />
-            </Text>
-          )}
-        </CardHeader>
-        <CardContent>
-          {formSubmitError && (
-            <Alert variant="destructive" className="mb-5">
-              <AlertTitle>Error submitting the form!</AlertTitle>
-              <AlertDescription>
-                <Text size="small">{formSubmitError}</Text>
-              </AlertDescription>
-            </Alert>
-          )}
-          <FormRenderer
-            shouldUseLocalInitialValues={!signedIn}
-            formFields={formFields}
-            onSubmit={(formData) => {
-              setIsSubmitting(true);
-              onFormSubmit(formData);
-            }}
-            className="w-full md:px-20"
-            actionButtons={
-              <Stack
-                direction="row"
-                className="w-full mt-5"
-                justify={previousStepId ? "between" : "end"}
-              >
-                {previousStepId && (
-                  <Button variant="outline" asChild>
-                    <Link href={`/application/form/step/${previousStepId}`}>
-                      <ChevronLeftIcon className="h-4 w-4 mr-2" />
-                      Previous step
-                    </Link>
-                  </Button>
-                )}
-                {isSubmitting ? (
-                  <Button disabled={true} className="px-6">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    className={nextStepId ? "pl-6" : "px-6"}
-                  >
-                    {nextStepId ? (
-                      <>
-                        Save and continue
-                        <ChevronRightIcon className="h-4 w-4 ml-2" />
-                      </>
-                    ) : (
-                      "Save"
-                    )}
-                  </Button>
-                )}
-              </Stack>
-            }
-          />
-        </CardContent>
-      </Card>
-    </Stack>
+    <>
+      <LogMount
+        action={LogAction.PageDisplayed}
+        detail="Application form step"
+        data={{
+          stepId,
+          title,
+        }}
+      />
+      <Stack
+        direction="column"
+        className="mt-navbarHeightOffsetMobile md:mt-navbarHeightOffset w-full md:w-[50vw] md:min-w-[700px] mx-auto mb-20"
+      >
+        <Link
+          href="/application"
+          className="text-hkOrange"
+          onClick={() => {
+            log({
+              action: LogAction.ButtonClicked,
+              detail: "Back to application",
+              data: {
+                stepId,
+                title,
+              },
+            });
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing="small">
+            <ChevronLeftIcon className="h-5 w-5" />
+            Back to application
+          </Stack>
+        </Link>
+        <Card className="mx-auto w-full mb-10">
+          <CardHeader>
+            <CardTitle>
+              {position}. {title}
+            </CardTitle>
+            {description && (
+              <Text>
+                <MarkDownRenderer markdown={description} />
+              </Text>
+            )}
+          </CardHeader>
+          <CardContent>
+            {formSubmitError && (
+              <Alert variant="destructive" className="mb-5">
+                <AlertTitle>Error submitting the form!</AlertTitle>
+                <AlertDescription>
+                  <Text size="small">{formSubmitError}</Text>
+                </AlertDescription>
+              </Alert>
+            )}
+            <FormRenderer
+              shouldUseLocalInitialValues={!signedIn}
+              formFields={formFields}
+              onSubmit={(formData) => {
+                setIsSubmitting(true);
+                onFormSubmit(formData);
+              }}
+              className="w-full md:px-20"
+              actionButtons={
+                <Stack
+                  direction="row"
+                  className="w-full mt-5"
+                  justify={previousStepId ? "between" : "end"}
+                >
+                  {previousStepId && (
+                    <Button variant="outline" asChild>
+                      <Link
+                        href={`/application/form/step/${previousStepId}`}
+                        onClick={() => {
+                          log({
+                            action: LogAction.ButtonClicked,
+                            detail: "Previous step",
+                            data: {
+                              stepId,
+                              title,
+                            },
+                          });
+                        }}
+                      >
+                        <ChevronLeftIcon className="h-4 w-4 mr-2" />
+                        Previous step
+                      </Link>
+                    </Button>
+                  )}
+                  {isSubmitting ? (
+                    <Button disabled={true} className="px-6">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      className={nextStepId ? "pl-6" : "px-6"}
+                      onClick={() => {
+                        log({
+                          action: LogAction.ButtonClicked,
+                          detail: "Save step",
+                          data: {
+                            stepId,
+                            title,
+                          },
+                        });
+                      }}
+                    >
+                      {nextStepId ? (
+                        <>
+                          Save and continue
+                          <ChevronRightIcon className="h-4 w-4 ml-2" />
+                        </>
+                      ) : (
+                        "Save"
+                      )}
+                    </Button>
+                  )}
+                </Stack>
+              }
+            />
+          </CardContent>
+        </Card>
+      </Stack>
+    </>
   );
 };
 

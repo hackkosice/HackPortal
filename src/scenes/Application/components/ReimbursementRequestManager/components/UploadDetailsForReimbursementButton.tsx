@@ -27,6 +27,7 @@ import { Text } from "@/components/ui/text";
 import formatBytesToString from "@/services/helpers/formatBytesToString";
 import { Loader2 } from "lucide-react";
 import uploadTravelReimbursementDetails from "@/server/actions/travelReimbursement/uploadTravelReimbursementDetails";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 const MAX_FILE_SIZE_IN_MB = 10;
 const MAX_FILE_SIZE = MAX_FILE_SIZE_IN_MB * 1024 * 1024; // 10 MB
@@ -52,6 +53,7 @@ type UploadDetailsForReimbursementButtonProps = {
 const UploadDetailsForReimbursementButton = ({
   fileUploadUrl,
 }: UploadDetailsForReimbursementButtonProps) => {
+  const { log } = useLog();
   const [isUploading, setIsUploading] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<ReimbursementDetailsForm>({
@@ -83,7 +85,16 @@ const UploadDetailsForReimbursementButton = ({
   return (
     <Dialog onOpenChange={setIsOpened} open={isOpened}>
       <DialogTrigger asChild>
-        <Button>Upload details</Button>
+        <Button
+          onClick={() => {
+            log({
+              action: LogAction.ButtonClicked,
+              detail: "Upload reimbursement details",
+            });
+          }}
+        >
+          Upload details
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

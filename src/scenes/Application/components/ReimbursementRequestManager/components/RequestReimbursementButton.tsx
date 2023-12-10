@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import createTravelReimbursementRequest from "@/server/actions/travelReimbursement/createTravelReimbursementRequest";
 import Tooltip from "@/components/common/Tooltip";
+import useLog, { LogAction } from "@/services/hooks/useLog";
 
 type RequestReimbursementButtonProps = {
   isSignedIn?: boolean;
@@ -40,6 +41,7 @@ const RequestReimbursementButton = ({
   isSignedIn,
   hasEmailVerified,
 }: RequestReimbursementButtonProps) => {
+  const { log } = useLog();
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<RequestReimbursementForm>({
     resolver: zodResolver(requestReimbursementSchema),
@@ -62,7 +64,16 @@ const RequestReimbursementButton = ({
   }, [form, isOpened]);
 
   const requestButton = (
-    <Button variant="outline" disabled={!isSignedIn || !hasEmailVerified}>
+    <Button
+      variant="outline"
+      disabled={!isSignedIn || !hasEmailVerified}
+      onClick={() => {
+        log({
+          action: LogAction.ButtonClicked,
+          detail: "Request travel reimbursement",
+        });
+      }}
+    >
       Request travel reimbursement
     </Button>
   );
