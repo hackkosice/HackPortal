@@ -1,5 +1,6 @@
 import { datadogLogs } from "@datadog/browser-logs";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
+import { CookieConsentContext } from "@/components/common/CookieConsentDialog";
 
 export const LogAction = {
   ButtonClicked: "ButtonClicked",
@@ -15,12 +16,23 @@ type LogProps = {
   data?: Record<string, unknown>;
 };
 const useLog = () => {
-  const log = useCallback(({ action, detail, data }: LogProps) => {
-    if (process.env.NEXT_PUBLIC_DATADOG_ENABLED !== "true") {
-      return;
-    }
-    datadogLogs.logger.log(action, { action, detail, data });
-  }, []);
+  const { isTrackingInitialized } = useContext(CookieConsentContext);
+  const log = useCallback(
+    ({ action, detail, data }: LogProps) => {
+      if (process.env.NEXT_PUBLIC_DATADOG_ENABLED !== "true") {
+        return;
+      }
+      if (!isTrackingInitialized) {
+        return;
+      }
+      if (process.env.NEXT_PUBLIC_LOG_DEBUG) {
+        console.log({ action, detail, data });
+        return;
+      }
+      datadogLogs.logger.log(action, { action, detail, data });
+    },
+    [isTrackingInitialized]
+  );
 
   return { log };
 };

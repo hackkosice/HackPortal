@@ -6,3 +6,44 @@
     text-decoration: underline;
     color: #EF611E;
 }
+
+.markdown-content p {
+    font-size: 1rem;
+    line-height: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+    font-family: var(--font-league-spartan);
+    color: #5E2137;
+}
+
+.markdown-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.markdown-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: var(--font-league-spartan);
+}
+
+.markdown-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: var(--font-league-spartan);
+}
+
+.markdown-content ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-bottom: 1rem;
+}
+.markdown-content li {
+    font-size: 1rem;
+    line-height: 1.75rem;
+}
