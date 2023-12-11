@@ -6,8 +6,8 @@ type SendEmailParams = {
   recipientEmail: string;
 };
 const sendEmailSafely = async (callback: () => Promise<void>) => {
-  if (process.env.EMAIL_DEBUG) {
-    console.log("Email debug mode enabled, not sending email");
+  if (process.env.EMAILS_ENABLED !== "true") {
+    console.log("Emails not enabled, not sending email");
     return;
   }
   try {
