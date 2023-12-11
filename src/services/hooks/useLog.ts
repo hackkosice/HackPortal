@@ -25,7 +25,7 @@ const useLog = () => {
       if (!isTrackingInitialized) {
         return;
       }
-      if (process.env.NEXT_PUBLIC_LOG_DEBUG) {
+      if (process.env.NEXT_PUBLIC_LOG_DEBUG === "true") {
         console.log({ action, detail, data });
         return;
       }

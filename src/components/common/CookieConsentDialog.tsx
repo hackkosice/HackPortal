@@ -75,12 +75,12 @@ const CookieConsentDialog = ({ children }: { children: ReactNode }) => {
     } else {
       const value = cookie.split("=")[1];
       setCookieConsentContext(value === "true");
-      if (value === "true") {
+      if (value === "true" && !isTrackingInitialized) {
         initTracking();
         setIsTrackingInitialized(true);
       }
     }
-  }, [path]);
+  }, [path, isTrackingInitialized]);
 
   const onAcceptAllClick = () => {
     setPerformanceAndAnalyticsConsent(true);
