@@ -203,7 +203,7 @@ const ApplicationsTable = ({
           </DropdownMenu>
         </div>
       </Stack>
-      <ScrollArea className="max-h-[400px] w-[96vw] md:max-w-[81vw] xl:max-w-[61vw]">
+      <ScrollArea className="max-h-[400px] w-[85vw] md:max-w-[81vw] xl:max-w-[61vw]">
         <div className="rounded-md border">
           <Table className="w-[95vw] md:w-max md:min-w-[80vw] xl:min-w-[60vw]">
             <TableHeader>

@@ -8,8 +8,8 @@ type CustomFixtures = {
 };
 
 export const test = base.extend<CustomFixtures>({
-  dashboardPage: async ({ page }, use) => {
-    const dashboardPage = new DashboardPage(page);
+  dashboardPage: async ({ page, isMobile }, use) => {
+    const dashboardPage = new DashboardPage(page, isMobile);
 
     await dashboardPage.goto();
 
@@ -17,8 +17,8 @@ export const test = base.extend<CustomFixtures>({
 
     // await dashboardPage.signOut();
   },
-  applicationPage: async ({ page }, use) => {
-    const applicationPage = new ApplicationPage(page);
+  applicationPage: async ({ page, isMobile }, use) => {
+    const applicationPage = new ApplicationPage(page, isMobile);
 
     await applicationPage.goto();
 

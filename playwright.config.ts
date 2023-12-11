@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import path from "path";
 
 /**
  * Read environment variables from file.
@@ -8,6 +9,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = process.env.PORT ?? 3000;
 const baseURL = `http://localhost:${PORT}`;
+
+export const STORAGE_STATE = path.join(__dirname, "e2e/.auth/state.json");
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -45,8 +48,13 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "setup",
+      testMatch: /global\.setup\.ts/,
+    },
+    {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], storageState: STORAGE_STATE },
+      dependencies: ["setup"],
     },
 
     // {
@@ -62,7 +70,8 @@ export default defineConfig({
     /* Test against mobile viewports. */
     {
       name: "Mobile Chrome",
-      use: { ...devices["Pixel 5"] },
+      use: { ...devices["Pixel 5"], storageState: STORAGE_STATE },
+      dependencies: ["setup"],
     },
     // {
     //   name: "Mobile Safari",

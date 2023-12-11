@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 export class ApplicationPage {
-  constructor(public readonly page: Page) {}
+  constructor(public readonly page: Page, public readonly isMobile: boolean) {}
 
   async goto() {
     await this.page.goto("/");
@@ -10,6 +10,9 @@ export class ApplicationPage {
   async openSignedIn(
     { hackerIndex }: { hackerIndex: number } = { hackerIndex: 1 }
   ) {
+    if (this.isMobile) {
+      await this.page.getByRole("button", { name: "open menu" }).click();
+    }
     await this.page.getByRole("link", { name: "Sign in" }).click();
 
     if (hackerIndex > 1) {
