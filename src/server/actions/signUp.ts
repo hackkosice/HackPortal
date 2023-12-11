@@ -27,6 +27,7 @@ const signUp = async ({ email, password }: SignUpInput) => {
       email: email,
       emailVerified: false,
       emailVerificationToken: verificationToken,
+      emailVerificationLastRequest: new Date(),
     },
   });
 

@@ -30,18 +30,20 @@ model Account {
 }
 
 model User {
-  id                     Int        @id @default(autoincrement())
-  name                   String?
-  password               String?
-  email                  String     @unique
-  emailVerified          Boolean?   @default(false)
-  emailVerificationToken String?
-  forgotPasswordToken    String?
-  image                  String?
-  accounts               Account[]
-  hacker                 Hacker?
-  organizer              Organizer?
-  sponsor                Sponsor?
+  id                           Int        @id @default(autoincrement())
+  name                         String?
+  password                     String?
+  email                        String     @unique
+  emailVerified                Boolean?   @default(false)
+  emailVerificationToken       String?
+  emailVerificationLastRequest DateTime?
+  forgotPasswordToken          String?
+  forgotPasswordLastRequest    DateTime?
+  image                        String?
+  accounts                     Account[]
+  hacker                       Hacker?
+  organizer                    Organizer?
+  sponsor                      Sponsor?
 }
 
 model Hackathon {

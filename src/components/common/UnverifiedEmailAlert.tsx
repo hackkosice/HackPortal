@@ -7,11 +7,20 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import resendVerificationLink from "@/server/actions/auth/resendVerificationLink";
 import { Card } from "@/components/ui/card";
+import callServerAction from "@/services/helpers/server/callServerAction";
 
 const UnverifiedEmailAlert = () => {
   const { toast } = useToast();
   const onResendEmailClick = async () => {
-    await resendVerificationLink();
+    const res = await callServerAction(resendVerificationLink, undefined);
+    if (!res.success) {
+      toast({
+        title: "Error sending email",
+        description: res.message,
+        variant: "destructive",
+      });
+      return;
+    }
     toast({
       title: "Email sent!",
       description: "We've sent you an email with verification link.",
