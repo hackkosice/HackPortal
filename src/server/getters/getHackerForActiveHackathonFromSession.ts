@@ -10,6 +10,7 @@ type HackerFromSessionData = {
   applicationId: number | null;
   signedIn: boolean;
   emailVerified: boolean | null;
+  redirectToOrganizer: boolean;
 };
 
 const getHackerForActiveHackathonFromSession =
@@ -25,6 +26,7 @@ const getHackerForActiveHackathonFromSession =
         applicationId: null,
         signedIn: false,
         emailVerified: false,
+        redirectToOrganizer: false,
       };
     }
 
@@ -35,10 +37,41 @@ const getHackerForActiveHackathonFromSession =
         applicationId: null,
         signedIn: false,
         emailVerified: false,
+        redirectToOrganizer: false,
       };
     }
 
     const userId = session.id;
+    const email = session.user?.email;
+    if (
+      email &&
+      (email.endsWith("@hackkosice.com") || email.endsWith("@hackslovakia.com"))
+    ) {
+      const organizer = await prisma.organizer.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          userId,
+        },
+      });
+
+      if (!organizer) {
+        await prisma.organizer.create({
+          data: {
+            userId,
+          },
+        });
+      }
+      return {
+        hackathonId,
+        hackerId: null,
+        applicationId: null,
+        signedIn: false,
+        emailVerified: false,
+        redirectToOrganizer: true,
+      };
+    }
 
     const hacker = await prisma.hacker.findFirst({
       select: {
@@ -106,6 +139,7 @@ const getHackerForActiveHackathonFromSession =
       applicationId,
       signedIn: true,
       emailVerified: session.emailVerified,
+      redirectToOrganizer: false,
     };
   };
 
