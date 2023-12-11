@@ -47,3 +47,9 @@
     font-size: 1rem;
     line-height: 1.75rem;
 }
+
+.markdown-content ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+    margin-bottom: 1rem;
+}
