@@ -96,6 +96,9 @@ const SignIn = () => {
                   </FormItem>
                 )}
               />
+              <Link href="/forgot-password" className="text-hkOrange underline">
+                Forgot your password?
+              </Link>
               <Button type="submit">Sign in</Button>
             </Stack>
           </form>

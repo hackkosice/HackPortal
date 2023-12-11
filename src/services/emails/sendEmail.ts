@@ -136,3 +136,29 @@ export const sendEmailConfirmationEmail = async ({
     });
   });
 };
+
+export const sendEmailForgotPassword = async ({
+  recipientEmail,
+  verificationToken,
+  userId,
+}: SendEmailParams & {
+  verificationToken: string;
+  userId: number;
+}) => {
+  const link = `${
+    process.env.BASE_URL ?? "https://apply.hackkosice.com"
+  }/auth/${userId}/forgot-password?token=${verificationToken}`;
+  await sendEmailSafely(async () => {
+    await emailClient.smtp.sendTransacEmail({
+      templateId: BrevoTemplateIds.RESET_PASSWORD,
+      to: [
+        {
+          email: recipientEmail,
+        },
+      ],
+      params: {
+        resetLink: link,
+      },
+    });
+  });
+};

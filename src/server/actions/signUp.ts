@@ -12,7 +12,6 @@ type SignUpInput = {
 };
 
 const signUp = async ({ email, password }: SignUpInput) => {
-  const hashedPassword = await hash(password);
   const user = await prisma.user.findFirst({
     where: { email },
   });
@@ -20,6 +19,7 @@ const signUp = async ({ email, password }: SignUpInput) => {
     throw new ExpectedServerActionError("User already exists");
   }
 
+  const hashedPassword = await hash(password);
   const verificationToken = randomBytes(24).toString("hex");
   const newUser = await prisma.user.create({
     data: {
