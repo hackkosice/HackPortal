@@ -18,16 +18,19 @@ test.describe("smoke tests", () => {
 
     await expect(
       page.getByRole("heading", {
-        name: "Welcome to Hack Kosice Application portal!",
+        name: "Your application for Hack Kosice TEST",
       })
     ).toBeVisible();
 
     await expect(page.getByText("You are not signed in")).toBeVisible();
   });
 
-  test("can sign in and sign out as hacker", async ({ page }) => {
+  test("can sign in and sign out as hacker", async ({ page, isMobile }) => {
     await page.goto("/");
 
+    if (isMobile) {
+      await page.getByRole("button", { name: "open menu" }).click();
+    }
     await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
@@ -37,19 +40,27 @@ test.describe("smoke tests", () => {
 
     await expect(
       page.getByRole("heading", {
-        name: "Welcome to Hack Kosice Application portal!",
+        name: "Your application for Hack Kosice TEST",
       })
     ).toBeVisible();
 
+    if (isMobile) {
+      await page.getByRole("button", { name: "open menu" }).click();
+    }
     await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
-    await page.getByRole("button", { name: "Sign out" }).click();
+    await page
+      .getByRole(isMobile ? "menuitem" : "button", { name: "Sign out" })
+      .click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   });
 
-  test("can sign in and sign out as organizer", async ({ page }) => {
+  test("can sign in and sign out as organizer", async ({ page, isMobile }) => {
     await page.goto("/");
 
+    if (isMobile) {
+      await page.getByRole("button", { name: "open menu" }).click();
+    }
     await page.getByRole("link", { name: "Sign in" }).click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
@@ -63,8 +74,13 @@ test.describe("smoke tests", () => {
       })
     ).toBeVisible();
 
+    if (isMobile) {
+      await page.getByRole("button", { name: "open menu" }).click();
+    }
     await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
-    await page.getByRole("button", { name: "Sign out" }).click();
+    await page
+      .getByRole(isMobile ? "menuitem" : "button", { name: "Sign out" })
+      .click();
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   });

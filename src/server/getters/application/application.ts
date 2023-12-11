@@ -34,6 +34,7 @@ export type ApplicationData = {
     };
     steps: ApplicationStepData[];
     canSubmit: boolean;
+    hackathonName: string;
   } | null;
 };
 
@@ -74,6 +75,19 @@ const getApplicationData = async ({
     },
   });
 
+  const hackathon = await prisma.hackathon.findUnique({
+    select: {
+      name: true,
+    },
+    where: {
+      id: hackathonId,
+    },
+  });
+
+  if (!hackathon) {
+    throw new Error("Hackathon not found");
+  }
+
   // User is not signed in
 
   if (!session?.id || !applicationId) {
@@ -94,6 +108,7 @@ const getApplicationData = async ({
         },
         steps,
         canSubmit: false,
+        hackathonName: hackathon.name,
       },
     };
   }
@@ -164,6 +179,7 @@ const getApplicationData = async ({
       },
       steps,
       canSubmit,
+      hackathonName: hackathon.name,
     },
   };
 };

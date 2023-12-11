@@ -2,11 +2,14 @@ import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 export class DashboardPage {
-  constructor(public readonly page: Page) {}
+  constructor(public readonly page: Page, public readonly isMobile: boolean) {}
 
   async goto() {
     await this.page.goto("/");
 
+    if (this.isMobile) {
+      await this.page.getByRole("button", { name: "open menu" }).click();
+    }
     await this.page.getByRole("link", { name: "Sign in" }).click();
 
     await this.page.fill('input[name="email"]', "test-org@hackkosice.com");

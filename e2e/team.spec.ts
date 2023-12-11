@@ -23,17 +23,16 @@ test.describe("Team", () => {
   }) => {
     await applicationPage.openUnsigned();
 
-    await expect(page.getByText("Your team")).toBeVisible();
     await expect(
-      page.getByText("You can create or join teams after you sign in")
+      page.getByRole("heading", { name: "Your team" })
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Create new team" })
-    ).not.toBeVisible();
+    ).toBeDisabled();
 
     await expect(
       page.getByRole("button", { name: "Join existing team" })
-    ).not.toBeVisible();
+    ).toBeDisabled();
   });
 
   test("signed in hacker can create a team", async ({
@@ -42,7 +41,9 @@ test.describe("Team", () => {
   }) => {
     await applicationPage.openSignedIn();
 
-    await expect(page.getByText("Your team")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Your team" })
+    ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Create new team" })
     ).toBeVisible();
@@ -93,7 +94,9 @@ test.describe("Team", () => {
   }) => {
     await applicationPage.openSignedIn({ hackerIndex: 2 });
 
-    await expect(page.getByText("Your team")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Your team" })
+    ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Join existing team" })
     ).toBeVisible();
@@ -112,8 +115,12 @@ test.describe("Team", () => {
     await expect(
       page.getByRole("button", { name: "Leave team" })
     ).toBeVisible();
-    await expect(page.getByText("test-hacker@test.com (owner)")).toBeVisible();
-    await expect(page.getByText("test-hacker-2@test.com")).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "test-hacker@test.com (owner)" })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "test-hacker-2@test.com" })
+    ).toBeVisible();
     await expect(page.getByText("Kick")).not.toBeVisible();
   });
 
@@ -121,7 +128,9 @@ test.describe("Team", () => {
     await applicationPage.openSignedIn();
 
     await expect(page.getByText("Team members (2/4):")).toBeVisible();
-    await expect(page.getByText("test-hacker-2@test.com")).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "test-hacker-2@test.com" })
+    ).toBeVisible();
 
     await page.getByRole("button", { name: "Kick" }).click();
     await expect(
@@ -134,7 +143,9 @@ test.describe("Team", () => {
     ).not.toBeVisible();
 
     await expect(page.getByText("Team members (2/4):")).toBeVisible();
-    await expect(page.getByText("test-hacker-2@test.com")).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "test-hacker-2@test.com" })
+    ).toBeVisible();
 
     await page.getByRole("button", { name: "Kick" }).click();
     await expect(
@@ -143,7 +154,9 @@ test.describe("Team", () => {
     await page.getByRole("button", { name: "Yes" }).click();
 
     await expect(page.getByText("Team members (1/4):")).toBeVisible();
-    await expect(page.getByText("test-hacker-2@test.com")).not.toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "test-hacker-2@test.com" })
+    ).not.toBeVisible();
   });
 
   test("member can leave a team", async ({ page, applicationPage }) => {

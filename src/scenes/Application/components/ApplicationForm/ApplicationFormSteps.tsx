@@ -36,38 +36,39 @@ const ApplicationFormSteps = async ({
         hackathonId={hackathonId}
       />
       <Stack className="w-full" direction="column">
-        <Heading className="mx-auto md:mb-6">
-          Your application for Hack Kosice 2024:
-        </Heading>
-
         {data && (
-          <Stack direction="column" className="gap-5 md:gap-20 w-full">
-            <ApplicationStatusCard status={data.application.status} />
-            {data.application.status === "open" && (
-              <div className="mx-auto">
-                <Stack
-                  justify="around"
-                  spaceAfter="medium"
-                  className="md:flex-row flex-col w-full md:gap-10"
-                >
-                  {data.steps.map((step) => (
+          <>
+            <Heading className="mx-auto md:mb-6">
+              Your application for {data.hackathonName}:
+            </Heading>
+            <Stack direction="column" className="gap-5 md:gap-20 w-full">
+              <ApplicationStatusCard status={data.application.status} />
+              {data.application.status === "open" && (
+                <div className="mx-auto">
+                  <Stack
+                    justify="around"
+                    spaceAfter="medium"
+                    className="md:flex-row flex-col w-full md:gap-10"
+                  >
+                    {data.steps.map((step) => (
+                      <ApplicationStepCard
+                        key={step.id}
+                        step={step}
+                        isSignedIn={authStatus?.signedIn}
+                      />
+                    ))}
                     <ApplicationStepCard
-                      key={step.id}
-                      step={step}
+                      key="submit"
+                      step="submit"
+                      canSubmit={data.canSubmit}
                       isSignedIn={authStatus?.signedIn}
+                      hasEmailVerified={authStatus?.emailVerified}
                     />
-                  ))}
-                  <ApplicationStepCard
-                    key="submit"
-                    step="submit"
-                    canSubmit={data.canSubmit}
-                    isSignedIn={authStatus?.signedIn}
-                    hasEmailVerified={authStatus?.emailVerified}
-                  />
-                </Stack>
-              </div>
-            )}
-          </Stack>
+                  </Stack>
+                </div>
+              )}
+            </Stack>
+          </>
         )}
       </Stack>
     </>

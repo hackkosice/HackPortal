@@ -164,10 +164,19 @@ test.describe("application form", () => {
     // General info section
     await page.getByText("General info").click();
 
-    await page.getByRole("button", { name: "Save" }).click();
+    await expect(
+      page.getByRole("heading", { name: "1. General info" })
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Save and continue" }).click();
     await expect(page.getByLabel("Full name")).toBeFocused();
     await page.getByLabel("Full name").fill("Test Testovic");
-    await page.getByRole("button", { name: "Save" }).click();
+    await page.getByRole("button", { name: "Save and continue" }).click();
+
+    await expect(
+      page.getByRole("heading", { name: "2. Experience" })
+    ).toBeVisible();
+
+    await page.getByRole("link", { name: "Back to application" }).click();
 
     await expect(page.getByTestId("Step 1 completed icon")).toBeVisible();
 
@@ -178,7 +187,7 @@ test.describe("application form", () => {
 
     // Experience section
     await page.getByText("Experience").click();
-    await page.getByRole("link", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back to application" }).click();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -253,17 +262,10 @@ test.describe("application form", () => {
     await page.getByRole("button", { name: "Save" }).click();
     await expect(page.getByLabel("Full name")).toBeFocused();
     await page.getByLabel("Full name").fill("Samuel Testovic");
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(page.getByTestId("Step 1 completed icon")).toBeVisible();
-
-    await expect(
-      page.getByRole("button", { name: "Submit application" })
-    ).toBeDisabled();
+    await page.getByRole("button", { name: "Save and continue" }).click();
 
     // Experience section
-    await page.getByText("Experience").click();
-    await page.getByRole("link", { name: "Back" }).click();
+    await page.getByRole("link", { name: "Back to application" }).click();
     await expect(page.getByText("Application status: open")).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Submit application" })
@@ -275,6 +277,7 @@ test.describe("application form", () => {
       .fill("I am awesome");
     await page.getByRole("button", { name: "Save" }).click();
 
+    await expect(page.getByTestId("Step 1 completed icon")).toBeVisible();
     await expect(page.getByTestId("Step 2 completed icon")).toBeVisible();
 
     await page.getByText("Experience").click();
@@ -316,8 +319,10 @@ test.describe("application form", () => {
       })
     ).toBeVisible();
 
-    await expect(page.getByText("Test Testovic")).toBeVisible();
-    await expect(page.getByText("submitted")).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "Test Testovic" })
+    ).toBeVisible();
+    await expect(page.getByRole("cell", { name: "submitted" })).toBeVisible();
 
     await page.getByRole("link", { name: "Details" }).click();
 

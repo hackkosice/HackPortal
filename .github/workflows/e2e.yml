@@ -23,6 +23,11 @@ jobs:
       SENTRY_ORGANIZATION: test-sentry
       SENTRY_PROJECT: test-sentry
       SENTRY_AUTH_TOKEN: test-sentry
+      EMAILS_ENABLED: false
+      NEXT_PUBLIC_DATADOG_ENABLED: false
+      NEXT_PUBLIC_DATADOG_CLIENT_TOKEN: test-datadog
+      NEXT_PUBLIC_DATADOG_SITE: test-datadog
+      NEXT_PUBLIC_LOG_DEBUG: false
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v3
