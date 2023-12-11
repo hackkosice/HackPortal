@@ -1,5 +1,10 @@
 import verifyUser from "@/server/actions/auth/verifyUser";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Verify email",
+};
 
 const Page = async ({
   searchParams,
