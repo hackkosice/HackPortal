@@ -6,10 +6,20 @@ import getHackerForActiveHackathonFromSession from "@/server/getters/getHackerFo
 import UnverifiedEmailAlert from "@/components/common/UnverifiedEmailAlert";
 import ReimbursementRequestManager from "@/scenes/Application/components/ReimbursementRequestManager/ReimbursementRequestManager";
 import UnsignedUserAlert from "@/scenes/Application/components/UnsignedUserAlert";
+import { redirect } from "next/navigation";
 
 const Application = async () => {
-  const { hackathonId, hackerId, applicationId, signedIn, emailVerified } =
-    await getHackerForActiveHackathonFromSession();
+  const {
+    hackathonId,
+    hackerId,
+    applicationId,
+    signedIn,
+    emailVerified,
+    redirectToOrganizer,
+  } = await getHackerForActiveHackathonFromSession();
+  if (redirectToOrganizer) {
+    redirect("/dashboard");
+  }
   if (!hackathonId) {
     return null;
   }
