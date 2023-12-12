@@ -57,7 +57,7 @@ const ReimbursementRequestManager = async ({
   } = await getTravelReimbursementRequest({ hackerId });
   return (
     <Card className="w-full p-5 relative pt-10">
-      <GlobeEuropeAfricaIcon className="text-primaryTitle h-[100px] absolute opacity-20 top-[-50px] left-1/2 -translate-x-1/2" />
+      <GlobeEuropeAfricaIcon className="text-primaryTitle h-[100px] absolute opacity-20 top-[-55px] left-1/2 -translate-x-1/2" />
       <div className="z-10">
         <Heading size="medium" className="text-center">
           Your travel reimbursement

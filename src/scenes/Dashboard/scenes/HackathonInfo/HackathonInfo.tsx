@@ -20,7 +20,7 @@ const HackathonInfo = async ({ hackathonId }: HackathonInfoProps) => {
     eventEndDate,
   } = await getHackathonInfo(hackathonId);
   return (
-    <Card>
+    <Card className="md:w-[70vw] mx-auto">
       <CardHeader>
         <CardTitle className="font-semibold text-3xl">{name}</CardTitle>
       </CardHeader>

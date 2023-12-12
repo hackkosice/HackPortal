@@ -103,6 +103,7 @@ const ApplicationsTable = ({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [filterValue, setFilterValue] = React.useState<string>("all");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const table = useReactTable({
@@ -134,6 +135,10 @@ const ApplicationsTable = ({
     );
   };
 
+  const saveFilter = (filter: string) => {
+    localStorage.setItem(`hackathon-${hackathonId}-column-filters`, filter);
+  };
+
   useEffect(() => {
     const savedColumnVisibility = localStorage.getItem(
       `hackathon-${hackathonId}-column-visibility`
@@ -141,17 +146,29 @@ const ApplicationsTable = ({
     if (savedColumnVisibility) {
       setColumnVisibility(JSON.parse(savedColumnVisibility));
     }
-  }, [hackathonId]);
+    const savedFilter = localStorage.getItem(
+      `hackathon-${hackathonId}-column-filters`
+    );
+    if (savedFilter) {
+      table
+        .getColumn("status")
+        ?.setFilterValue(savedFilter === "all" ? "" : savedFilter);
+      setFilterValue(savedFilter);
+    }
+  }, [hackathonId, table]);
 
   return (
     <>
       <Stack justify="between" className="w-full">
         <Select
-          onValueChange={(value) =>
+          onValueChange={(value) => {
             table
               .getColumn("status")
-              ?.setFilterValue(value === "all" ? "" : value)
-          }
+              ?.setFilterValue(value === "all" ? "" : value);
+            saveFilter(value);
+            setFilterValue(value);
+          }}
+          value={filterValue}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a status" />

@@ -34,10 +34,7 @@ const ApplicationReview = async ({ hackathonId }: ApplicationReviewProps) => {
           Back to applications
         </Stack>
       </Link>
-      <Stack
-        direction="row"
-        className="w-full flex-wrap md:flex-nowrap mb-20"
-      >
+      <Stack direction="row" className="w-full flex-wrap md:flex-nowrap mb-20">
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Application detail</CardTitle>

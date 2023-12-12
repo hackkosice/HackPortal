@@ -1,6 +1,5 @@
 import React from "react";
 import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
-import { Text } from "@/components/ui/text";
 import { Stack } from "@/components/ui/stack";
 import { Heading } from "@/components/ui/heading";
 import HiddenPropertiesCollapsible from "@/scenes/Dashboard/scenes/ApplicationDetail/components/components/HiddenPropertiesCollapsible";
