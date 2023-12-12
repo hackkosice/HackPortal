@@ -20,10 +20,10 @@ export class ApplicationPage {
         'input[name="email"]',
         `test-hacker-${hackerIndex}@test.com`
       );
-      await this.page.fill('input[name="password"]', "test123");
+      await this.page.fill('input[name="password"]', "test123456");
     } else {
       await this.page.fill('input[name="email"]', "test-hacker@test.com");
-      await this.page.fill('input[name="password"]', "test123");
+      await this.page.fill('input[name="password"]', "test123456");
     }
 
     await this.page.getByRole("button", { name: /^Sign in$/ }).click();

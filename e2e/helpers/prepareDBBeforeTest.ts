@@ -48,7 +48,7 @@ export async function main(
   const { id: userId } = await prisma.user.create({
     data: {
       email: "test-hacker@test.com",
-      password: await hash("test123"),
+      password: await hash("test123456"),
       emailVerified: true,
     },
   });
@@ -72,7 +72,7 @@ export async function main(
       const { id: userId } = await prisma.user.create({
         data: {
           email: `test-hacker-${i + 2}@test.com`,
-          password: await hash("test123"),
+          password: await hash("test123456"),
           emailVerified: true,
         },
       });
@@ -96,7 +96,7 @@ export async function main(
   const { id: userOrganizerId } = await prisma.user.create({
     data: {
       email: "test-org@hackkosice.com",
-      password: await hash("test123"),
+      password: await hash("test123456"),
       emailVerified: true,
     },
   });
