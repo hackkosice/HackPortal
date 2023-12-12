@@ -78,6 +78,20 @@ export const authOptions: AuthOptions = {
           token.id = Number(dbUser.id);
           token.emailVerified =
             dbUser.emailVerified || dbUser.accounts.length > 0;
+
+          const dbOrganizer = await prisma.organizer.findUnique({
+            select: {
+              isAdmin: true,
+            },
+            where: {
+              userId: dbUser.id,
+            },
+          });
+          if (dbOrganizer) {
+            token.isAdmin = dbOrganizer.isAdmin;
+          } else {
+            token.isAdmin = false;
+          }
         }
       }
 
@@ -87,6 +101,7 @@ export const authOptions: AuthOptions = {
       if (token) {
         session.id = token.id;
         session.emailVerified = token.emailVerified;
+        session.isAdmin = token.isAdmin;
       }
 
       return session;

@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { revalidatePath } from "next/cache";
 
 type CreateNewVoteParameterInput = {
@@ -20,7 +20,7 @@ const editVoteParameter = async ({
   minValue,
   maxValue,
 }: CreateNewVoteParameterInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const { hackathonId } = await prisma.voteParameter.update({
     where: {

@@ -4,13 +4,13 @@ import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type CreateNewStepInput = {
   hackathonId: number;
 };
 const createNewStep = async ({ hackathonId }: CreateNewStepInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const lastStep = await prisma.applicationFormStep.findFirst({
     orderBy: {

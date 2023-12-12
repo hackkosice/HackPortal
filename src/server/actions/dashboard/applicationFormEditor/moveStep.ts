@@ -2,12 +2,14 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type MoveStepInput = {
   stepId: number;
   direction: "up" | "down";
 };
 const moveStep = async ({ stepId, direction }: MoveStepInput) => {
+  await requireAdminSession();
   const step = await prisma.applicationFormStep.findUnique({
     where: {
       id: stepId,

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type EditHackathonInput = {
   hackathonId: number;
@@ -24,7 +24,7 @@ const editHackathon = async ({
   applicationStartDate,
   applicationEndDate,
 }: EditHackathonInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   await prisma.hackathon.update({
     where: {

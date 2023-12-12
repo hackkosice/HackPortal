@@ -1,14 +1,14 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { revalidatePath } from "next/cache";
 
 type DeleteOptionsInput = {
   optionIds: number[];
 };
 const deleteOptions = async ({ optionIds }: DeleteOptionsInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const optionListIds = await prisma.option.findMany({
     select: {

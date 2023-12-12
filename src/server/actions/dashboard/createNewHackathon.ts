@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type CreateNewHackathonInput = {
   name: string;
@@ -22,7 +22,7 @@ const createNewHackathon = async ({
   applicationStartDate,
   applicationEndDate,
 }: CreateNewHackathonInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   await prisma.hackathon.create({
     data: {

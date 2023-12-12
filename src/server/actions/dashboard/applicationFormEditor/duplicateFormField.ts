@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";
@@ -10,7 +10,7 @@ type DuplicateFormFieldInput = {
   formFieldId: number;
 };
 const duplicateFormField = async ({ formFieldId }: DuplicateFormFieldInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const formField = await prisma.formField.findUnique({
     where: {

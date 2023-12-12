@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { revalidatePath } from "next/cache";
 
 type DeleteVoteParameterInput = {
@@ -10,7 +10,7 @@ type DeleteVoteParameterInput = {
 const deleteVoteParameter = async ({
   voteParameterId,
 }: DeleteVoteParameterInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const votes = await prisma.vote.findMany({
     where: {

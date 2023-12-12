@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type EditStepInput = {
   stepId: number;
@@ -10,7 +10,7 @@ type EditStepInput = {
   description: string;
 };
 const editStep = async ({ stepId, title, description }: EditStepInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const { hackathonId } = await prisma.applicationFormStep.update({
     where: {

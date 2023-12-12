@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type EditFormFieldInput = {
   formFieldId: number;
@@ -32,7 +32,7 @@ const editFormField = async ({
   description,
   visibilityRule,
 }: EditFormFieldInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   let newOptionListId: number | null = null;
   if (newOptionListName) {

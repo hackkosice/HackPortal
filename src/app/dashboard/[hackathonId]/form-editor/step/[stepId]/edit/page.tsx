@@ -1,7 +1,7 @@
 import React from "react";
-import requireOrganizer from "@/services/helpers/requireOrganizer";
 import { Metadata } from "next";
 import FormStepEditor from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/EditStepForm/FormStepEditor";
+import requireAdmin from "@/services/helpers/requireAdmin";
 
 export const metadata: Metadata = {
   title: "Edit application form step",
@@ -12,7 +12,7 @@ const FormEditorStepPage = async ({
 }: {
   params: { stepId: string; hackathonId: string };
 }) => {
-  await requireOrganizer();
+  await requireAdmin();
 
   return (
     <FormStepEditor

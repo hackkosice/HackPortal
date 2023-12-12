@@ -2,7 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
 type DeleteFormFieldInput = {
@@ -10,7 +10,7 @@ type DeleteFormFieldInput = {
   force: boolean;
 };
 const deleteFormField = async ({ fieldId, force }: DeleteFormFieldInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const fieldValues = await prisma.applicationFormFieldValue.findMany({
     where: {
