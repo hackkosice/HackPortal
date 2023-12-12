@@ -53,7 +53,11 @@ const mapToZodType = (formField: FormFieldData) => {
       }
       return z.boolean().nullable();
     case FormFieldTypeEnum.file:
-      if (!formField.required || formField.initialValue) {
+      if (
+        !formField.required ||
+        formField.initialValue ||
+        !formField.fileUploadKey
+      ) {
         return fileValidator.nullable();
       }
       return fileValidator;
