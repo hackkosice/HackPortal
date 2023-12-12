@@ -35,7 +35,7 @@ test.describe("smoke tests", () => {
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-hacker@test.com");
-    await page.fill('input[name="password"]', "test123");
+    await page.fill('input[name="password"]', "test123456");
     await page.getByRole("button", { name: /^Sign in$/ }).click();
 
     await expect(
@@ -65,7 +65,7 @@ test.describe("smoke tests", () => {
 
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
     await page.fill('input[name="email"]', "test-org@hackkosice.com");
-    await page.fill('input[name="password"]', "test123");
+    await page.fill('input[name="password"]', "test123456");
     await page.getByRole("button", { name: /^Sign in$/ }).click();
 
     await expect(

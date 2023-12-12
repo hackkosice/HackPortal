@@ -13,7 +13,7 @@ export class DashboardPage {
     await this.page.getByRole("link", { name: "Sign in" }).click();
 
     await this.page.fill('input[name="email"]', "test-org@hackkosice.com");
-    await this.page.fill('input[name="password"]', "test123");
+    await this.page.fill('input[name="password"]', "test123456");
 
     await this.page.getByRole("button", { name: /^Sign in$/ }).click();
 
