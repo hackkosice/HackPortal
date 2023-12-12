@@ -37,7 +37,9 @@ const ApplicationDetail = async ({ applicationId }: ApplicationDetailProps) => {
                     );
                   return (
                     <tr key={value} className={!isLastRow ? "border-b-2" : ""}>
-                      <td className="font-bold max-w-[250px] pr-4 align-top">{label}</td>
+                      <td className="font-bold max-w-[250px] pr-4 align-top">
+                        {label}
+                      </td>
                       <td className="align-top">{content}</td>
                     </tr>
                   );
