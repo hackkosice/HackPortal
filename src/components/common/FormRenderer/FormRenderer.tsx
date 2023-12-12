@@ -42,9 +42,9 @@ const mapToZodType = (formField: FormFieldData) => {
     case FormFieldTypeEnum.radio:
     case FormFieldTypeEnum.combobox:
       if (!formField.required) {
-        return z.string().nullable();
+        return z.string().max(1000).nullable();
       }
-      return z.string().min(1, { message: "This field is required" });
+      return z.string().min(1, { message: "This field is required" }).max(1000);
     case FormFieldTypeEnum.checkbox:
       if (formField.required) {
         return z.literal(true, {
