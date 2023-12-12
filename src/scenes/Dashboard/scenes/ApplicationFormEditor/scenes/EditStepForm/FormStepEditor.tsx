@@ -21,6 +21,7 @@ import FormPreview from "@/scenes/Dashboard/scenes/ApplicationFormEditor/scenes/
 import getStepDataForForm from "@/server/services/helpers/applicationForm/getStepDataForForm";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import getPotentialVisibilityRuleTargets from "@/server/getters/dashboard/applicationFormEditor/potentialVisibilityRuleTargets";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 export type Props = {
   stepId: number;
@@ -37,58 +38,64 @@ const FormStepEditor = async ({ hackathonId, stepId }: Props) => {
   const potentialVisibilityRuleTargets =
     await getPotentialVisibilityRuleTargets(stepId);
   return (
-    <Stack justify="center" className="flex-wrap">
-      <Card className="w-full md:w-[60%]">
-        <CardHeader>
-          <Stack alignItems="center">
-            <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
-            <EditTitleDialog
-              initialValue={{ title, description: description ?? "" }}
-              stepId={stepId}
+    <div className="md:w-[92vw] mx-auto">
+      <Link
+        href={`/dashboard/${hackathonId}/form-editor`}
+        className="text-hkOrange"
+      >
+        <Stack direction="row" alignItems="center" spacing="small">
+          <ChevronLeftIcon className="h-5 w-5" />
+          Back to steps
+        </Stack>
+      </Link>
+      <Stack direction="row" justify="center" className="flex-wrap mt-5">
+        <Card className="w-full md:w-[60vw]">
+          <CardHeader>
+            <Stack alignItems="center">
+              <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
+              <EditTitleDialog
+                initialValue={{ title, description: description ?? "" }}
+                stepId={stepId}
+              />
+            </Stack>
+            {description && (
+              <Text>
+                <MarkDownRenderer markdown={description} />
+              </Text>
+            )}
+          </CardHeader>
+          <CardContent>
+            <Heading size="small" spaceAfter="medium">
+              Form fields
+            </Heading>
+            <FormFieldsTable
+              formFields={formFields}
+              formFieldTypes={formFieldTypes}
+              optionLists={optionLists}
+              potentialVisibilityRuleTargets={potentialVisibilityRuleTargets}
             />
-          </Stack>
-          {description && (
-            <Text>
-              <MarkDownRenderer markdown={description} />
-            </Text>
-          )}
-        </CardHeader>
-        <CardContent>
-          <Heading size="small" spaceAfter="medium">
-            Form fields
-          </Heading>
-          <FormFieldsTable
-            formFields={formFields}
-            formFieldTypes={formFieldTypes}
-            optionLists={optionLists}
-            potentialVisibilityRuleTargets={potentialVisibilityRuleTargets}
-          />
-        </CardContent>
-        <CardFooter>
-          <Stack direction="column">
+          </CardContent>
+          <CardFooter>
             <NewFieldButton
               stepId={stepId}
               formFieldTypes={formFieldTypes}
               optionLists={optionLists}
               potentialVisibilityRuleTargets={potentialVisibilityRuleTargets}
             />
-            <Button asChild variant="outline" size="small">
-              <Link href={`/dashboard/${hackathonId}/form-editor`}>
-                Back to steps
-              </Link>
-            </Button>
-          </Stack>
-        </CardFooter>
-      </Card>
-      <Card className="w-full md:w-[30%]">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold">Form preview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormPreview formFields={formFieldsForPreview} />
-        </CardContent>
-      </Card>
-    </Stack>
+          </CardFooter>
+        </Card>
+        <Card className="w-full md:w-[30vw]">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold">
+              Form preview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormPreview formFields={formFieldsForPreview} />
+          </CardContent>
+        </Card>
+      </Stack>
+    </div>
   );
 };
 

@@ -20,7 +20,7 @@ const Settings = ({
   travelReimbursementRequestDescription,
 }: SettingsProps) => {
   return (
-    <Card>
+    <Card className="md:w-[70vw] mx-auto">
       <CardHeader></CardHeader>
       <CardContent>
         <Stack direction="column">

@@ -38,7 +38,7 @@ const ApplicationFormEditor = ({
   };
 
   return (
-    <Card className="md:w-[60%] mx-auto">
+    <Card className="md:w-[70vw] mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold">
           Application Form Editor
