@@ -1,13 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/components/ApplicationDetail";
 import { Stack } from "@/components/ui/stack";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";

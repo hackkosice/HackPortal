@@ -1,20 +1,12 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import getApplicationIdForReview from "@/server/getters/dashboard/applicationReview/getApplicationIdForReview";
 import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/components/ApplicationDetail";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Stack } from "@/components/ui/stack";
 import getVoteParameters from "@/server/getters/dashboard/voteParameterManager/voteParameters";
 import VotePicker from "@/scenes/Dashboard/scenes/ApplicationReview/components/VotePicker";
-import { LogAction } from "@/services/hooks/useLog";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 type ApplicationReviewProps = {

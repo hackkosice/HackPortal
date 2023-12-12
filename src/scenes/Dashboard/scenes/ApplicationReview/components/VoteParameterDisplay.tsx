@@ -1,7 +1,6 @@
 import React from "react";
 import { VoteParameter } from "@/server/getters/dashboard/voteParameterManager/voteParameters";
 import { Stack } from "@/components/ui/stack";
-import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import Tooltip from "@/components/common/Tooltip";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
