@@ -23,6 +23,17 @@ const moveStep = async ({ stepId, direction }: MoveStepInput) => {
   const { position: currentPosition, hackathonId } = step;
   const newPosition =
     direction === "up" ? currentPosition - 1 : currentPosition + 1;
+  const stepCount = await prisma.applicationFormStep.count({
+    where: {
+      hackathonId,
+    },
+  });
+  if (newPosition <= 0) {
+    return;
+  }
+  if (newPosition > stepCount) {
+    return;
+  }
   await prisma.$transaction([
     prisma.applicationFormStep.update({
       where: {
