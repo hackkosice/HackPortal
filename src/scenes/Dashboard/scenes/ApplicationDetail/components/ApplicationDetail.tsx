@@ -18,38 +18,34 @@ const ApplicationDetail = async ({ applicationId }: ApplicationDetailProps) => {
           <Heading key={property.stepId} size="small">
             {property.stepTitle}
           </Heading>
-          {property.values.map(
-            ({ label, value, type, hasVisibilityRule, fileUrl }) => {
-              if (hasVisibilityRule && !value) return null;
-              if (type === FormFieldTypeEnum.textarea) {
-                return (
-                  <Text key={value}>
-                    <span className="font-bold">{label}</span>:<br />
-                    {value}
-                  </Text>
-                );
-              }
-              if (type === FormFieldTypeEnum.file) {
-                return (
-                  <Text key={value}>
-                    <span className="font-bold">{label}</span>:{" "}
-                    <a
-                      href={fileUrl}
-                      target="_blank"
-                      className="text-hkOrange underline"
-                    >
-                      {value}
-                    </a>
-                  </Text>
-                );
-              }
-              return (
-                <Text key={value}>
-                  <span className="font-bold">{label}</span>: {value}
-                </Text>
-              );
-            }
-          )}
+          <table>
+            <tbody>
+              {property.values.map(
+                ({ label, value, type, hasVisibilityRule, fileUrl }, index) => {
+                  if (hasVisibilityRule && !value) return null;
+                  const isLastRow = index === property.values.length - 1;
+                  const content =
+                    type === FormFieldTypeEnum.file ? (
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        className="text-hkOrange underline"
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      value
+                    );
+                  return (
+                    <tr key={value} className={!isLastRow ? "border-b-2" : ""}>
+                      <td className="font-bold max-w-[250px] pr-4 align-top">{label}</td>
+                      <td className="align-top">{content}</td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
         </>
       ))}
       <HiddenPropertiesCollapsible

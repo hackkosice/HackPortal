@@ -48,14 +48,18 @@ const VotePicker = ({ voteParameters, applicationId }: VotePickerProps) => {
   };
   return (
     <Stack direction="column">
-      {voteParameters.map((voteParameter) => (
-        <VoteParameterDisplay
-          key={voteParameter.id}
-          voteParameter={voteParameter}
-          selectedValue={selectedValues[voteParameter.id]}
-          onValueSelect={(value) => onValueSelect(voteParameter.id, value)}
-        />
-      ))}
+      <table>
+        <tbody>
+          {voteParameters.map((voteParameter) => (
+            <VoteParameterDisplay
+              key={voteParameter.id}
+              voteParameter={voteParameter}
+              selectedValue={selectedValues[voteParameter.id]}
+              onValueSelect={(value) => onValueSelect(voteParameter.id, value)}
+            />
+          ))}
+        </tbody>
+      </table>
       {isVoteValid && <Button onClick={onSaveClick}>Save vote</Button>}
     </Stack>
   );
