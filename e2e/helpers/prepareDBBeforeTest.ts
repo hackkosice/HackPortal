@@ -104,6 +104,7 @@ export async function main(
   await prisma.organizer.create({
     data: {
       userId: userOrganizerId,
+      isAdmin: true,
     },
   });
 

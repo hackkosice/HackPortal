@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { revalidatePath } from "next/cache";
 
 type EditOptionInput = {
@@ -9,7 +9,7 @@ type EditOptionInput = {
   newValue: string;
 };
 const editOption = async ({ optionId, newValue }: EditOptionInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const { listId } = await prisma.option.update({
     select: {

@@ -4,7 +4,7 @@ import { prisma } from "@/services/prisma";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 import { revalidatePath } from "next/cache";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type NewFormFieldInput = {
   stepId: number;
@@ -34,7 +34,7 @@ const createNewFormField = async ({
   shouldBeShownInList,
   visibilityRule,
 }: NewFormFieldInput) => {
-  await requireOrganizerSession();
+  await requireAdminSession();
 
   const lastFormField = await prisma.formField.findFirst({
     where: {

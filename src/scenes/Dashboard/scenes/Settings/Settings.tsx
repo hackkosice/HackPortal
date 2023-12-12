@@ -5,19 +5,22 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Stack } from "@/components/ui/stack";
-import fixFormFieldPositions from "@/server/actions/dashboard/applicationFormEditor/fixFormFieldPositions";
 import TravelReimbursementRequestDescriptionDialog from "@/scenes/Dashboard/scenes/Settings/components/TravelReimbursementRequestDescriptionDialog";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { Heading } from "@/components/ui/heading";
+import { GetAdminInfoData } from "@/server/getters/dashboard/settings/adminInfo";
+import AdminManager from "@/scenes/Dashboard/scenes/Settings/components/AdminManager";
 
 type SettingsProps = {
   hackathonId: number;
   travelReimbursementRequestDescription: string | null;
+  adminInfo: GetAdminInfoData;
 };
 
 const Settings = ({
   hackathonId,
   travelReimbursementRequestDescription,
+  adminInfo,
 }: SettingsProps) => {
   return (
     <Card className="md:w-[70vw] mx-auto">
@@ -32,9 +35,6 @@ const Settings = ({
               Manage vote parameters
             </Link>
           </Button>
-          <Button onClick={async () => await fixFormFieldPositions()}>
-            Fix form fields
-          </Button>
           <Heading size="small">
             Travel reimbursement request description
           </Heading>
@@ -47,6 +47,7 @@ const Settings = ({
             initialDescription={travelReimbursementRequestDescription}
             hackathonId={hackathonId}
           />
+          <AdminManager adminInfo={adminInfo} hackathonId={hackathonId} />
         </Stack>
       </CardContent>
     </Card>

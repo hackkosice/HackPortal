@@ -2,6 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import { revalidatePath } from "next/cache";
+import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 
 type MoveFormFieldInput = {
   formFieldId: number;
@@ -11,6 +12,7 @@ const moveFormField = async ({
   formFieldId,
   direction,
 }: MoveFormFieldInput) => {
+  await requireAdminSession();
   const formField = await prisma.formField.findUnique({
     where: {
       id: formFieldId,
