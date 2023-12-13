@@ -3,7 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/services/prisma";
 import { redirect } from "next/navigation";
 
-const requireOrganizer = async () => {
+const requireHacker = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -12,7 +12,7 @@ const requireOrganizer = async () => {
 
   const user = await prisma.user.findFirst({
     select: {
-      organizer: true,
+      hacker: true,
       accounts: {
         select: {
           id: true,
@@ -28,13 +28,13 @@ const requireOrganizer = async () => {
     redirect("/application");
   }
 
-  if (!user.organizer) {
+  if (!session.emailVerified) {
     redirect("/application");
   }
 
-  if (!session.emailVerified) {
-    redirect("/org-verify-email");
+  if (!user.hacker) {
+    redirect("/application");
   }
 };
 
-export default requireOrganizer;
+export default requireHacker;
