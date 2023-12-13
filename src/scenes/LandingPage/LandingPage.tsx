@@ -13,7 +13,7 @@ import LandingPageActionButton from "@/scenes/LandingPage/components/LandingPage
 const LandingPage = async () => {
   const { title, description, ctaContent } = await getLandingPageInfo();
   return (
-    <Card className="m-auto">
+    <Card className="mx-auto mt-navbarHeightOffsetMobile my-0 mb-20 md:my-auto">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
