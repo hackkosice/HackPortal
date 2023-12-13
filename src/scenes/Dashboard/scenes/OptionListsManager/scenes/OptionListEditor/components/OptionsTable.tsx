@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { OptionList } from "@/server/getters/dashboard/optionListManager/getOptionList";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/text";
 import createNewOptions from "@/server/actions/dashboard/optionListManager/createNewOptions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { VirtualizedDataTable } from "@/components/ui/virtualized-data-table";
 
 type OptionListsTableProps = {
   optionList: OptionList;
@@ -189,7 +189,7 @@ const OptionsTable = ({
     <>
       <Stack direction="column" className="md:flex-row">
         <div className="md:w-[500px]">
-          <DataTable
+          <VirtualizedDataTable
             columns={columns}
             data={options}
             shouldHaveFiltering
