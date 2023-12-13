@@ -25,13 +25,17 @@ const ApplicationsList = async ({ hackathonId }: ApplicationsListProps) => {
             </Link>
           </Button>
           <Stack direction="column">
-            <ApplicationsTable
-              hackathonId={hackathonId}
-              applicationValues={applications.map(
-                (application) => application.properties
-              )}
-              applications={applications}
-            />
+            {applications.length > 0 ? (
+              <ApplicationsTable
+                hackathonId={hackathonId}
+                applicationValues={applications.map(
+                  (application) => application.properties
+                )}
+                applications={applications}
+              />
+            ) : (
+              "No applications yet"
+            )}
           </Stack>
         </Stack>
       </CardContent>
