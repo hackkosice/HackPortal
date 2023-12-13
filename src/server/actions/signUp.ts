@@ -40,8 +40,9 @@ const signUp = async ({ email, password }: SignUpInput) => {
   const isOrganizer =
     email.endsWith("@hackkosice.com") || email.endsWith("@hackslovakia.com");
   if (isOrganizer) {
+    const organizers = await prisma.organizer.findMany();
     await prisma.organizer.create({
-      data: { userId: newUser.id },
+      data: { userId: newUser.id, isAdmin: organizers.length === 0 },
     });
   }
 
