@@ -7,6 +7,10 @@ import { Heading } from "@/components/ui/heading";
 import LocalApplicationDataSync from "@/scenes/Application/components/ApplicationForm/components/LocalApplicationDataSync";
 import LogMount from "@/components/common/LogMount";
 import { LogAction } from "@/services/hooks/useLog";
+import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import Link from "next/link";
 
 type ApplicationStepsProps = {
   hackathonId: number;
@@ -66,6 +70,21 @@ const ApplicationFormSteps = async ({
                     />
                   </Stack>
                 </div>
+              )}
+              {data.application.status === ApplicationStatusEnum.confirmed && (
+                <Stack
+                  className="mx-auto w-[90vw]"
+                  alignItems="center"
+                  direction="column"
+                >
+                  <Text>
+                    Use this button to show the check-in code to the organizer
+                    when you arrive at the venue:
+                  </Text>
+                  <Button asChild>
+                    <Link href="/check-in">Show checkin code</Link>
+                  </Button>
+                </Stack>
               )}
             </Stack>
           </>

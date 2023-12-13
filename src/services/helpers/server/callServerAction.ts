@@ -3,20 +3,27 @@
 import * as Sentry from "@sentry/nextjs";
 import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
-type ServerActionReturn = {
-  message: string;
-  success: boolean;
-};
+type ServerActionReturn<TReturn> =
+  | {
+      message: string;
+      success: true;
+      data: TReturn;
+    }
+  | {
+      message: string;
+      success: false;
+    };
 
 const callServerAction = async <TData, TReturn>(
   action: (data: TData) => Promise<TReturn>,
   data: TData
-): Promise<ServerActionReturn> => {
+): Promise<ServerActionReturn<TReturn>> => {
   try {
-    await action(data);
+    const returnedData = await action(data);
     return {
       message: "ok",
       success: true,
+      data: returnedData,
     };
   } catch (error) {
     if (error instanceof ExpectedServerActionError) {

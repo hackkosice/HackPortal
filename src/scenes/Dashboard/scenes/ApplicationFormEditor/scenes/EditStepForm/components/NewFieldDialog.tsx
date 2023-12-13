@@ -50,6 +50,7 @@ const newFieldFormSchema = z.object({
   newOptionListName: z.string().min(1).optional(),
   required: z.boolean().optional(),
   shouldBeShownInList: z.boolean().optional(),
+  shouldBeShownInCheckin: z.boolean().optional(),
   shouldHaveVisibilityRule: z.boolean().optional(),
   visibilityRuleTargetFormFieldId: z.string().min(1).optional(),
   visibilityRuleTargetOptionId: z.string().min(1).optional(),
@@ -133,6 +134,7 @@ const NewFieldDialog = ({
     optionListId,
     newOptionListName,
     shouldBeShownInList,
+    shouldBeShownInCheckin,
     description,
     shouldHaveVisibilityRule,
     visibilityRuleTargetFormFieldId,
@@ -142,24 +144,27 @@ const NewFieldDialog = ({
       setSubmitError("Required fields cannot have visibility rules.");
       return;
     }
+    const payload = {
+      label,
+      name: createName(label),
+      typeId: Number(typeId),
+      required: Boolean(required),
+      optionListId: optionListId ? Number(optionListId) : undefined,
+      newOptionListName: optionListId === "new" ? newOptionListName : undefined,
+      description: description === "" ? undefined : description,
+      shouldBeShownInList,
+      shouldBeShownInCheckin,
+      visibilityRule: shouldHaveVisibilityRule
+        ? {
+            targetId: Number(visibilityRuleTargetFormFieldId),
+            optionId: Number(visibilityRuleTargetOptionId),
+          }
+        : undefined,
+    };
     if (mode === "edit" && formFieldId) {
       const res = await callServerAction(editFormField, {
         formFieldId,
-        label,
-        name: createName(label),
-        typeId: Number(typeId),
-        required: Boolean(required),
-        optionListId: optionListId ? Number(optionListId) : undefined,
-        newOptionListName:
-          optionListId === "new" ? newOptionListName : undefined,
-        description: description === "" ? undefined : description,
-        shouldBeShownInList,
-        visibilityRule: shouldHaveVisibilityRule
-          ? {
-              targetId: Number(visibilityRuleTargetFormFieldId),
-              optionId: Number(visibilityRuleTargetOptionId),
-            }
-          : undefined,
+        ...payload,
       });
       if (!res.success) {
         setSubmitError(res.message);
@@ -167,22 +172,8 @@ const NewFieldDialog = ({
       }
     } else if (mode === "create" && stepId) {
       const res = await callServerAction(createNewFormField, {
-        label,
-        name: createName(label),
         stepId,
-        typeId: Number(typeId),
-        required: Boolean(required),
-        optionListId: optionListId ? Number(optionListId) : undefined,
-        newOptionListName:
-          optionListId === "new" ? newOptionListName : undefined,
-        description: description === "" ? undefined : description,
-        shouldBeShownInList,
-        visibilityRule: shouldHaveVisibilityRule
-          ? {
-              targetId: Number(visibilityRuleTargetFormFieldId),
-              optionId: Number(visibilityRuleTargetOptionId),
-            }
-          : undefined,
+        ...payload,
       });
       if (!res.success) {
         setSubmitError(res.message);
@@ -373,6 +364,30 @@ const NewFieldDialog = ({
                       </FormControl>
                       <FormLabel className="ml-1 !mt-0 cursor-pointer">
                         Should be shown in application list and detail
+                      </FormLabel>
+                    </span>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shouldBeShownInCheckin"
+                render={({ field }) => (
+                  <FormItem>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Should be shown when checking in
                       </FormLabel>
                     </span>
                     <FormMessage />

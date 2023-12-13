@@ -42,7 +42,27 @@ const getHackerForActiveHackathonFromSession =
     }
 
     const userId = session.id;
-    const email = session.user?.email;
+    const user = await prisma.user.findUnique({
+      select: {
+        email: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      return {
+        hackathonId,
+        hackerId: null,
+        applicationId: null,
+        signedIn: false,
+        emailVerified: false,
+        redirectToOrganizer: false,
+      };
+    }
+
+    const email = user.email;
+
     if (
       email &&
       (email.endsWith("@hackkosice.com") || email.endsWith("@hackslovakia.com"))
