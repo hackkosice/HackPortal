@@ -15,10 +15,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import {
-  ApplicationData,
-  ApplicationProperty,
-} from "@/server/getters/dashboard/applicationList";
+import { ApplicationProperty } from "@/server/getters/dashboard/applicationList";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -46,9 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
-import inviteHacker from "@/server/actions/dashboard/inviteHacker";
 import { ArrowsUpDownIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { ApplicationScore } from "@/server/services/helpers/applications/calculateApplicationScore";
 import Tooltip from "@/components/common/Tooltip";
 import InviteHackerButton from "@/scenes/Dashboard/scenes/ApplicationDetail/components/InviteHackerButton";
 import RejectHackerButton from "@/scenes/Dashboard/scenes/ApplicationDetail/components/RejectHackerButton";

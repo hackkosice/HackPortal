@@ -5,7 +5,6 @@ import ApplicationDetail from "@/scenes/Dashboard/scenes/ApplicationDetail/compo
 import { Stack } from "@/components/ui/stack";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Heading } from "@/components/ui/heading";
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import getApplicationMetadata from "@/server/getters/dashboard/applicationMetadata";
 import InviteHackerButton from "@/scenes/Dashboard/scenes/ApplicationDetail/components/InviteHackerButton";
