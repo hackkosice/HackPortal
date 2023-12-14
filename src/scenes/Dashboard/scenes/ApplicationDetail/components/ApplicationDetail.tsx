@@ -2,7 +2,7 @@ import React from "react";
 import getApplicationDetail from "@/server/getters/dashboard/applicationDetail";
 import { Stack } from "@/components/ui/stack";
 import { Heading } from "@/components/ui/heading";
-import HiddenPropertiesCollapsible from "@/scenes/Dashboard/scenes/ApplicationDetail/components/components/HiddenPropertiesCollapsible";
+import HiddenPropertiesCollapsible from "@/scenes/Dashboard/scenes/ApplicationDetail/components/HiddenPropertiesCollapsible";
 import { FormFieldTypeEnum } from "@/services/types/formFields";
 
 type ApplicationDetailProps = {
