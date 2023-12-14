@@ -2,17 +2,23 @@
 
 import React, { useEffect, useMemo } from "react";
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  Row,
+  SortingState,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ApplicationData } from "@/server/getters/dashboard/applicationList";
-import { ApplicationFormValuesObject } from "@/server/services/helpers/applications/createFormValuesObject";
+import {
+  ApplicationData,
+  ApplicationProperty,
+} from "@/server/getters/dashboard/applicationList";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -20,7 +26,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -40,38 +45,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  ApplicationStatus,
-  ApplicationStatusEnum,
-} from "@/services/types/applicationStatus";
+import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
 import inviteHacker from "@/server/actions/dashboard/inviteHacker";
+import { ArrowsUpDownIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ApplicationScore } from "@/server/services/helpers/applications/calculateApplicationScore";
+import Tooltip from "@/components/common/Tooltip";
+import InviteHackerButton from "@/scenes/Dashboard/scenes/ApplicationDetail/components/InviteHackerButton";
+import RejectHackerButton from "@/scenes/Dashboard/scenes/ApplicationDetail/components/RejectHackerButton";
 
 const ActionsCell = ({
-  applicationValues,
+  applicationProperties,
 }: {
-  applicationValues: ApplicationFormValuesObject;
+  applicationProperties: ApplicationProperty;
 }) => {
-  const applicationStatus = applicationValues["status"] as ApplicationStatus;
   return (
     <Stack>
       <Link
-        href={`applications/${applicationValues.id}/detail`}
+        href={`applications/${applicationProperties.id}/detail`}
         className="text-hkOrange"
       >
         Details
       </Link>
-      {applicationStatus === ApplicationStatusEnum.submitted && (
-        <Button
-          variant="link"
-          onClick={async () => {
-            await inviteHacker({
-              hackerId: Number(applicationValues["hackerId"] as string),
-            });
-          }}
-          className="hover:no-underline"
-        >
-          Invite
-        </Button>
+      {applicationProperties.status === ApplicationStatusEnum.submitted && (
+        <>
+          <InviteHackerButton
+            hackerId={applicationProperties.hackerId}
+            hackerEmail={applicationProperties.email}
+            variant="text"
+          />
+          <RejectHackerButton
+            hackerId={applicationProperties.hackerId}
+            hackerEmail={applicationProperties.email}
+            variant="text"
+          />
+        </>
       )}
     </Stack>
   );
@@ -79,43 +86,89 @@ const ActionsCell = ({
 
 type ApplicationsTableProps = {
   hackathonId: number;
-  applicationValues: ApplicationFormValuesObject[];
-  applications: ApplicationData[];
+  applicationProperties: ApplicationProperty[];
 };
 const ApplicationsTable = ({
   hackathonId,
-  applicationValues,
-  applications,
+  applicationProperties,
 }: ApplicationsTableProps) => {
-  const columns: ColumnDef<ApplicationFormValuesObject>[] = useMemo(
+  const columns: ColumnDef<ApplicationProperty>[] = useMemo(
     () => [
-      ...Object.keys(applications[0].properties).map((key) => ({
-        header: key,
-        accessorKey: key,
+      ...Object.keys(applicationProperties[0]).map((key) => ({
+        header: ({ column }: { column: Column<ApplicationProperty> }) => {
+          if (!["score", "status", "team"].includes(key)) {
+            return key;
+          }
+          return (
+            <Button
+              variant="link"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+              className="text-slate-500"
+            >
+              {key}
+              <ArrowsUpDownIcon className="ml-1 h-4 w-4" />
+            </Button>
+          );
+        },
+        id: key,
+        accessorKey: key === "score" ? "score.score" : key,
+        cell: ({ row }: { row: Row<ApplicationProperty> }) => {
+          if (key === "score") {
+            const score = row.original.score;
+            const status = row.original.status;
+            if (status === ApplicationStatusEnum.open) {
+              return null;
+            }
+            return (
+              <Tooltip
+                trigger={
+                  <span
+                    className="cursor-pointer"
+                    style={{
+                      color: score.relevance.color,
+                    }}
+                  >
+                    {score.score}
+                  </span>
+                }
+                content={`${score.relevance.value} relevance (${
+                  score.numberOfVotes
+                } ${score.numberOfVotes === 1 ? "vote" : "votes"})`}
+              />
+            );
+          }
+          return <span>{row.original[key] as string | null}</span>;
+        },
       })),
       {
         id: "Actions",
-        cell: ({ row }) => <ActionsCell applicationValues={row.original} />,
+        cell: ({ row }) => <ActionsCell applicationProperties={row.original} />,
       },
     ],
-    [applications]
+    [applicationProperties]
   );
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [filterValue, setFilterValue] = React.useState<string>("all");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const table = useReactTable({
-    data: applicationValues,
+    data: applicationProperties,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       columnVisibility,
       columnFilters,
+      sorting,
     },
     onColumnVisibilityChange: setColumnVisibility,
   });
@@ -189,7 +242,7 @@ const ApplicationsTable = ({
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
                 Columns
-                <ChevronDown className="ml-2" />
+                <ChevronDownIcon className="ml-2 w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

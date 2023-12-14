@@ -38,7 +38,10 @@ const rejectHacker = async ({ hackerId }: RejectHackerInput) => {
     throw new Error("Application invited status doesn't exist");
   }
 
-  await prisma.application.update({
+  const application = await prisma.application.update({
+    select: {
+      id: true,
+    },
     data: {
       statusId: statusRejected.id,
     },
@@ -52,6 +55,10 @@ const rejectHacker = async ({ hackerId }: RejectHackerInput) => {
   });
 
   revalidatePath(`/dashboard/${hacker.hackathonId}/applications`, "page");
+  revalidatePath(
+    `/dashboard/${hacker.hackathonId}/applications/${application.id}/detail`,
+    "page"
+  );
   revalidatePath("/application", "page");
 };
 

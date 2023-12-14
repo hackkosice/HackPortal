@@ -1,15 +1,25 @@
-import createFormValuesObject, {
-  ApplicationFormValuesObject,
-} from "@/server/services/helpers/applications/createFormValuesObject";
+import createFormValuesObject from "@/server/services/helpers/applications/createFormValuesObject";
 import { prisma } from "@/services/prisma";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 import { ApplicationStatus } from "@/services/types/applicationStatus";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
-import calculateApplicationScore from "@/server/services/helpers/applications/calculateApplicationScore";
+import calculateApplicationScore, {
+  ApplicationScore,
+} from "@/server/services/helpers/applications/calculateApplicationScore";
+
+export type ApplicationProperty = {
+  [key: string]: string | null | ApplicationScore | number | ApplicationStatus;
+} & {
+  id: number;
+  hackerId: number;
+  email: string;
+  score: ApplicationScore;
+  status: ApplicationStatus;
+};
 
 export type ApplicationData = {
-  properties: ApplicationFormValuesObject;
+  properties: ApplicationProperty;
 };
 export type ApplicationListData = {
   applications: ApplicationData[];
@@ -23,7 +33,21 @@ const getApplicationsList = async (
   const applicationsDb = await prisma.application.findMany({
     select: {
       id: true,
-      hackerId: true,
+      hacker: {
+        select: {
+          id: true,
+          team: {
+            select: {
+              name: true,
+            },
+          },
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
       status: {
         select: {
           name: true,
@@ -94,17 +118,28 @@ const getApplicationsList = async (
 
   const applications = applicationsDb.map((application) => ({
     properties: {
+      id: application.id,
+      hackerId: application.hacker.id,
+      email: application.hacker.user.email,
       ...createFormValuesObject(application.formValues, formFields),
-      id: application.id.toString(),
-      hackerId: application.hackerId.toString(),
-      score: calculateApplicationScore({ votes: application.votes }).toString(),
-      team: null,
+      score: calculateApplicationScore({ votes: application.votes }),
+      team: application.hacker.team?.name ?? "",
       status: application.status.name as ApplicationStatus,
     },
   }));
 
+  const applicationsSorted = applications.sort((a, b) => {
+    if (a.properties.score > b.properties.score) {
+      return -1;
+    }
+    if (a.properties.score < b.properties.score) {
+      return 1;
+    }
+    return 0;
+  });
+
   return {
-    applications,
+    applications: applicationsSorted,
   };
 };
 
