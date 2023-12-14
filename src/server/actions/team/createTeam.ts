@@ -10,6 +10,10 @@ type CreateTeamInput = {
   name: string;
 };
 const createTeam = async ({ name }: CreateTeamInput) => {
+  if (name.length > 20) {
+    throw new ExpectedServerActionError("Team name too long");
+  }
+
   const { id: hackerId } = await requireHackerSession();
 
   const existingTeam = await prisma.team.findFirst({

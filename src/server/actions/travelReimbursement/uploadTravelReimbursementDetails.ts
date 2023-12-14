@@ -14,6 +14,10 @@ const uploadTravelReimbursementDetails = async ({
   fileName,
   financialDetails,
 }: UploadTravelReimbursementDetailsInput) => {
+  if (financialDetails.length > 50) {
+    throw new Error("Financial details too long");
+  }
+
   const { id: hackerId } = await requireHackerSession();
   const travelReimbursementRequest =
     await prisma.travelReimbursementRequest.findUnique({
