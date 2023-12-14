@@ -32,7 +32,7 @@ import callServerAction from "@/services/helpers/server/callServerAction";
 import useLog, { LogAction } from "@/services/hooks/useLog";
 
 const newTeamFormSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).max(20),
 });
 
 type NewTeamForm = z.infer<typeof newTeamFormSchema>;

@@ -43,7 +43,7 @@ const reimbursementDetailsSchema = z.object({
     .refine((v) => v.type === "application/pdf", {
       message: "Only PDF files are allowed",
     }),
-  financialDetails: z.string().min(1),
+  financialDetails: z.string().min(1).max(50),
 });
 
 type ReimbursementDetailsForm = z.infer<typeof reimbursementDetailsSchema>;

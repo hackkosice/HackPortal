@@ -51,6 +51,9 @@ const saveFormFieldValue = async ({
     case FormFieldTypeEnum.text:
     case FormFieldTypeEnum.textarea:
     case FormFieldTypeEnum.checkbox: {
+      if (fieldValue.value.length > 1000) {
+        throw new Error("Field value too long");
+      }
       await saveValue(applicationId, fieldValue.fieldId, {
         value: fieldValue.value,
       });
