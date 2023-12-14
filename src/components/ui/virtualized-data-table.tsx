@@ -138,7 +138,7 @@ export function VirtualizedDataTable<TData, TValue>({
                     transform: `translateY(${virtualItem.start}px)`,
                   }}
                 >
-                  {row.getVisibleCells().map((cell, index) => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-2 text-left">
                       {flexRender(
                         cell.column.columnDef.cell,
