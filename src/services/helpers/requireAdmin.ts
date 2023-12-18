@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 const requireAdmin = async () => {
   await requireOrganizer();
 
+  // Session is guaranteed to exist at this point thanks to requireOrganizer
   const session = (await getServerSession(authOptions)) as Session;
   if (!session.isAdmin) {
     redirect("/dashboard");

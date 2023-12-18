@@ -8,6 +8,7 @@ const requireOrganizer = async () => {
 
   if (!session) {
     redirect("/application");
+    return;
   }
 
   const user = await prisma.user.findFirst({
@@ -26,14 +27,17 @@ const requireOrganizer = async () => {
 
   if (!user) {
     redirect("/application");
+    return;
   }
 
   if (!user.organizer) {
     redirect("/application");
+    return;
   }
 
   if (!session.emailVerified) {
     redirect("/org-verify-email");
+    return;
   }
 };
 

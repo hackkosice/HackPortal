@@ -8,6 +8,11 @@ jobs:
   jest-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_R2_BUCKET_NAME: test-value
+      CLOUDFLARE_R2_ACCOUNT_ID: test-value
+      CLOUDFLARE_R2_ACCESS_KEY_ID: test-value
+      CLOUDFLARE_R2_SECRET_ACCESS_KEY: test-value
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3

@@ -8,16 +8,12 @@ const requireHacker = async () => {
 
   if (!session) {
     redirect("/application");
+    return;
   }
 
   const user = await prisma.user.findFirst({
     select: {
       hacker: true,
-      accounts: {
-        select: {
-          id: true,
-        },
-      },
     },
     where: {
       id: session.id,
@@ -26,14 +22,17 @@ const requireHacker = async () => {
 
   if (!user) {
     redirect("/application");
+    return;
   }
 
   if (!session.emailVerified) {
     redirect("/application");
+    return;
   }
 
   if (!user.hacker) {
     redirect("/application");
+    return;
   }
 };
 

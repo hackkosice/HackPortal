@@ -10,7 +10,10 @@ const createJestConfig = nextJest({
 /** @type {import('jest').Config} */
 const config = {
   // Add more setup options before each test is run
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: [
+    "<rootDir>/jest.setup.js",
+    "<rootDir>/src/services/jest/prisma-singleton.ts",
+  ],
   testEnvironment: "jest-environment-jsdom",
   testMatch: [
     "**/__tests__/**/*.+(ts|tsx|js)",
@@ -24,12 +27,17 @@ const config = {
     "!**/*.d.ts",
     "!**/node_modules/**",
     "!src/services/emails/types/**/*.{ts,tsx}",
+    "!src/services/jest/**/*.{ts,tsx}",
+    "!src/services/types/**/*.{ts,tsx}",
   ],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
   coverageThreshold: {
     global: {
-      branches: 4,
-      functions: 4,
-      lines: 4,
+      branches: 15,
+      functions: 15,
+      lines: 15,
     },
   },
 };
