@@ -466,11 +466,24 @@ export class DashboardPage {
     await expect(this.page.getByText(name, { exact: true })).not.toBeVisible();
   }
 
-  async signOut() {
-    await this.page.getByRole("button", { name: "Sign out" }).click();
+  async openTravelReimbursementRequests() {
+    await this.page.getByRole("tab", { name: "Travel reimbursements" }).click();
 
     await expect(
-      this.page.getByRole("heading", { name: "Sign in" })
+      this.page.getByRole("heading", {
+        name: "Travel reimbursement requests to review",
+      })
+    ).toBeVisible();
+  }
+
+  async openApplicationReview() {
+    await this.page.getByRole("tab", { name: "Applications" }).click();
+    await this.page.getByRole("link", { name: "Review applications" }).click();
+
+    await expect(
+      this.page.getByRole("heading", {
+        name: "Application detail",
+      })
     ).toBeVisible();
   }
 }

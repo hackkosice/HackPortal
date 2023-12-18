@@ -25,6 +25,7 @@ async function clearDb(prisma: PrismaClient) {
 
 type Options = {
   numberOfHackers?: number;
+  numberOfOrganizers?: number;
 };
 export async function main(
   prisma: PrismaClient,
@@ -38,6 +39,7 @@ export async function main(
     data: {
       name: "Hack Kosice TEST",
       description: "Hack Kosice TEST",
+      travelReimbursementDescription: "Hack Kosice TEST reimbursement info",
       applicationStartDate: new Date(new Date().getTime() - DAY),
       applicationEndDate: new Date(new Date().getTime() + 30 * DAY),
       eventStartDate: new Date(new Date().getTime() + 31 * DAY),
@@ -100,6 +102,25 @@ export async function main(
       emailVerified: true,
     },
   });
+
+  if (options.numberOfOrganizers && options.numberOfOrganizers > 1) {
+    for (let i = 0; i < options.numberOfOrganizers - 1; i++) {
+      const { id: userId } = await prisma.user.create({
+        data: {
+          email: `test-org-${i + 2}@test.com`,
+          password: await hash("test123456"),
+          emailVerified: true,
+        },
+      });
+
+      await prisma.organizer.create({
+        data: {
+          userId,
+          isAdmin: false,
+        },
+      });
+    }
+  }
 
   await prisma.organizer.create({
     data: {
