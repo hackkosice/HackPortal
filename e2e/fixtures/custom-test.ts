@@ -14,8 +14,6 @@ export const test = base.extend<CustomFixtures>({
     await dashboardPage.goto();
 
     await use(dashboardPage);
-
-    // await dashboardPage.signOut();
   },
   applicationPage: async ({ page, isMobile }, use) => {
     const applicationPage = new ApplicationPage(page, isMobile);
