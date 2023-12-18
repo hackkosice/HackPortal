@@ -9,7 +9,6 @@ import getStepDataForForm, {
 import getPresignedDownloadUrl from "@/services/fileUpload/getPresignedDownloadUrl";
 
 export type ApplicationFormStepData = {
-  message: string;
   signedIn: boolean;
   data: {
     title: string;
@@ -34,7 +33,6 @@ const getApplicationFormStep = async (
   // If user is not signed in return steps with empty initial values
   if (!session?.id) {
     return {
-      message: "Steps found",
       signedIn: false,
       data: stepFormFields,
     };
@@ -121,7 +119,6 @@ const getApplicationFormStep = async (
   );
 
   return {
-    message: "Steps found",
     signedIn: true,
     data: {
       title: stepFormFields.title,

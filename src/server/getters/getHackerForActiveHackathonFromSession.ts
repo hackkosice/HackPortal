@@ -4,7 +4,7 @@ import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 import { prisma } from "@/services/prisma";
 import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
 
-type HackerFromSessionData = {
+export type HackerFromSessionData = {
   hackathonId: number | null;
   hackerId: number | null;
   applicationId: number | null;

@@ -14,5 +14,6 @@ export type LocalApplicationData = LocalApplicationFieldData[];
 export type LocalApplicationFieldDataParsed = {
   fieldId: number;
   fieldType: FormFieldType;
+  stepId: number;
   value: string | boolean;
 };

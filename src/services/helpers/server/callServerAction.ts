@@ -33,7 +33,6 @@ const callServerAction = async <TData, TReturn>(
       };
     }
     if (process.env.NEXT_PUBLIC_SENTRY_ENABLED === "true") {
-      console.log("Sentry error", error);
       Sentry.captureException(error);
     }
     return {

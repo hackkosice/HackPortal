@@ -89,7 +89,7 @@ const ApplicationsTable = ({
 }: ApplicationsTableProps) => {
   const columns: ColumnDef<ApplicationProperty>[] = useMemo(
     () => [
-      ...Object.keys(applicationProperties[0]).map((key) => ({
+      ...Object.keys(applicationProperties[0] ?? {}).map((key) => ({
         header: ({ column }: { column: Column<ApplicationProperty> }) => {
           if (!["score", "status", "team"].includes(key)) {
             return key;
