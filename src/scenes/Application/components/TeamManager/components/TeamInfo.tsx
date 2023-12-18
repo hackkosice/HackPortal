@@ -75,6 +75,10 @@ const getTeamMembersColumns = (
         );
       },
     },
+    {
+      header: "Application status",
+      accessorKey: "applicationStatus",
+    },
   ];
   if (isOwnerSession) {
     columns.push({
