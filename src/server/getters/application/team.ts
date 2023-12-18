@@ -17,11 +17,17 @@ export type TeamData = {
   code: string;
   members: TeamMemberData[];
 };
-export type GetTeamData = {
-  status: "not_signed_in" | "unverified_email" | "success";
-  team: TeamData | null;
-  isOwnerSession: boolean;
-};
+export type GetTeamData =
+  | {
+      status: "not_signed_in" | "unverified_email";
+      team: null;
+    }
+  | {
+      status: "success";
+      team: TeamData | null;
+      maxTeamSize: number;
+      isOwnerSession: boolean;
+    };
 
 type GetTeamInput = {
   hackerId: number | null;
@@ -33,19 +39,22 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
     return {
       status: "not_signed_in",
       team: null,
-      isOwnerSession: false,
     };
   }
   if (!session.emailVerified) {
     return {
       status: "unverified_email",
       team: null,
-      isOwnerSession: false,
     };
   }
   const hacker = await prisma.hacker.findUnique({
     select: {
       id: true,
+      hackathon: {
+        select: {
+          maxTeamSize: true,
+        },
+      },
       team: {
         select: {
           id: true,
@@ -88,6 +97,7 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
       status: "success",
       team: null,
       isOwnerSession: false,
+      maxTeamSize: hacker.hackathon.maxTeamSize,
     };
   }
 
@@ -110,6 +120,7 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
     status: "success",
     team,
     isOwnerSession: ownerId === hacker.id,
+    maxTeamSize: hacker.hackathon.maxTeamSize,
   };
 };
 

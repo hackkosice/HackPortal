@@ -10,17 +10,20 @@ import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { Heading } from "@/components/ui/heading";
 import { GetAdminInfoData } from "@/server/getters/dashboard/settings/adminInfo";
 import AdminManager from "@/scenes/Dashboard/scenes/Settings/components/AdminManager";
+import HackathonMaxTeamSizeDialog from "@/scenes/Dashboard/scenes/Settings/components/HackathonMaxTeamSizeDialog";
 
 type SettingsProps = {
   hackathonId: number;
   travelReimbursementRequestDescription: string | null;
   adminInfo: GetAdminInfoData;
+  maxTeamSize: number;
 };
 
 const Settings = ({
   hackathonId,
   travelReimbursementRequestDescription,
   adminInfo,
+  maxTeamSize,
 }: SettingsProps) => {
   return (
     <Card className="md:w-[70vw] mx-auto">
@@ -35,6 +38,10 @@ const Settings = ({
               Manage vote parameters
             </Link>
           </Button>
+          <HackathonMaxTeamSizeDialog
+            initialMaxTeamSize={maxTeamSize}
+            hackathonId={hackathonId}
+          />
           <Heading size="small">
             Travel reimbursement request description
           </Heading>

@@ -51,6 +51,7 @@ model Hackathon {
   name                           String                @unique
   title                          String?
   description                    String?
+  maxTeamSize                    Int                   @default(4)
   eventStartDate                 DateTime
   eventEndDate                   DateTime
   applicationStartDate           DateTime
