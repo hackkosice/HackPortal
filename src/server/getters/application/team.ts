@@ -1,12 +1,14 @@
 import { prisma } from "@/services/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { ApplicationStatus } from "@/services/types/applicationStatus";
 
 export type TeamMemberData = {
   id: number;
   email: string;
   isOwner: boolean;
   isCurrentUser: boolean;
+  applicationStatus: ApplicationStatus;
 };
 
 export type TeamData = {
@@ -53,6 +55,15 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
           members: {
             select: {
               id: true,
+              application: {
+                select: {
+                  status: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
               user: {
                 select: {
                   email: true,
@@ -91,6 +102,7 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
       email: member.user.email,
       isOwner: member.id === ownerId,
       isCurrentUser: member.id === hacker.id,
+      applicationStatus: member.application?.status.name as ApplicationStatus,
     })),
   };
 
