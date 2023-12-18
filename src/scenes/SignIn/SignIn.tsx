@@ -105,11 +105,19 @@ const SignIn = () => {
         </Form>
         <Stack direction="column" className="gap-3">
           <GithubButton
-            onClick={() => signIn("github")}
+            onClick={() =>
+              signIn("github", {
+                callbackUrl: "/application",
+              })
+            }
             content="Sign in with Github"
           />
           <GoogleButton
-            onClick={() => signIn("google")}
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/application",
+              })
+            }
             content="Sign in with Google"
           />
           <Text className="text-center">

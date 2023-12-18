@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Stack } from "@/components/ui/stack";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import signUp from "@/server/actions/signUp";
 import callServerAction from "@/services/helpers/server/callServerAction";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import GithubButton from "@/scenes/SignIn/components/SocialButtons/GithubButton";
 import GoogleButton from "@/scenes/SignIn/components/SocialButtons/GoogleButton";
 import Link from "next/link";
@@ -38,18 +37,21 @@ export const signupSchema = z.object({
       /[^a-zA-Z0-9]/,
       "Password must contain at least one special character"
     ),
-  repeatPassword: z.string().min(8),
+  repeatPassword: z.string(),
 });
 
 export type SignUpSchema = z.infer<typeof signupSchema>;
 
 const SignUp = () => {
-  const router = useRouter();
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      repeatPassword: "",
+    },
   });
   const [error, setError] = React.useState<string | null>(null);
-  const { status: sessionStatus } = useSession();
 
   const onSubmit = async (data: SignUpSchema) => {
     if (data.password !== data.repeatPassword) {
@@ -68,14 +70,9 @@ const SignUp = () => {
     await signIn("credentials", {
       email: data.email,
       password: data.password,
+      callbackUrl: "/application",
     });
   };
-
-  useEffect(() => {
-    if (sessionStatus === "authenticated") {
-      router.push("/application");
-    }
-  }, [sessionStatus, router]);
 
   return (
     <Card className="m-auto w-full md:w-[60vw]">
@@ -147,11 +144,19 @@ const SignUp = () => {
             </form>
           </Form>
           <GithubButton
-            onClick={() => signIn("github")}
+            onClick={() =>
+              signIn("github", {
+                callbackUrl: "/application",
+              })
+            }
             content="Sign up with Github"
           />
           <GoogleButton
-            onClick={() => signIn("google")}
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/application",
+              })
+            }
             content="Sign up with Google"
           />
           <Text className="text-center">
