@@ -13,10 +13,11 @@ type TeamManagerProps = {
   hackerId: number | null;
 };
 const TeamManager = async ({ hackerId }: TeamManagerProps) => {
-  const { status, team, isOwnerSession } = await getTeam({
+  const teamData = await getTeam({
     hackerId,
   });
   let teamPageContent = null;
+  const { status, team } = teamData;
   if (team === null) {
     teamPageContent = (
       <>
@@ -37,7 +38,13 @@ const TeamManager = async ({ hackerId }: TeamManagerProps) => {
       </>
     );
   } else {
-    teamPageContent = <TeamInfo team={team} isOwnerSession={isOwnerSession} />;
+    teamPageContent = (
+      <TeamInfo
+        team={team}
+        isOwnerSession={teamData.isOwnerSession}
+        maxTeamSize={teamData.maxTeamSize}
+      />
+    );
   }
 
   return (

@@ -26,6 +26,7 @@ import deleteTeam from "@/server/actions/team/deleteTeam";
 type TeamInfoProps = {
   team: TeamData;
   isOwnerSession: boolean;
+  maxTeamSize: number;
 };
 
 const ActionsCell = ({ member }: { member: TeamMemberData }) => {
@@ -94,6 +95,7 @@ const getTeamMembersColumns = (
 const TeamInfo = ({
   team: { name, code, members },
   isOwnerSession,
+  maxTeamSize,
 }: TeamInfoProps) => {
   const teamMembersColumns = useMemo(
     () => getTeamMembersColumns(isOwnerSession),
@@ -145,7 +147,9 @@ const TeamInfo = ({
             </TooltipBase>
           </TooltipProvider>
         </Stack>
-        <Text>Team members ({members.length}/4):</Text>
+        <Text>
+          Team members ({members.length}/{maxTeamSize}):
+        </Text>
         <DataTable columns={teamMembersColumns} data={members} />
       </div>
       {isOwnerSession ? (

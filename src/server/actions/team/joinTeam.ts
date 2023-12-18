@@ -9,9 +9,9 @@ type JoinTeamInput = {
   code: string;
 };
 const joinTeam = async ({ code }: JoinTeamInput) => {
-  const hacker = await requireHackerSession();
+  const { teamId, hackathonId, id: hackerId } = await requireHackerSession();
 
-  if (hacker.teamId) {
+  if (teamId) {
     throw new Error("Hacker already has a team");
   }
 
@@ -33,13 +33,26 @@ const joinTeam = async ({ code }: JoinTeamInput) => {
     throw new ExpectedServerActionError("Team not found");
   }
 
-  if (team.members.length >= 4) {
+  const hackathon = await prisma.hackathon.findUnique({
+    where: {
+      id: hackathonId,
+    },
+    select: {
+      maxTeamSize: true,
+    },
+  });
+
+  if (!hackathon) {
+    throw new Error("Hackathon not found");
+  }
+
+  if (team.members.length >= hackathon.maxTeamSize) {
     throw new ExpectedServerActionError("Team is full");
   }
 
   await prisma.hacker.update({
     where: {
-      id: hacker.id,
+      id: hackerId,
     },
     data: {
       teamId: team.id,
