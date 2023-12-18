@@ -6,12 +6,19 @@ import {
 } from "@/services/types/applicationStatus";
 import confirmAttendance from "@/server/actions/applicationForm/confirmAttendance";
 import userEvent from "@testing-library/user-event";
+import declineAttendance from "@/server/actions/applicationForm/declineAttendance";
 
 jest.mock("@/server/actions/applicationForm/confirmAttendance", () => ({
   __esModule: true,
   default: jest.fn(),
 }));
 const mockConfirmAttendance = confirmAttendance as jest.Mock;
+
+jest.mock("@/server/actions/applicationForm/declineAttendance", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+const mockDeclineAttendance = declineAttendance as jest.Mock;
 
 const renderComponent = (status: ApplicationStatus) => {
   render(<ApplicationStatusCard status={status} />);
@@ -39,7 +46,7 @@ describe("ApplicationStatusCard", () => {
     ],
     [
       ApplicationStatusEnum.declined,
-      "We are sorry to hear that you cannot attend. We hope to see you next time!",
+      "We are sorry to hear that you cannot attend. We hope to see you next time! If anything changes please let us know.",
     ],
     [
       ApplicationStatusEnum.rejected,
@@ -55,15 +62,35 @@ describe("ApplicationStatusCard", () => {
     expect(screen.getByText(text)).toBeInTheDocument();
   });
 
-  it("should render correctly for invited status", async () => {
+  it("should behave correctly for invited status", async () => {
     renderComponent(ApplicationStatusEnum.invited);
     expect(mockConfirmAttendance).not.toHaveBeenCalled();
+    expect(mockDeclineAttendance).not.toHaveBeenCalled();
     expect(
       screen.getByRole("button", { name: "Confirm attendance" })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Decline attendance" })
     ).toBeVisible();
     await userEvent.click(
       screen.getByRole("button", { name: "Confirm attendance" })
     );
+    expect(
+      screen.getByText("Are you sure you want to confirm attendance?")
+    ).toBeVisible();
+    await userEvent.click(screen.getByRole("button", { name: "Yes" }));
     expect(mockConfirmAttendance).toHaveBeenCalledTimes(1);
+    expect(mockDeclineAttendance).not.toHaveBeenCalled();
+
+    mockConfirmAttendance.mockClear();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Decline attendance" })
+    );
+    expect(
+      screen.getByText("Are you sure you want to decline attendance?")
+    ).toBeVisible();
+    await userEvent.click(screen.getByRole("button", { name: "Yes" }));
+    expect(mockConfirmAttendance).not.toHaveBeenCalled();
+    expect(mockDeclineAttendance).toHaveBeenCalledTimes(1);
   });
 });

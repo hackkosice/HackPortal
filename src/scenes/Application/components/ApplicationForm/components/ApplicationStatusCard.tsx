@@ -7,6 +7,7 @@ import { Text } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { Stack } from "@/components/ui/stack";
 import ConfirmAttendanceButton from "@/scenes/Application/components/ApplicationForm/components/ConfirmAttendanceButton";
+import DeclineAttendanceButton from "@/scenes/Application/components/ApplicationForm/components/DeclineAttendanceButton";
 
 type ApplicationStatusCardProps = {
   status: ApplicationStatus;
@@ -21,7 +22,7 @@ const ApplicationStatusDescriptions: { [key in ApplicationStatus]: string } = {
   [ApplicationStatusEnum.confirmed]:
     "Your attendance is confirmed. We are looking forward to seeing you at the event!",
   [ApplicationStatusEnum.declined]:
-    "We are sorry to hear that you cannot attend. We hope to see you next time!",
+    "We are sorry to hear that you cannot attend. We hope to see you next time! If anything changes please let us know.",
   [ApplicationStatusEnum.rejected]:
     "Unfortunately, we cannot accept your application. If you have any questions, please contact us.",
   [ApplicationStatusEnum.attended]:
@@ -33,7 +34,7 @@ const ApplicationStatusEmojis: { [key in ApplicationStatus]: string | null } = {
   [ApplicationStatusEnum.submitted]: null,
   [ApplicationStatusEnum.invited]: "🎉",
   [ApplicationStatusEnum.confirmed]: "✅",
-  [ApplicationStatusEnum.declined]: null,
+  [ApplicationStatusEnum.declined]: "😔",
   [ApplicationStatusEnum.rejected]: null,
   [ApplicationStatusEnum.attended]: "💪",
 };
@@ -49,7 +50,14 @@ const ApplicationStatusCard = ({ status }: ApplicationStatusCardProps) => {
           {ApplicationStatusDescriptions[status]}
         </Text>
         {status === ApplicationStatusEnum.invited && (
-          <ConfirmAttendanceButton />
+          <>
+            <ConfirmAttendanceButton />
+            <Text className="text-white text-sm md:text-base">
+              Alternatively, if you are sure that you cannot attend, please let
+              us know by declining your invitation using the button below.
+            </Text>
+            <DeclineAttendanceButton />
+          </>
         )}
       </Stack>
     </Card>
