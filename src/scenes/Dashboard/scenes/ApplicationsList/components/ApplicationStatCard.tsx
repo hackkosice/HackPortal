@@ -14,7 +14,7 @@ const ApplicationStatCard = ({ title, stats }: ApplicationStatCardProps) => {
         <Text className="text-sm">{title}</Text>
         <Text className="font-bold text-[2rem]">{stats.total}</Text>
         <Text className="text-xs">
-          +{stats.changeFromLastWeek}% from last week
+          +{stats.changeFromLastWeek.toFixed(2)}% from last week
         </Text>
       </Stack>
     </div>
