@@ -13,6 +13,8 @@ import ReimbursementAmountDialog from "@/scenes/Dashboard/scenes/TravelReimburse
 import approveTravelDocuments from "@/server/actions/travelReimbursement/approveTravelDocuments";
 import rejectTravelDocuments from "@/server/actions/travelReimbursement/rejectTravelDocuments";
 import confirmPaymentOfReimbursement from "@/server/actions/travelReimbursement/confirmPaymentOfReimbursement";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 type ActionType =
   | "review"
@@ -130,6 +132,7 @@ const TravelReimbursementRequestTable = ({
   requests,
   actionType,
 }: TravelReimbursementRequestReviewTableProps) => {
+  const params = useParams();
   const columns = useMemo(
     () =>
       [
@@ -140,6 +143,23 @@ const TravelReimbursementRequestTable = ({
         {
           header: "Hacker email",
           accessorKey: "hackerEmail",
+        },
+        {
+          header: "Application Status",
+          accessorKey: "applicationStatus",
+        },
+        {
+          header: "Application",
+          cell: ({ row }) => {
+            return (
+              <Link
+                className="text-hkOrange"
+                href={`/dashboard/${params.hackathonId}/applications/${row.original.applicationId}/detail`}
+              >
+                Detail
+              </Link>
+            );
+          },
         },
         {
           header: "Country",
@@ -192,7 +212,7 @@ const TravelReimbursementRequestTable = ({
           },
         },
       ] as ColumnDef<TravelReimbursementRequest>[],
-    [actionType]
+    [params, actionType]
   );
   return <DataTable columns={columns} data={requests} />;
 };

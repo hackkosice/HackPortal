@@ -6,6 +6,7 @@ import {
 import { prisma } from "@/services/prisma";
 import TravelReimbursementRequest from "@/server/getters/application/travelReimbursementRequest";
 import getPresignedDownloadUrl from "@/services/fileUpload/getPresignedDownloadUrl";
+import { ApplicationStatus } from "@/services/types/applicationStatus";
 
 export type TravelReimbursementRequest = {
   id: number;
@@ -15,6 +16,8 @@ export type TravelReimbursementRequest = {
   travelDocumentFileLink: string | null;
   approvedAmount: number | null;
   financialDetails: string | null;
+  applicationStatus: ApplicationStatus;
+  applicationId: number;
 };
 
 type TravelReimbursementRequestsLists = {
@@ -52,6 +55,16 @@ const getTravelReimbursementsLists = async (
                 email: true,
               },
             },
+            application: {
+              select: {
+                status: {
+                  select: {
+                    name: true,
+                  },
+                },
+                id: true,
+              },
+            },
           },
         },
         proofOfTravelFile: {
@@ -67,19 +80,23 @@ const getTravelReimbursementsLists = async (
       },
     });
 
-  const travelReimbursementRequests = await Promise.all(
-    travelReimbursementRequestsDb.map(async (request) => ({
-      id: request.id,
-      financialDetails: request.financialDetails,
-      approvedAmount: request.approvedAmount,
-      countryOfTravel: request.countryOfTravel,
-      hackerEmail: request.hacker.user.email,
-      travelDocumentFileLink: request.proofOfTravelFile?.path
-        ? await getPresignedDownloadUrl(request.proofOfTravelFile.path)
-        : null,
-      status: request.status.name as TravelReimbursementRequestStatus,
-    }))
-  );
+  const travelReimbursementRequests: TravelReimbursementRequest[] =
+    await Promise.all(
+      travelReimbursementRequestsDb.map(async (request) => ({
+        id: request.id,
+        financialDetails: request.financialDetails,
+        approvedAmount: request.approvedAmount,
+        countryOfTravel: request.countryOfTravel,
+        hackerEmail: request.hacker.user.email,
+        travelDocumentFileLink: request.proofOfTravelFile?.path
+          ? await getPresignedDownloadUrl(request.proofOfTravelFile.path)
+          : null,
+        status: request.status.name as TravelReimbursementRequestStatus,
+        applicationStatus: request.hacker.application?.status
+          .name as ApplicationStatus,
+        applicationId: request.hacker.application?.id as number,
+      }))
+    );
 
   return {
     totalApprovedAmount: travelReimbursementRequests.reduce(
