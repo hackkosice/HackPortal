@@ -130,7 +130,10 @@ const UploadDetailsForReimbursementButton = ({
                 render={({ field: { value, onChange, ...field } }) => (
                   <FormItem>
                     <Stack direction="row" spacing="small" alignItems="center">
-                      <FormLabel required>Travel document</FormLabel>
+                      <FormLabel required>
+                        Travel document (tickets you used to travel to
+                        hackathon)
+                      </FormLabel>
                     </Stack>
                     <FormControl>
                       <Input
