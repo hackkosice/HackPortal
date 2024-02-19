@@ -4,17 +4,14 @@ import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
 
 type GetApplicationIdForReviewData = {
   applicationId: number | null;
+  totalApplicationsLeftToReviewCount: number;
 };
 const getApplicationIdForReview = async (
   hackathonId: number
 ): Promise<GetApplicationIdForReviewData> => {
   const { id: organizerId, currentApplicationForReviewId } =
     await requireOrganizerSession();
-  if (currentApplicationForReviewId) {
-    return {
-      applicationId: currentApplicationForReviewId,
-    };
-  }
+
   const applications = await prisma.application.findMany({
     select: {
       id: true,
@@ -52,8 +49,17 @@ const getApplicationIdForReview = async (
       ],
     },
   });
+
+  if (currentApplicationForReviewId) {
+    return {
+      totalApplicationsLeftToReviewCount: applications.length,
+      applicationId: currentApplicationForReviewId,
+    };
+  }
+
   if (applications.length === 0) {
     return {
+      totalApplicationsLeftToReviewCount: applications.length,
       applicationId: null,
     };
   }
@@ -107,6 +113,7 @@ const getApplicationIdForReview = async (
   });
 
   return {
+    totalApplicationsLeftToReviewCount: applications.length,
     applicationId: selectedApplicationId,
   };
 };

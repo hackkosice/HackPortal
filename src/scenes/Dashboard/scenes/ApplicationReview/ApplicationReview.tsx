@@ -13,7 +13,8 @@ type ApplicationReviewProps = {
   hackathonId: number;
 };
 const ApplicationReview = async ({ hackathonId }: ApplicationReviewProps) => {
-  const { applicationId } = await getApplicationIdForReview(hackathonId);
+  const { applicationId, totalApplicationsLeftToReviewCount } =
+    await getApplicationIdForReview(hackathonId);
   const voteParameters = await getVoteParameters(hackathonId);
   return (
     <Stack direction="column" className="md:px-20">
@@ -29,6 +30,9 @@ const ApplicationReview = async ({ hackathonId }: ApplicationReviewProps) => {
       <Stack direction="row" className="w-full flex-wrap md:flex-nowrap mb-20">
         <Card className="w-full">
           <CardHeader>
+            <Text className="mb-4">
+              {totalApplicationsLeftToReviewCount} applications left to review
+            </Text>
             <CardTitle>Application detail</CardTitle>
           </CardHeader>
           <CardContent>
