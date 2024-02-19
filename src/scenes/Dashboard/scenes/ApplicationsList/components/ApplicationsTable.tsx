@@ -125,7 +125,7 @@ const ApplicationsTable = ({
                       color: score.relevance.color,
                     }}
                   >
-                    {score.score}
+                    {score.score.toFixed(2)}
                   </span>
                 }
                 content={`${score.relevance.value} relevance (${
