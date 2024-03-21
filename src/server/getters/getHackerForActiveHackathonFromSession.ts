@@ -3,8 +3,10 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 import { prisma } from "@/services/prisma";
 import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
+import getLastActiveHackathonId from "@/server/getters/getLastActiveHackathonId";
 
 export type HackerFromSessionData = {
+  closedPortal: boolean;
   hackathonId: number | null;
   hackerId: number | null;
   applicationId: number | null;
@@ -17,21 +19,27 @@ const getHackerForActiveHackathonFromSession =
   async (): Promise<HackerFromSessionData> => {
     const session = await getServerSession(authOptions);
 
-    const hackathonId = await getActiveHackathonId(prisma);
-
+    let hackathonId = await getActiveHackathonId(prisma);
+    let closedPortal = false;
     if (!hackathonId) {
-      return {
-        hackathonId: null,
-        hackerId: null,
-        applicationId: null,
-        signedIn: false,
-        emailVerified: false,
-        redirectToOrganizer: false,
-      };
+      hackathonId = await getLastActiveHackathonId(prisma);
+      closedPortal = true;
+      if (!hackathonId) {
+        return {
+          closedPortal: closedPortal,
+          hackathonId: null,
+          hackerId: null,
+          applicationId: null,
+          signedIn: false,
+          emailVerified: false,
+          redirectToOrganizer: false,
+        };
+      }
     }
 
     if (!session?.id) {
       return {
+        closedPortal: closedPortal,
         hackathonId,
         hackerId: null,
         applicationId: null,
@@ -52,6 +60,7 @@ const getHackerForActiveHackathonFromSession =
     });
     if (!user) {
       return {
+        closedPortal: closedPortal,
         hackathonId,
         hackerId: null,
         applicationId: null,
@@ -84,6 +93,7 @@ const getHackerForActiveHackathonFromSession =
         });
       }
       return {
+        closedPortal: closedPortal,
         hackathonId,
         hackerId: null,
         applicationId: null,
@@ -154,6 +164,7 @@ const getHackerForActiveHackathonFromSession =
     }
 
     return {
+      closedPortal: closedPortal,
       hackathonId,
       hackerId,
       applicationId,
