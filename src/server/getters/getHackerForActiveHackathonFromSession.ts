@@ -22,12 +22,10 @@ const getHackerForActiveHackathonFromSession =
     const activeHackathonId = await getActiveHackathonId(prisma);
     const lastActiveHackathonId = await getLastActiveHackathonId(prisma);
 
-    let closedPortal = false;
     if (!activeHackathonId) {
-      closedPortal = true;
       if (!activeHackathonId) {
         return {
-          closedPortal: closedPortal,
+          closedPortal: true,
           hackathonId: null,
           hackerId: null,
           applicationId: null,
@@ -40,7 +38,7 @@ const getHackerForActiveHackathonFromSession =
 
     if (!session?.id) {
       return {
-        closedPortal: closedPortal,
+        closedPortal: !activeHackathonId,
         hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
@@ -61,7 +59,7 @@ const getHackerForActiveHackathonFromSession =
     });
     if (!user) {
       return {
-        closedPortal: closedPortal,
+        closedPortal: !activeHackathonId,
         hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
@@ -94,7 +92,7 @@ const getHackerForActiveHackathonFromSession =
         });
       }
       return {
-        closedPortal: closedPortal,
+        closedPortal: !activeHackathonId,
         hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
@@ -165,7 +163,7 @@ const getHackerForActiveHackathonFromSession =
     }
 
     return {
-      closedPortal: closedPortal,
+      closedPortal: !activeHackathonId,
       hackathonId: activeHackathonId ?? lastActiveHackathonId,
       hackerId,
       applicationId,
