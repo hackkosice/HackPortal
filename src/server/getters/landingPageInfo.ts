@@ -43,7 +43,7 @@ const getLandingPageInfo = async (): Promise<LandingPageInfo> => {
   return {
     title: "Welcome to Application portal",
     description:
-      "There is no open registration at the moment. Sign in to show your last applications. ",
+      "There is no open registration at the moment. Sign in to show your last applications.",
     ctaContent: ctaContent == "Start application" ? null : ctaContent,
   };
 };
