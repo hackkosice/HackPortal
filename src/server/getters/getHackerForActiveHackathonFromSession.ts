@@ -19,12 +19,13 @@ const getHackerForActiveHackathonFromSession =
   async (): Promise<HackerFromSessionData> => {
     const session = await getServerSession(authOptions);
 
-    let hackathonId = await getActiveHackathonId(prisma);
+    const activeHackathonId = await getActiveHackathonId(prisma);
+    const lastActiveHackathonId = await getLastActiveHackathonId(prisma);
+
     let closedPortal = false;
-    if (!hackathonId) {
-      hackathonId = await getLastActiveHackathonId(prisma);
+    if (!activeHackathonId) {
       closedPortal = true;
-      if (!hackathonId) {
+      if (!activeHackathonId) {
         return {
           closedPortal: closedPortal,
           hackathonId: null,
@@ -40,7 +41,7 @@ const getHackerForActiveHackathonFromSession =
     if (!session?.id) {
       return {
         closedPortal: closedPortal,
-        hackathonId,
+        hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -61,7 +62,7 @@ const getHackerForActiveHackathonFromSession =
     if (!user) {
       return {
         closedPortal: closedPortal,
-        hackathonId,
+        hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -94,7 +95,7 @@ const getHackerForActiveHackathonFromSession =
       }
       return {
         closedPortal: closedPortal,
-        hackathonId,
+        hackathonId: activeHackathonId ?? lastActiveHackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -109,7 +110,7 @@ const getHackerForActiveHackathonFromSession =
       },
       where: {
         userId,
-        hackathonId,
+        hackathonId: activeHackathonId ?? lastActiveHackathonId,
       },
     });
 
@@ -123,7 +124,7 @@ const getHackerForActiveHackathonFromSession =
         },
         data: {
           userId,
-          hackathonId,
+          hackathonId: activeHackathonId ?? lastActiveHackathonId,
         },
       });
 
@@ -165,7 +166,7 @@ const getHackerForActiveHackathonFromSession =
 
     return {
       closedPortal: closedPortal,
-      hackathonId,
+      hackathonId: activeHackathonId ?? lastActiveHackathonId,
       hackerId,
       applicationId,
       signedIn: true,
