@@ -45,11 +45,11 @@ const ApplicationFormSteps = async ({
       <Stack className="w-full" direction="column">
         {data &&
           (closedPortal && data.application.status === "open" ? (
-            <Card className="p-5 pt-10 mx-auto container bg-primaryTitle">
-              <Heading className="text-white">
+            <Card className="p-5 w-fit mx-auto container bg-primaryTitle">
+              <Text className="text-white w-full text-center text-lg">
                 Thank you for your interest, but the applications for this year
                 are already closed. Please sign up for a hackathon next year.
-              </Heading>
+              </Text>
             </Card>
           ) : (
             <>
