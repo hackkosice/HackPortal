@@ -25,16 +25,16 @@ const getHackerForActiveHackathonFromSession =
     const session = await getServerSession(authOptions);
 
     // Get the active hackathon ID
-    const activeHackathonId = await getActiveHackathonId(prisma);
-
-    // Get the last active hackathon ID
-    const lastActiveHackathonId = await getLastActiveHackathonId(prisma);
+    let hackathonId = await getActiveHackathonId(prisma);
+    let closedPortal = false;
 
     // Check if there are no active hackathons going on
-    if (!activeHackathonId && !lastActiveHackathonId) {
+    if (!hackathonId) {
+      hackathonId = await getLastActiveHackathonId(prisma);
+      closedPortal = true;
       // Return portal as closed with no hackathon, hacker or application
       return {
-        closedPortal: true,
+        closedPortal: closedPortal,
         hackathonId: null,
         hackerId: null,
         applicationId: null,
@@ -48,8 +48,8 @@ const getHackerForActiveHackathonFromSession =
     if (!session?.id) {
       // Retrieve the session
       return {
-        closedPortal: !activeHackathonId,
-        hackathonId: activeHackathonId ?? lastActiveHackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -73,8 +73,8 @@ const getHackerForActiveHackathonFromSession =
     if (!user) {
       // Return portal as closed with no user
       return {
-        closedPortal: !activeHackathonId,
-        hackathonId: activeHackathonId ?? lastActiveHackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -108,8 +108,8 @@ const getHackerForActiveHackathonFromSession =
         });
       }
       return {
-        closedPortal: !activeHackathonId,
-        hackathonId: activeHackathonId ?? lastActiveHackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -125,7 +125,7 @@ const getHackerForActiveHackathonFromSession =
       },
       where: {
         userId,
-        hackathonId: activeHackathonId ?? lastActiveHackathonId!,
+        hackathonId: hackathonId,
       },
     });
 
@@ -140,7 +140,7 @@ const getHackerForActiveHackathonFromSession =
         },
         data: {
           userId,
-          hackathonId: activeHackathonId ?? lastActiveHackathonId!,
+          hackathonId: hackathonId,
         },
       });
       hackerId = newHacker.id;
@@ -185,8 +185,8 @@ const getHackerForActiveHackathonFromSession =
 
     // Return the final session data
     return {
-      closedPortal: !activeHackathonId,
-      hackathonId: activeHackathonId ?? lastActiveHackathonId,
+      closedPortal: closedPortal,
+      hackathonId: hackathonId,
       hackerId,
       applicationId,
       signedIn: true,
