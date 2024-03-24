@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 
 const Application = async () => {
   const {
+    closedPortal,
     hackathonId,
     hackerId,
     applicationId,
@@ -33,6 +34,7 @@ const Application = async () => {
       <Stack direction="column" className="w-full gap-20">
         <Suspense fallback={<div>Loading...</div>}>
           <ApplicationFormSteps
+            closedPortal={closedPortal}
             hackathonId={hackathonId}
             applicationId={applicationId}
           />

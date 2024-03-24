@@ -3,8 +3,10 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
 import { prisma } from "@/services/prisma";
 import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
+import getLastActiveHackathonId from "@/server/getters/getLastActiveHackathonId";
 
 export type HackerFromSessionData = {
+  closedPortal: boolean;
   hackathonId: number | null;
   hackerId: number | null;
   applicationId: number | null;
@@ -13,14 +15,26 @@ export type HackerFromSessionData = {
   redirectToOrganizer: boolean;
 };
 
+/**
+ * Retrieves the hacker data for the active hackathon from the current session.
+ * @returns {Promise<HackerFromSessionData>} - The hacker data from the session.
+ */
 const getHackerForActiveHackathonFromSession =
   async (): Promise<HackerFromSessionData> => {
+    // Fetch the session data from the server
     const session = await getServerSession(authOptions);
 
-    const hackathonId = await getActiveHackathonId(prisma);
+    // Get the active hackathon ID
+    let hackathonId = await getActiveHackathonId(prisma);
+    let closedPortal = false;
 
+    // Check if there are no active hackathons going on
     if (!hackathonId) {
+      hackathonId = await getLastActiveHackathonId(prisma);
+      closedPortal = true;
+      // Return portal as closed with no hackathon, hacker or application
       return {
+        closedPortal: closedPortal,
         hackathonId: null,
         hackerId: null,
         applicationId: null,
@@ -30,9 +44,12 @@ const getHackerForActiveHackathonFromSession =
       };
     }
 
+    // Check if there is no session going on
     if (!session?.id) {
+      // Retrieve the session
       return {
-        hackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -41,6 +58,7 @@ const getHackerForActiveHackathonFromSession =
       };
     }
 
+    // Fetch the user by ID
     const userId = session.id;
     const user = await prisma.user.findUnique({
       select: {
@@ -50,9 +68,13 @@ const getHackerForActiveHackathonFromSession =
         id: userId,
       },
     });
+
+    // Check if there is no user
     if (!user) {
+      // Return portal as closed with no user
       return {
-        hackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -61,8 +83,10 @@ const getHackerForActiveHackathonFromSession =
       };
     }
 
+    // Get the email for the user
     const email = user.email;
 
+    // Check if the user is an organiser
     if (
       email &&
       (email.endsWith("@hackkosice.com") || email.endsWith("@hackslovakia.com"))
@@ -75,7 +99,7 @@ const getHackerForActiveHackathonFromSession =
           userId,
         },
       });
-
+      // Create organiser if it doesn't exist and return RedirectToOrganizer as true
       if (!organizer) {
         await prisma.organizer.create({
           data: {
@@ -84,7 +108,8 @@ const getHackerForActiveHackathonFromSession =
         });
       }
       return {
-        hackathonId,
+        closedPortal: closedPortal,
+        hackathonId: hackathonId,
         hackerId: null,
         applicationId: null,
         signedIn: false,
@@ -93,19 +118,21 @@ const getHackerForActiveHackathonFromSession =
       };
     }
 
+    // Check if user is a hacker
     const hacker = await prisma.hacker.findFirst({
       select: {
         id: true,
       },
       where: {
         userId,
-        hackathonId,
+        hackathonId: hackathonId,
       },
     });
 
     let hackerId: number;
     let applicationId: number;
 
+    // Instantiate hacker if there isn't one yet
     if (!hacker) {
       const newHacker = await prisma.hacker.create({
         select: {
@@ -113,15 +140,15 @@ const getHackerForActiveHackathonFromSession =
         },
         data: {
           userId,
-          hackathonId,
+          hackathonId: hackathonId,
         },
       });
-
       hackerId = newHacker.id;
     } else {
       hackerId = hacker.id;
     }
 
+    // Check if there is an application
     const application = await prisma.application.findFirst({
       select: {
         id: true,
@@ -130,6 +157,8 @@ const getHackerForActiveHackathonFromSession =
         hackerId,
       },
     });
+
+    // Create an application if it doesn't exist else fetch the existing application
     if (!application) {
       const { id: openStatusId } = (await prisma.applicationStatus.findFirst({
         select: {
@@ -139,6 +168,7 @@ const getHackerForActiveHackathonFromSession =
           name: ApplicationStatusEnum.open,
         },
       })) as { id: number };
+
       const newApplication = await prisma.application.create({
         select: {
           id: true,
@@ -153,8 +183,10 @@ const getHackerForActiveHackathonFromSession =
       applicationId = application.id;
     }
 
+    // Return the final session data
     return {
-      hackathonId,
+      closedPortal: closedPortal,
+      hackathonId: hackathonId,
       hackerId,
       applicationId,
       signedIn: true,
