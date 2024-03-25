@@ -32,16 +32,18 @@ const getHackerForActiveHackathonFromSession =
     if (!hackathonId) {
       hackathonId = await getLastActiveHackathonId(prisma);
       closedPortal = true;
-      // Return portal as closed with no hackathon, hacker or application
-      return {
-        closedPortal: closedPortal,
-        hackathonId: null,
-        hackerId: null,
-        applicationId: null,
-        signedIn: false,
-        emailVerified: false,
-        redirectToOrganizer: false,
-      };
+      if (!hackathonId) {
+        // Return portal as closed with no hackathon, hacker or application
+        return {
+          closedPortal: closedPortal,
+          hackathonId: null,
+          hackerId: null,
+          applicationId: null,
+          signedIn: false,
+          emailVerified: false,
+          redirectToOrganizer: false,
+        };
+      }
     }
 
     // Check if there is no session going on
