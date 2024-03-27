@@ -17,8 +17,15 @@ const getLandingPageInfo = async (): Promise<LandingPageInfo> => {
         userId,
       },
     });
+    const sponsor = await prisma.sponsor.findUnique({
+      where: {
+        userId,
+      },
+    });
     if (organizer) {
       ctaContent = "Go to dashboard";
+    } else if (sponsor) {
+      ctaContent = "Go to sponsor dashboard";
     } else {
       ctaContent = "Go to application";
     }

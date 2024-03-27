@@ -1,21 +1,22 @@
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
+import requireSponsorSession from "@/server/services/helpers/auth/requireSponsorSession";
 import getApplicationPropertiesForDisplay, {
   ApplicationProperties,
 } from "@/server/services/helpers/applications/getApplicationPropertiesForDisplay";
 
-export type ApplicationDetailData = {
+type ApplicationDetailSponsorData = {
   id: number;
 } & ApplicationProperties;
 
-const getApplicationDetail = async (
+const getApplicationDetailForSponsors = async (
   applicationId: number
-): Promise<ApplicationDetailData> => {
-  await requireOrganizerSession();
+): Promise<ApplicationDetailSponsorData> => {
+  await requireSponsorSession();
 
   const { shownProperties, hiddenPropertiesValues } =
     await getApplicationPropertiesForDisplay({
       applicationId,
-      isShownFormFieldCallback: (formField) => formField.shownInList,
+      isShownFormFieldCallback: (formField) =>
+        formField.shownInSponsorsViewDetails,
     });
 
   return {
@@ -25,4 +26,4 @@ const getApplicationDetail = async (
   };
 };
 
-export default getApplicationDetail;
+export default getApplicationDetailForSponsors;

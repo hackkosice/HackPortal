@@ -16,18 +16,26 @@ const requireNonOrganizer = async (): Promise<void> => {
     },
     select: {
       organizer: true,
+      sponsor: {
+        select: {
+          id: true,
+          hackathonId: true,
+        },
+      },
     },
   });
 
-  if (!user?.organizer) {
-    return;
+  if (user?.organizer) {
+    if (!session.emailVerified) {
+      redirect("/org-verify-email");
+    }
+    redirect("/dashboard");
   }
 
-  if (!session.emailVerified) {
-    redirect("/org-verify-email");
+  if (user?.sponsor) {
+    const sponsorHackathonId = user.sponsor.hackathonId;
+    redirect(`/sponsors/${sponsorHackathonId}/applications`);
   }
-
-  redirect("/dashboard");
 };
 
 export default requireNonOrganizer;

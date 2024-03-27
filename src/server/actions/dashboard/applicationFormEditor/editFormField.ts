@@ -14,6 +14,8 @@ type EditFormFieldInput = {
   newOptionListName?: string;
   description?: string;
   shouldBeShownInList?: boolean;
+  shouldBeShownInSponsorsViewTable?: boolean;
+  shouldBeShownInSponsorsViewDetails?: boolean;
   shouldBeShownInCheckin?: boolean;
   visibilityRule?: {
     targetId: number;
@@ -31,6 +33,8 @@ const editFormField = async ({
   newOptionListName,
   shouldBeShownInList,
   shouldBeShownInCheckin,
+  shouldBeShownInSponsorsViewTable,
+  shouldBeShownInSponsorsViewDetails,
   description,
   visibilityRule,
 }: EditFormFieldInput) => {
@@ -64,6 +68,8 @@ const editFormField = async ({
       optionListId: newOptionListId ?? optionListId,
       shownInList: shouldBeShownInList,
       shownInCheckin: shouldBeShownInCheckin,
+      shownInSponsorsViewTable: shouldBeShownInSponsorsViewTable,
+      shownInSponsorsViewDetails: shouldBeShownInSponsorsViewDetails,
     },
     select: {
       step: {

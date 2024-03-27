@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { PropertyValue } from "@/server/getters/dashboard/applicationDetail";
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
+import { PropertyValue } from "@/server/services/helpers/applications/getApplicationPropertiesForDisplay";
 
 type HiddenPropertiesCollapsibleProps = {
   hiddenPropertiesValues: PropertyValue[];
@@ -35,7 +35,7 @@ const HiddenPropertiesCollapsible = ({
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2">
         {hiddenPropertiesValues.map(({ label, value }) => (
-          <Text key={value}>
+          <Text key={label}>
             <span className="font-bold">{label}</span>: {value}
           </Text>
         ))}

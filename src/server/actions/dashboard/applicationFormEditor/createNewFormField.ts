@@ -17,6 +17,8 @@ type NewFormFieldInput = {
   description?: string;
   shouldBeShownInList?: boolean;
   shouldBeShownInCheckin?: boolean;
+  shouldBeShownInSponsorsViewTable?: boolean;
+  shouldBeShownInSponsorsViewDetails?: boolean;
   visibilityRule?: {
     targetId: number;
     optionId: number;
@@ -34,6 +36,8 @@ const createNewFormField = async ({
   description,
   shouldBeShownInList,
   shouldBeShownInCheckin,
+  shouldBeShownInSponsorsViewTable,
+  shouldBeShownInSponsorsViewDetails,
   visibilityRule,
 }: NewFormFieldInput) => {
   await requireAdminSession();
@@ -77,6 +81,8 @@ const createNewFormField = async ({
       optionListId: newOptionListId ?? optionListId,
       shownInList: shouldBeShownInList,
       shownInCheckin: shouldBeShownInCheckin,
+      shownInSponsorsViewTable: shouldBeShownInSponsorsViewTable,
+      shownInSponsorsViewDetails: shouldBeShownInSponsorsViewDetails,
     },
     select: {
       id: true,
