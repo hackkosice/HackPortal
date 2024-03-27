@@ -51,6 +51,8 @@ const newFieldFormSchema = z.object({
   required: z.boolean().optional(),
   shouldBeShownInList: z.boolean().optional(),
   shouldBeShownInCheckin: z.boolean().optional(),
+  shouldBeShownInSponsorsViewTable: z.boolean().optional(),
+  shouldBeShownInSponsorsViewDetails: z.boolean().optional(),
   shouldHaveVisibilityRule: z.boolean().optional(),
   visibilityRuleTargetFormFieldId: z.string().min(1).optional(),
   visibilityRuleTargetOptionId: z.string().min(1).optional(),
@@ -135,6 +137,8 @@ const NewFieldDialog = ({
     newOptionListName,
     shouldBeShownInList,
     shouldBeShownInCheckin,
+    shouldBeShownInSponsorsViewTable,
+    shouldBeShownInSponsorsViewDetails,
     description,
     shouldHaveVisibilityRule,
     visibilityRuleTargetFormFieldId,
@@ -154,6 +158,8 @@ const NewFieldDialog = ({
       description: description === "" ? undefined : description,
       shouldBeShownInList,
       shouldBeShownInCheckin,
+      shouldBeShownInSponsorsViewTable,
+      shouldBeShownInSponsorsViewDetails,
       visibilityRule: shouldHaveVisibilityRule
         ? {
             targetId: Number(visibilityRuleTargetFormFieldId),
@@ -388,6 +394,54 @@ const NewFieldDialog = ({
                       </FormControl>
                       <FormLabel className="ml-1 !mt-0 cursor-pointer">
                         Should be shown when checking in
+                      </FormLabel>
+                    </span>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shouldBeShownInSponsorsViewTable"
+                render={({ field }) => (
+                  <FormItem>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Should be shown in sponsor portal table
+                      </FormLabel>
+                    </span>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shouldBeShownInSponsorsViewDetails"
+                render={({ field }) => (
+                  <FormItem>
+                    <span className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            if (checked !== "indeterminate") {
+                              field.onChange(checked);
+                            }
+                          }}
+                        />
+                      </FormControl>
+                      <FormLabel className="ml-1 !mt-0 cursor-pointer">
+                        Should be shown in sponsor portal details
                       </FormLabel>
                     </span>
                     <FormMessage />

@@ -17,6 +17,9 @@ export type FormFieldData = {
   } | null;
   type: FormFieldType;
   shouldBeShownInList: boolean;
+  shouldBeShownInCheckin: boolean;
+  shouldBeShownInSponsorsViewTable: boolean;
+  shouldBeShownInSponsorsViewDetails: boolean;
   formFieldVisibilityRule: {
     targetFormField: {
       id: number;
@@ -52,6 +55,9 @@ const getStepEditorInfo = async (stepId: number): Promise<StepInfoData> => {
           label: true,
           description: true,
           shownInList: true,
+          shownInCheckin: true,
+          shownInSponsorsViewTable: true,
+          shownInSponsorsViewDetails: true,
           name: true,
           required: true,
           type: {
@@ -101,6 +107,9 @@ const getStepEditorInfo = async (stepId: number): Promise<StepInfoData> => {
       name: field.name,
       required: field.required,
       shouldBeShownInList: field.shownInList,
+      shouldBeShownInCheckin: field.shownInCheckin,
+      shouldBeShownInSponsorsViewTable: field.shownInSponsorsViewTable,
+      shouldBeShownInSponsorsViewDetails: field.shownInSponsorsViewDetails,
       optionList: field.optionList,
       position: field.position,
       type: field.type.value as FormFieldType,

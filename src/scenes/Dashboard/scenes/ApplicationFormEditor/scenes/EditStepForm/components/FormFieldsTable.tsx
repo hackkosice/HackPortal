@@ -72,6 +72,9 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
     type,
     description,
     shouldBeShownInList,
+    shouldBeShownInCheckin,
+    shouldBeShownInSponsorsViewTable,
+    shouldBeShownInSponsorsViewDetails,
     formFieldVisibilityRule,
   } = formField;
   const { formFieldTypes, optionLists, potentialVisibilityRuleTargets } =
@@ -103,6 +106,9 @@ const ActionsCell = ({ formField }: { formField: FormFieldData }) => {
           label,
           description: description ?? "",
           shouldBeShownInList,
+          shouldBeShownInCheckin,
+          shouldBeShownInSponsorsViewTable,
+          shouldBeShownInSponsorsViewDetails,
           typeId: formFieldTypes
             .find((fieldType) => fieldType.value === type)
             ?.id.toString() as string,
