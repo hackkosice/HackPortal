@@ -3,27 +3,31 @@ import getTravelReimbursementRequestDescription from "@/server/getters/dashboard
 import requireAdmin from "@/services/helpers/requireAdmin";
 import getAdminInfo from "@/server/getters/dashboard/settings/adminInfo";
 import getMaxTeamSize from "@/server/getters/dashboard/settings/maxTeamSize";
+import getSponsorsInfo from "@/server/getters/dashboard/settings/sponsorsInfo";
 
 export const metadata = {
   title: "Settings",
 };
 
 const SettingsPage = async ({
-  params: { hackathonId },
+  params,
 }: {
   params: { hackathonId: string };
 }) => {
+  const hackathonId = Number(params.hackathonId);
   await requireAdmin();
   const { description } = await getTravelReimbursementRequestDescription(
-    Number(hackathonId)
+    hackathonId
   );
   const adminInfo = await getAdminInfo();
-  const maxTeamSize = await getMaxTeamSize(Number(hackathonId));
+  const maxTeamSize = await getMaxTeamSize(hackathonId);
+  const sponsorsInfo = await getSponsorsInfo(hackathonId);
   return (
     <Settings
-      hackathonId={Number(hackathonId)}
+      hackathonId={hackathonId}
       travelReimbursementRequestDescription={description}
       adminInfo={adminInfo}
+      sponsorsInfo={sponsorsInfo}
       maxTeamSize={maxTeamSize}
     />
   );
