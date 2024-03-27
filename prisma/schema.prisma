@@ -154,6 +154,8 @@ model FormField {
   required                       Boolean
   shownInList                    Boolean                     @default(false)
   shownInCheckin                 Boolean                     @default(false)
+  shownInSponsorsViewTable       Boolean                     @default(false)
+  shownInSponsorsViewDetails     Boolean                     @default(false)
   step                           ApplicationFormStep         @relation(fields: [stepId], references: [id])
   stepId                         Int
   type                           FormFieldType               @relation(fields: [typeId], references: [id])
