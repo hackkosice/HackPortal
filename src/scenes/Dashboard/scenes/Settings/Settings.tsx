@@ -11,11 +11,14 @@ import { Heading } from "@/components/ui/heading";
 import { GetAdminInfoData } from "@/server/getters/dashboard/settings/adminInfo";
 import AdminManager from "@/scenes/Dashboard/scenes/Settings/components/AdminManager";
 import HackathonMaxTeamSizeDialog from "@/scenes/Dashboard/scenes/Settings/components/HackathonMaxTeamSizeDialog";
+import { GetSponsorsInfoData } from "@/server/getters/dashboard/settings/sponsorsInfo";
+import SponsorsManager from "@/scenes/Dashboard/scenes/Settings/components/SponsorsManager";
 
 type SettingsProps = {
   hackathonId: number;
   travelReimbursementRequestDescription: string | null;
   adminInfo: GetAdminInfoData;
+  sponsorsInfo: GetSponsorsInfoData;
   maxTeamSize: number;
 };
 
@@ -23,10 +26,11 @@ const Settings = ({
   hackathonId,
   travelReimbursementRequestDescription,
   adminInfo,
+  sponsorsInfo,
   maxTeamSize,
 }: SettingsProps) => {
   return (
-    <Card className="md:w-[70vw] mx-auto">
+    <Card className="md:w-[70vw] mx-auto mb-[200px]">
       <CardHeader></CardHeader>
       <CardContent>
         <Stack direction="column">
@@ -55,6 +59,10 @@ const Settings = ({
             hackathonId={hackathonId}
           />
           <AdminManager adminInfo={adminInfo} hackathonId={hackathonId} />
+          <SponsorsManager
+            hackathonId={hackathonId}
+            sponsorsInfo={sponsorsInfo}
+          />
         </Stack>
       </CardContent>
     </Card>
