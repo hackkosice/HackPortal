@@ -49,6 +49,9 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
       case "settings":
         push(`/dashboard/${hackathonId}/settings`);
         break;
+      case "tables":
+        push(`/dashboard/${hackathonId}/hacker-tables`);
+        break;
     }
   };
 
@@ -74,6 +77,7 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
         <TabsTrigger value="checkin">Check-in</TabsTrigger>
         {isAdmin && <TabsTrigger value="form">Application form</TabsTrigger>}
         {isAdmin && <TabsTrigger value="info">Hackathon info</TabsTrigger>}
+        {isAdmin && <TabsTrigger value="tables">Tables</TabsTrigger>}
         {isAdmin && <TabsTrigger value="settings">Settings</TabsTrigger>}
       </TabsList>
     </Tabs>

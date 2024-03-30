@@ -61,6 +61,7 @@ model Hackathon {
   sponsors                       Sponsor[]
   applicationFormSteps           ApplicationFormStep[]
   voteParameters                 VoteParameter[]
+  tableRows                      TableRow[]
   createdAt                      DateTime              @default(now())
   updatedAt                      DateTime              @updatedAt
 }
@@ -81,12 +82,14 @@ model Hacker {
 }
 
 model Team {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  code    String   @unique
-  ownerId Int      @unique
-  owner   Hacker   @relation(name: "TeamOwner", fields: [ownerId], references: [id])
-  members Hacker[]
+  id            Int          @id @default(autoincrement())
+  name          String       @unique
+  code          String       @unique
+  ownerId       Int          @unique
+  owner         Hacker       @relation(name: "TeamOwner", fields: [ownerId], references: [id])
+  members       Hacker[]
+  hackerTableId Int?
+  hackerTable   HackerTable? @relation(fields: [hackerTableId], references: [id])
 }
 
 model Organizer {
@@ -286,4 +289,20 @@ model TravelReimbursementRequestStatus {
   requests  TravelReimbursementRequest[]
   createdAt DateTime                     @default(now())
   updatedAt DateTime                     @updatedAt
+}
+
+model TableRow {
+  id           Int           @id @default(autoincrement())
+  hackathonId  Int
+  hackathon    Hackathon     @relation(fields: [hackathonId], references: [id])
+  HackerTables HackerTable[] // updated Table to HackerTable
+}
+
+model HackerTable {
+  id       Int      @id @default(autoincrement())
+  Name     String
+  Space    String
+  rowId    Int
+  TableRow TableRow @relation(fields: [rowId], references: [id])
+  Team     Team[]
 }
