@@ -35,6 +35,7 @@ export type ApplicationData = {
     steps: ApplicationStepData[];
     canSubmit: boolean;
     hackathonName: string;
+    tableCode?: string;
   } | null;
 };
 
@@ -140,6 +141,19 @@ const getApplicationData = async ({
           id: true,
         },
       },
+      hacker: {
+        select: {
+          team: {
+            select: {
+              table: {
+                select: {
+                  code: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
     where: {
       id: session.id,
@@ -180,6 +194,7 @@ const getApplicationData = async ({
       steps,
       canSubmit,
       hackathonName: hackathon.name,
+      tableCode: user.hacker?.team?.table?.code,
     },
   };
 };

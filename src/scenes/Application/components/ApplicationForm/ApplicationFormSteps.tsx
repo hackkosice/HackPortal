@@ -85,7 +85,7 @@ const ApplicationFormSteps = async ({
                 {data.application.status ===
                   ApplicationStatusEnum.confirmed && (
                   <Stack
-                    className="mx-auto w-[90vw]"
+                    className="mx-auto w-[90vw] lg:w-[50vw]"
                     alignItems="center"
                     direction="column"
                   >
@@ -96,6 +96,15 @@ const ApplicationFormSteps = async ({
                     <Button asChild>
                       <Link href="/check-in">Show checkin code</Link>
                     </Button>
+                    {data.tableCode && (
+                      <Text>
+                        Your team will be seated at the table{" "}
+                        <strong>{data.tableCode}</strong>. Please sit down at
+                        this table after checking in. If you have trouble
+                        finding your table, look for maps on the wall or ask an
+                        organizer for help.
+                      </Text>
+                    )}
                   </Stack>
                 )}
               </Stack>
