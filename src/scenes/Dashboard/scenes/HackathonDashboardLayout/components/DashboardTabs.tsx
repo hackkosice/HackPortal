@@ -9,7 +9,19 @@ type DashboardTabsProps = {
   isAdmin: boolean;
 };
 
-const getTabValue = (path: string, hackathonId: number) => {
+type TabValue =
+  | "info"
+  | "form"
+  | "applications"
+  | "settings"
+  | "reimbursements"
+  | "checkin"
+  | "tables";
+
+const getTabValue = (
+  path: string,
+  hackathonId: number
+): TabValue | undefined => {
   if (path === `/dashboard/${hackathonId}`) return "info";
   if (path.startsWith(`/dashboard/${hackathonId}/form-editor`)) return "form";
   if (path.startsWith(`/dashboard/${hackathonId}/applications`))
@@ -18,6 +30,7 @@ const getTabValue = (path: string, hackathonId: number) => {
   if (path.startsWith(`/dashboard/${hackathonId}/travel-reimbursements`))
     return "reimbursements";
   if (path.startsWith(`/dashboard/${hackathonId}/check-in`)) return "checkin";
+  if (path.startsWith(`/dashboard/${hackathonId}/tables`)) return "tables";
   return undefined;
 };
 
@@ -30,7 +43,7 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
   );
 
   const onTabChange = (value: string) => {
-    switch (value) {
+    switch (value as TabValue) {
       case "info":
         push(`/dashboard/${hackathonId}`);
         break;
@@ -49,6 +62,9 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
       case "settings":
         push(`/dashboard/${hackathonId}/settings`);
         break;
+      case "tables":
+        push(`/dashboard/${hackathonId}/tables`);
+        break;
     }
   };
 
@@ -59,20 +75,21 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
   return (
     <Tabs
       className={`w-full ${
-        isAdmin ? "md:w-[80vw]" : "md:w-[50vw]"
+        isAdmin ? "md:w-[90vw]" : "md:w-[50vw]"
       } h-fit my-5 mx-auto`}
       value={tabValue}
       onValueChange={onTabChange}
     >
       <TabsList
         className={`grid w-full grid-cols-2 ${
-          isAdmin ? "md:grid-cols-6" : "md:grid-cols-3"
+          isAdmin ? "md:grid-cols-7" : "md:grid-cols-3"
         } h-fit`}
       >
         <TabsTrigger value="applications">Applications</TabsTrigger>
         <TabsTrigger value="reimbursements">Travel reimbursements</TabsTrigger>
         <TabsTrigger value="checkin">Check-in</TabsTrigger>
         {isAdmin && <TabsTrigger value="form">Application form</TabsTrigger>}
+        {isAdmin && <TabsTrigger value="tables">Teams & Tables</TabsTrigger>}
         {isAdmin && <TabsTrigger value="info">Hackathon info</TabsTrigger>}
         {isAdmin && <TabsTrigger value="settings">Settings</TabsTrigger>}
       </TabsList>

@@ -63,6 +63,7 @@ model Hackathon {
   voteParameters                 VoteParameter[]
   createdAt                      DateTime              @default(now())
   updatedAt                      DateTime              @updatedAt
+  tables                         Table[]
 }
 
 model Hacker {
@@ -81,12 +82,15 @@ model Hacker {
 }
 
 model Team {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  code    String   @unique
-  ownerId Int      @unique
-  owner   Hacker   @relation(name: "TeamOwner", fields: [ownerId], references: [id])
-  members Hacker[]
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  code       String      @unique
+  ownerId    Int         @unique
+  owner      Hacker      @relation(name: "TeamOwner", fields: [ownerId], references: [id])
+  tableId    Int?
+  table      Table?      @relation(fields: [tableId], references: [id])
+  challenges Challenge[]
+  members    Hacker[]
 }
 
 model Organizer {
@@ -102,14 +106,26 @@ model Organizer {
 }
 
 model Sponsor {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   company     String
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int       @unique
-  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int        @unique
+  hackathon   Hackathon  @relation(fields: [hackathonId], references: [id])
   hackathonId Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  challenge   Challenge?
+}
+
+model Challenge {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  sponsor     Sponsor  @relation(fields: [sponsorId], references: [id])
+  sponsorId   Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  teams       Team[]
 }
 
 model Application {
@@ -286,4 +302,14 @@ model TravelReimbursementRequestStatus {
   requests  TravelReimbursementRequest[]
   createdAt DateTime                     @default(now())
   updatedAt DateTime                     @updatedAt
+}
+
+model Table {
+  id          Int       @id @default(autoincrement())
+  code        String
+  hackathonId Int
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  teams       Team[]
 }
