@@ -4,12 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
+import getMyJudgings from "@/server/getters/dashboard/judging/getMyJudgings";
+import JudgingSwitcher from "@/scenes/Dashboard/scenes/Judging/components/JudgingSwitcher";
 
 type JudgingManagerProps = {
   hackathonId: number;
 };
 const Judging = async ({ hackathonId }: JudgingManagerProps) => {
   const session = await getServerSession(authOptions);
+  const { judgings, nextJudgingIndex } = await getMyJudgings(hackathonId);
   return (
     <Card className="md:w-[70vw] mx-auto">
       <CardHeader>
@@ -23,7 +26,10 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
             </Link>
           </Button>
         )}
-        Judge judge judge
+        <JudgingSwitcher
+          judgings={judgings}
+          initialJudgingIndex={nextJudgingIndex}
+        />
       </CardContent>
     </Card>
   );
