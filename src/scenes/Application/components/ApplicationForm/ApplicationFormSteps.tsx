@@ -96,7 +96,7 @@ const ApplicationFormSteps = async ({
                     <Button asChild>
                       <Link href="/check-in">Show checkin code</Link>
                     </Button>
-                    {data.tableCode && (
+                    {data.tableCode ? (
                       <Text>
                         Your team will be seated at the table{" "}
                         <strong>{data.tableCode}</strong>. Please sit down at
@@ -104,6 +104,15 @@ const ApplicationFormSteps = async ({
                         finding your table, look for maps on the wall or ask an
                         organizer for help.
                       </Text>
+                    ) : (
+                      data.freeTables.length >= 1 && (
+                        <Text>
+                          Since you don&apos;t have a full team yet or your team
+                          doesn&apos;t have a table assigned please find a free
+                          place at one of these tables:{" "}
+                          <strong>{data.freeTables.join(", ")}</strong>
+                        </Text>
+                      )
                     )}
                   </Stack>
                 )}
