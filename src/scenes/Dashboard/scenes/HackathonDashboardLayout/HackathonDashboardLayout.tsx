@@ -12,11 +12,16 @@ const HackathonDashboardLayout = async ({
   children,
 }: HackathonDashboardProps) => {
   const session = await getServerSession(authOptions);
+
+  // This is a hack to allow volunteers to access the dashboard
+  const isVolunteersEmail =
+    session?.user?.email === "volunteers@hackkosice.com";
   return (
     <div>
       <DashboardTabs
         hackathonId={hackathonId}
         isAdmin={Boolean(session?.isAdmin)}
+        isVolunteer={isVolunteersEmail}
       />
       {children}
     </div>
