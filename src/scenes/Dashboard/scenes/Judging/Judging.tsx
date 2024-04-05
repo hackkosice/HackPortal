@@ -20,11 +20,18 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
       </CardHeader>
       <CardContent>
         {session?.isAdmin && (
-          <Button>
-            <Link href={`/dashboard/${hackathonId}/judging/manage`}>
-              Judging manager
-            </Link>
-          </Button>
+          <>
+            <Button>
+              <Link href={`/dashboard/${hackathonId}/judging/manage`}>
+                Judging manager
+              </Link>
+            </Button>
+            <Button>
+              <Link href={`/dashboard/${hackathonId}/judging/results`}>
+                Judging results
+              </Link>
+            </Button>
+          </>
         )}
         <JudgingSwitcher
           judgings={judgings}
