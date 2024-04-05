@@ -16,7 +16,8 @@ type TabValue =
   | "settings"
   | "reimbursements"
   | "checkin"
-  | "tables";
+  | "tables"
+  | "judging";
 
 const getTabValue = (
   path: string,
@@ -31,6 +32,7 @@ const getTabValue = (
     return "reimbursements";
   if (path.startsWith(`/dashboard/${hackathonId}/check-in`)) return "checkin";
   if (path.startsWith(`/dashboard/${hackathonId}/tables`)) return "tables";
+  if (path.startsWith(`/dashboard/${hackathonId}/judging`)) return "judging";
   return undefined;
 };
 
@@ -65,6 +67,9 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
       case "tables":
         push(`/dashboard/${hackathonId}/tables`);
         break;
+      case "judging":
+        push(`/dashboard/${hackathonId}/judging`);
+        break;
     }
   };
 
@@ -82,12 +87,13 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
     >
       <TabsList
         className={`grid w-full grid-cols-2 ${
-          isAdmin ? "md:grid-cols-7" : "md:grid-cols-3"
+          isAdmin ? "md:grid-cols-8" : "md:grid-cols-3"
         } h-fit`}
       >
         <TabsTrigger value="applications">Applications</TabsTrigger>
         <TabsTrigger value="reimbursements">Travel reimbursements</TabsTrigger>
         <TabsTrigger value="checkin">Check-in</TabsTrigger>
+        <TabsTrigger value="judging">Judging</TabsTrigger>
         {isAdmin && <TabsTrigger value="form">Application form</TabsTrigger>}
         {isAdmin && <TabsTrigger value="tables">Teams & Tables</TabsTrigger>}
         {isAdmin && <TabsTrigger value="info">Hackathon info</TabsTrigger>}
