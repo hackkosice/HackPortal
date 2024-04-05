@@ -8,6 +8,7 @@ import { Stack } from "@/components/ui/stack";
 import getVoteParameters from "@/server/getters/dashboard/voteParameterManager/voteParameters";
 import VotePicker from "@/scenes/Dashboard/scenes/ApplicationReview/components/VotePicker";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import addVote from "@/server/actions/dashboard/addVote";
 
 type ApplicationReviewProps = {
   hackathonId: number;
@@ -51,7 +52,12 @@ const ApplicationReview = async ({ hackathonId }: ApplicationReviewProps) => {
             {applicationId && (
               <VotePicker
                 voteParameters={voteParameters}
-                applicationId={applicationId}
+                onVoteSubmit={async (values) => {
+                  await addVote({
+                    applicationId,
+                    values,
+                  });
+                }}
               />
             )}
           </CardContent>
