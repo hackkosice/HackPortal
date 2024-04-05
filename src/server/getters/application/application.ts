@@ -7,6 +7,7 @@ import {
   ApplicationStatus,
   ApplicationStatusEnum,
 } from "@/services/types/applicationStatus";
+import SortOrder = Prisma.SortOrder;
 
 export type ApplicationStepData = {
   id: number;
@@ -36,6 +37,7 @@ export type ApplicationData = {
     canSubmit: boolean;
     hackathonName: string;
     tableCode?: string;
+    freeTables: string[];
   } | null;
 };
 
@@ -110,6 +112,7 @@ const getApplicationData = async ({
         steps,
         canSubmit: false,
         hackathonName: hackathon.name,
+        freeTables: [],
       },
     };
   }
@@ -181,6 +184,26 @@ const getApplicationData = async ({
   const canSubmit =
     steps.every((step) => step.isCompleted) && session.emailVerified;
 
+  // Get list of all free tables if user doesn't have table assigned
+  const tableCode = user.hacker?.team?.table?.code;
+  let freeTables = [] as string[];
+  if (!tableCode) {
+    const tables = await prisma.table.findMany({
+      where: {
+        teams: {
+          none: {},
+        },
+      },
+      select: {
+        code: true,
+      },
+      orderBy: {
+        code: SortOrder.asc,
+      },
+    });
+    freeTables = tables.map((table) => table.code);
+  }
+
   return {
     message: "Application found",
     authStatus: {
@@ -195,6 +218,7 @@ const getApplicationData = async ({
       canSubmit,
       hackathonName: hackathon.name,
       tableCode: user.hacker?.team?.table?.code,
+      freeTables,
     },
   };
 };
