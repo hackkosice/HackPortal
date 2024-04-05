@@ -14,7 +14,7 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
   const session = await getServerSession(authOptions);
   const { judgings, nextJudgingIndex } = await getMyJudgings(hackathonId);
   return (
-    <Card className="md:w-[70vw] mx-auto">
+    <Card className="md:w-[70vw] mx-auto mb-20 md:[mb-0]">
       <CardHeader>
         <CardTitle>Judging</CardTitle>
       </CardHeader>

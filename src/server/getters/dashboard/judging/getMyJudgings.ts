@@ -79,7 +79,7 @@ const getMyJudgings = async (hackathonId: number): Promise<MyJudgings> => {
     judgingVerdict: judging.judgingVerdict ?? undefined,
   }));
 
-  let nextJudgingIndex = -1;
+  let nextJudgingIndex = 0;
   for (let i = 0; i < judgings.length; i++) {
     if (!judgings[i].judgingVerdict) {
       nextJudgingIndex = i;

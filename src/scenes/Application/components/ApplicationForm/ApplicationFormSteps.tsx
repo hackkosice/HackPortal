@@ -96,6 +96,12 @@ const ApplicationFormSteps = async ({
                     <Button asChild>
                       <Link href="/check-in">Show checkin code</Link>
                     </Button>
+                  </Stack>
+                )}
+                {(data.application.status === ApplicationStatusEnum.confirmed ||
+                  data.application.status ===
+                    ApplicationStatusEnum.attended) && (
+                  <>
                     {data.tableCode ? (
                       <Text>
                         Your team will be seated at the table{" "}
@@ -114,7 +120,7 @@ const ApplicationFormSteps = async ({
                         </Text>
                       )
                     )}
-                  </Stack>
+                  </>
                 )}
               </Stack>
             </>
