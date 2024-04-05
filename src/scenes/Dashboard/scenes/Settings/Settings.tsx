@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,11 +6,17 @@ import { Stack } from "@/components/ui/stack";
 import TravelReimbursementRequestDescriptionDialog from "@/scenes/Dashboard/scenes/Settings/components/TravelReimbursementRequestDescriptionDialog";
 import MarkDownRenderer from "@/components/common/MarkDownRenderer";
 import { Heading } from "@/components/ui/heading";
-import { GetAdminInfoData } from "@/server/getters/dashboard/settings/adminInfo";
+import getAdminInfo, {
+  GetAdminInfoData,
+} from "@/server/getters/dashboard/settings/adminInfo";
 import AdminManager from "@/scenes/Dashboard/scenes/Settings/components/AdminManager";
 import HackathonMaxTeamSizeDialog from "@/scenes/Dashboard/scenes/Settings/components/HackathonMaxTeamSizeDialog";
-import { GetSponsorsInfoData } from "@/server/getters/dashboard/settings/sponsorsInfo";
+import getSponsorsInfo, {
+  GetSponsorsInfoData,
+} from "@/server/getters/dashboard/settings/sponsorsInfo";
 import SponsorsManager from "@/scenes/Dashboard/scenes/Settings/components/SponsorsManager";
+import getTravelReimbursementRequestDescription from "@/server/getters/dashboard/travelReimbursements/travelReimbursementRequestDescription";
+import getMaxTeamSize from "@/server/getters/dashboard/settings/maxTeamSize";
 
 type SettingsProps = {
   hackathonId: number;
@@ -22,13 +26,12 @@ type SettingsProps = {
   maxTeamSize: number;
 };
 
-const Settings = ({
-  hackathonId,
-  travelReimbursementRequestDescription,
-  adminInfo,
-  sponsorsInfo,
-  maxTeamSize,
-}: SettingsProps) => {
+const Settings = async ({ hackathonId }: SettingsProps) => {
+  const { description: travelReimbursementRequestDescription } =
+    await getTravelReimbursementRequestDescription(hackathonId);
+  const adminInfo = await getAdminInfo();
+  const maxTeamSize = await getMaxTeamSize(hackathonId);
+  const sponsorsInfo = await getSponsorsInfo(hackathonId);
   return (
     <Card className="md:w-[70vw] mx-auto mb-[200px]">
       <CardHeader></CardHeader>

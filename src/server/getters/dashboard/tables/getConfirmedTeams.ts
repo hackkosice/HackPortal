@@ -8,7 +8,10 @@ export type TeamAndTable = {
   name: string;
   memberCount: number;
   tableCode?: string;
-  challenges: string[];
+  challenges: {
+    id: number;
+    title: string;
+  }[];
 };
 
 type TeamList = {
@@ -35,6 +38,7 @@ const getConfirmedTeams = async (hackathonId: number): Promise<TeamList> => {
       },
       challenges: {
         select: {
+          id: true,
           title: true,
         },
       },
@@ -74,7 +78,10 @@ const getConfirmedTeams = async (hackathonId: number): Promise<TeamList> => {
         name: team.name,
         memberCount: team.members.length,
         tableCode: team.table?.code,
-        challenges: team.challenges.map((challenge) => challenge.title),
+        challenges: team.challenges.map((challenge) => ({
+          id: challenge.id,
+          title: challenge.title,
+        })),
       });
       continue;
     }
@@ -90,7 +97,10 @@ const getConfirmedTeams = async (hackathonId: number): Promise<TeamList> => {
         name: team.name,
         memberCount: team.members.length,
         tableCode: team.table?.code,
-        challenges: team.challenges.map((challenge) => challenge.title),
+        challenges: team.challenges.map((challenge) => ({
+          id: challenge.id,
+          title: challenge.title,
+        })),
       });
     }
   }

@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import { GetSponsorsInfoData } from "@/server/getters/dashboard/settings/sponsorsInfo";
 import { Heading } from "@/components/ui/heading";
 import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/ui/text";
 import AddNewSponsorDialog from "@/scenes/Dashboard/scenes/Settings/components/AddNewSponsorDialog";
+import CreateSponsorChallengeDialog from "@/scenes/Dashboard/scenes/Settings/components/CreateSponsorChallenge";
 
 type SponsorsManagerProps = {
   hackathonId: number;
@@ -23,6 +26,11 @@ const SponsorsManager = ({
             <Stack direction="row" key={sponsor.email} alignItems="center">
               <Text size="small">{sponsor.company}</Text>
               <Text size="small">{sponsor.email}</Text>
+              {sponsor.challengeTitle ? (
+                <Text size="small">{sponsor.challengeTitle}</Text>
+              ) : (
+                <CreateSponsorChallengeDialog sponsorId={sponsor.id} />
+              )}
             </Stack>
           ))}
         </Stack>

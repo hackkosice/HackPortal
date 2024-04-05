@@ -5,6 +5,7 @@ import getConfirmedTeams from "@/server/getters/dashboard/tables/getConfirmedTea
 import TeamRow from "@/scenes/Dashboard/scenes/TablesManager/components/TeamRow";
 import getTableList from "@/server/getters/dashboard/tables/getTableList";
 import NewTableDialog from "@/scenes/Dashboard/scenes/TablesManager/components/NewTableDialog";
+import getChallengeList from "@/server/getters/dashboard/tables/getChallengeList";
 
 type TablesManagerProps = {
   hackathonId: number;
@@ -13,6 +14,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
   const { fullyConfirmedTeams, partiallyConfirmedTeams } =
     await getConfirmedTeams(hackathonId);
   const { tables } = await getTableList(hackathonId);
+  const { challenges } = await getChallengeList(hackathonId);
   return (
     <Card className="md:w-[70vw] mx-auto">
       <CardContent className="pt-5">
@@ -24,7 +26,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
               </Heading>
               <div className="flex flex-col gap-1">
                 {fullyConfirmedTeams.map((team) => (
-                  <TeamRow team={team} key={team.id} />
+                  <TeamRow team={team} key={team.id} challenges={challenges} />
                 ))}
               </div>
             </div>
@@ -39,7 +41,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
               </ul>
             </div>
           </div>
-          <div className="w-full">
+          <div className="pr-20">
             <Heading size="small">Tables</Heading>
             <NewTableDialog hackathonId={hackathonId} mode="create" />
             <div className="flex flex-col mt-3 gap-1">

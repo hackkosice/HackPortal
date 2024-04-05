@@ -16,7 +16,7 @@ const createChallenge = async ({
 }: CreateChallengeInput) => {
   await requireAdminSession();
 
-  prisma.challenge.create({
+  await prisma.challenge.create({
     data: {
       title,
       description,

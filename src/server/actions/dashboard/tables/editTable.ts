@@ -11,15 +11,18 @@ type EditTableInput = {
 const editTable = async ({ tableId, code }: EditTableInput) => {
   await requireAdminSession();
 
-  await prisma.table.update({
+  const { hackathonId } = await prisma.table.update({
     where: {
       id: tableId,
     },
     data: {
       code,
     },
+    select: {
+      hackathonId: true,
+    },
   });
-  revalidatePath(`/dashboard/${tableId}/tables`);
+  revalidatePath(`/dashboard/${hackathonId}/tables`);
 };
 
 export default editTable;
