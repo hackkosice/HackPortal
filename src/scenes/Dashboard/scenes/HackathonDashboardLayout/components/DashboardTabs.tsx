@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 type DashboardTabsProps = {
   hackathonId: number;
   isAdmin: boolean;
+  isVolunteer: boolean;
 };
 
 type TabValue =
@@ -36,7 +37,11 @@ const getTabValue = (
   return undefined;
 };
 
-const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
+const DashboardTabs = ({
+  hackathonId,
+  isAdmin,
+  isVolunteer,
+}: DashboardTabsProps) => {
   const path = usePathname();
   const { push } = useRouter();
 
@@ -76,6 +81,8 @@ const DashboardTabs = ({ hackathonId, isAdmin }: DashboardTabsProps) => {
   useEffect(() => {
     setTabValue(getTabValue(path, hackathonId));
   }, [path, hackathonId]);
+
+  if (isVolunteer) return <div className="mt-5"></div>;
 
   return (
     <Tabs
