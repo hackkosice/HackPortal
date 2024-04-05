@@ -102,7 +102,7 @@ const JudgingSwitcher = ({
   };
   return (
     <div className="mt-5">
-      {/*<Clock className="font-bold" />*/}
+      <Clock className="font-bold" />
       <Heading size="small">{judgingIndex + 1}. Judging</Heading>
       <div>
         <strong>Time:</strong> {dateToTimeString(judging.startTime)} -{" "}
@@ -121,7 +121,13 @@ const JudgingSwitcher = ({
       </div>
       {judging.judgingVerdict && !changeJudging ? (
         <div>
-          <div>{judging.judgingVerdict}</div>
+          <div>
+            {judging.judgingVerdict.split(";").map((value) => (
+              <div key={value.split("-")[0]}>
+                {value.split("-")[0]}: {value.split("-")[1]}
+              </div>
+            ))}
+          </div>
           <Button
             size="small"
             variant="outline"
