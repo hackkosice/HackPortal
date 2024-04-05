@@ -17,6 +17,8 @@ import getSponsorsInfo, {
 import SponsorsManager from "@/scenes/Dashboard/scenes/Settings/components/SponsorsManager";
 import getTravelReimbursementRequestDescription from "@/server/getters/dashboard/travelReimbursements/travelReimbursementRequestDescription";
 import getMaxTeamSize from "@/server/getters/dashboard/settings/maxTeamSize";
+import getJudgingSlots from "@/server/getters/dashboard/settings/getJudgingSlots";
+import JudgingSlotManager from "@/scenes/Dashboard/scenes/Settings/components/JudgingSlotManager";
 
 type SettingsProps = {
   hackathonId: number;
@@ -32,6 +34,7 @@ const Settings = async ({ hackathonId }: SettingsProps) => {
   const adminInfo = await getAdminInfo();
   const maxTeamSize = await getMaxTeamSize(hackathonId);
   const sponsorsInfo = await getSponsorsInfo(hackathonId);
+  const judgingSlots = await getJudgingSlots(hackathonId);
   return (
     <Card className="md:w-[70vw] mx-auto mb-[200px]">
       <CardHeader></CardHeader>
@@ -65,6 +68,10 @@ const Settings = async ({ hackathonId }: SettingsProps) => {
           <SponsorsManager
             hackathonId={hackathonId}
             sponsorsInfo={sponsorsInfo}
+          />
+          <JudgingSlotManager
+            hackathonId={hackathonId}
+            judgingSlots={judgingSlots}
           />
         </Stack>
       </CardContent>
