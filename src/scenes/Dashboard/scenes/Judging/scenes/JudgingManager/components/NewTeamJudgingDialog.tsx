@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -21,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import callServerAction from "@/services/helpers/server/callServerAction";
 import createTeamJudging from "@/server/actions/dashboard/judging/createTeamJudging";
 import { Text } from "@/components/ui/text";
