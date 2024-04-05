@@ -4,7 +4,7 @@ import requireAdmin from "@/services/helpers/requireAdmin";
 import TablesManager from "@/scenes/Dashboard/scenes/TablesManager/TablesManager";
 
 export const metadata: Metadata = {
-  title: "Checkin",
+  title: "Teams & Tables",
 };
 
 const Page = async ({

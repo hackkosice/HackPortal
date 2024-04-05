@@ -2,6 +2,7 @@
 
 import { prisma } from "@/services/prisma";
 import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
+import { revalidatePath } from "next/cache";
 
 type CreateTeamJudgingInput = {
   organizerId: number;
@@ -15,6 +16,17 @@ const createTeamJudging = async ({
 }: CreateTeamJudgingInput) => {
   await requireAdminSession();
 
+  const judgingSlot = await prisma.judgingSlot.findUnique({
+    where: {
+      id: judgingSlotId,
+    },
+    select: { hackathonId: true },
+  });
+
+  if (!judgingSlot) {
+    throw new Error("Judging slot not found");
+  }
+
   await prisma.teamJudging.create({
     data: {
       judgingSlotId,
@@ -22,6 +34,11 @@ const createTeamJudging = async ({
       organizerId,
     },
   });
+
+  revalidatePath(
+    `/dashboard/${judgingSlot.hackathonId}/judging/manage`,
+    "page"
+  );
 };
 
 export default createTeamJudging;

@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PopoverContent as PopoverContentWithoutPortal } from "@/components/ui/popover-without-portal";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
@@ -117,6 +118,7 @@ interface VirtualizedComboboxProps {
   height?: string;
   onSelectOption: (option: string) => void;
   selectedOption: string;
+  withoutPortal?: boolean;
 }
 
 export function Combobox({
@@ -124,8 +126,20 @@ export function Combobox({
   searchPlaceholder = "Search items...",
   onSelectOption,
   selectedOption,
+  withoutPortal,
 }: VirtualizedComboboxProps) {
   const [open, setOpen] = React.useState<boolean>(false);
+  const command = (
+    <VirtualizedCommand
+      options={options}
+      placeholder={searchPlaceholder}
+      selectedOption={selectedOption}
+      onSelectOption={(currentValue) => {
+        onSelectOption(currentValue === selectedOption ? "" : currentValue);
+        setOpen(false);
+      }}
+    />
+  );
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -141,17 +155,16 @@ export function Combobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 md:w-[45vw] w-[95vw] md:h-[400px] h-[30vh]">
-        <VirtualizedCommand
-          options={options}
-          placeholder={searchPlaceholder}
-          selectedOption={selectedOption}
-          onSelectOption={(currentValue) => {
-            onSelectOption(currentValue === selectedOption ? "" : currentValue);
-            setOpen(false);
-          }}
-        />
-      </PopoverContent>
+
+      {withoutPortal ? (
+        <PopoverContentWithoutPortal className="p-0 md:w-[45vw] w-[95vw] md:h-[400px] h-[30vh]">
+          {command}
+        </PopoverContentWithoutPortal>
+      ) : (
+        <PopoverContent className="p-0 md:w-[45vw] w-[95vw] md:h-[400px] h-[30vh]">
+          {command}
+        </PopoverContent>
+      )}
     </Popover>
   );
 }
