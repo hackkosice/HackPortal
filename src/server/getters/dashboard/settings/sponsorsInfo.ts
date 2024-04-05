@@ -5,6 +5,7 @@ type SponsorInfo = {
   id: number;
   company: string;
   email: string;
+  challengeTitle?: string;
 };
 
 export type GetSponsorsInfoData = {
@@ -26,6 +27,11 @@ const getSponsorsInfo = async (hackathonId: number) => {
           email: true,
         },
       },
+      challenge: {
+        select: {
+          title: true,
+        },
+      },
     },
   });
 
@@ -34,6 +40,7 @@ const getSponsorsInfo = async (hackathonId: number) => {
       id: sponsor.id,
       company: sponsor.company,
       email: sponsor.user.email,
+      challengeTitle: sponsor.challenge?.title,
     })),
   };
 };

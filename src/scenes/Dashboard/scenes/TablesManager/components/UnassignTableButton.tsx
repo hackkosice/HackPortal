@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import unassignTableFromTeam from "@/server/actions/dashboard/tables/unassignTableFromTeam";
 import callServerAction from "@/services/helpers/server/callServerAction";
+import { Undo2 } from "lucide-react";
 
 type UnassignTableButtonProps = {
   teamId: number;
@@ -18,10 +19,10 @@ const UnassignTableButton = ({ teamId }: UnassignTableButtonProps) => {
     <Button
       variant="ghost"
       size="small"
-      className="pl-1 text-gray-500"
+      className="text-gray-500 px-1"
       onClick={onUnassignTable}
     >
-      Unassign
+      <Undo2 className="h-4 w-4" />
     </Button>
   );
 };
