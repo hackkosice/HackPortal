@@ -1,21 +1,16 @@
 import React from "react";
 import VotePicker from "@/scenes/Dashboard/scenes/ApplicationReview/components/VotePicker";
 import { render, screen } from "@testing-library/react";
-import addVote from "@/server/actions/dashboard/addVote";
 import userEvent from "@testing-library/user-event";
 
-jest.mock("@/server/actions/dashboard/addVote", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-const mockAddVote = addVote as jest.MockedFunction<typeof addVote>;
+const mockAddVote = jest.fn();
 
 describe("VotePicker", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   it("should render when no vote parameters are defined", () => {
-    render(<VotePicker voteParameters={[]} applicationId={1} />);
+    render(<VotePicker voteParameters={[]} onVoteSubmit={mockAddVote} />);
     expect(true).toBe(true);
   });
 
@@ -32,7 +27,7 @@ describe("VotePicker", () => {
             weight: 1,
           },
         ]}
-        applicationId={1}
+        onVoteSubmit={mockAddVote}
       />
     );
 
@@ -63,7 +58,7 @@ describe("VotePicker", () => {
             weight: 1,
           },
         ]}
-        applicationId={1}
+        onVoteSubmit={mockAddVote}
       />
     );
 
@@ -95,7 +90,7 @@ describe("VotePicker", () => {
             weight: 1,
           },
         ]}
-        applicationId={1}
+        onVoteSubmit={mockAddVote}
       />
     );
 
@@ -104,14 +99,11 @@ describe("VotePicker", () => {
     await userEvent.click(screen.getByRole("button", { name: "1" }));
     expect(screen.getByRole("button", { name: "Save vote" })).toBeVisible();
     await userEvent.click(screen.getByRole("button", { name: "Save vote" }));
-    expect(mockAddVote).toHaveBeenCalledWith({
-      applicationId: 1,
-      values: [
-        {
-          value: 1,
-          voteParameterId: 1,
-        },
-      ],
-    });
+    expect(mockAddVote).toHaveBeenCalledWith([
+      {
+        value: 1,
+        voteParameterId: 1,
+      },
+    ]);
   });
 });
