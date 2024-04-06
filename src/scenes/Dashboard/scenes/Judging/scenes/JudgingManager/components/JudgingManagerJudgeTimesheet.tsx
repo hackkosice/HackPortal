@@ -33,6 +33,8 @@ const JudgingManagerJudgeTimesheet = ({
           {teamJudging.team ? (
             <>
               <span>{teamJudging.team.name}</span>
+              {" - "}
+              <span>{teamJudging.team.tableCode}</span>
               <ConfirmationDialog
                 question="Are you sure you want to unassign this team?"
                 onAnswer={async (answer) => {
