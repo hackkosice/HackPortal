@@ -20,7 +20,7 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
       </CardHeader>
       <CardContent>
         {session?.isAdmin && (
-          <>
+          <div className="flex flex-row gap-1">
             <Button>
               <Link href={`/dashboard/${hackathonId}/judging/manage`}>
                 Judging manager
@@ -31,7 +31,7 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
                 Judging results
               </Link>
             </Button>
-          </>
+          </div>
         )}
         <JudgingSwitcher
           judgings={judgings}

@@ -12,7 +12,7 @@ type ParsedVerdict = Record<string, number>;
 type TeamsWithJudgings = {
   teamId: number;
   teamName: string;
-  judgingVerdicts: ParsedVerdict[];
+  judgingVerdicts: { organizerId: number; verdict: ParsedVerdict }[];
 }[];
 
 const computeJudgingResults = (
@@ -50,6 +50,7 @@ const getJudgingResults = async (
           name: true,
         },
       },
+      organizerId: true,
     },
   });
 
@@ -64,12 +65,20 @@ const getJudgingResults = async (
       teamId: team.id,
       teamName: team.name,
       judgingVerdicts: judgings
-        .map((judging) =>
-          judging.judgingVerdict
-            ? parseJudgingVerdict(judging.judgingVerdict)
-            : null
-        )
-        .filter((judging) => judging !== null) as ParsedVerdict[],
+        .map((judging) => {
+          if (!judging.judgingVerdict) {
+            return null;
+          }
+          const parsedVerdict = parseJudgingVerdict(judging.judgingVerdict);
+          return {
+            organizerId: judging.organizerId,
+            verdict: parsedVerdict,
+          };
+        })
+        .filter((judging) => judging !== null) as {
+        organizerId: number;
+        verdict: ParsedVerdict;
+      }[],
     });
   }
 
