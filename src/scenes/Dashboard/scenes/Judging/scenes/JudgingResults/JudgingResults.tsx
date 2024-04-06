@@ -25,7 +25,7 @@ const JudgingResults = async ({ hackathonId }: JudgingResultsProps) => {
         {results.map((result, index) => {
           return (
             <div key={index}>
-              {index + 1}. {result.name} - {result.score}
+              {index + 1}. {result.name} ({result.tableCode}) - {result.score}
             </div>
           );
         })}
