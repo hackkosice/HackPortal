@@ -70,7 +70,8 @@ const getConfirmedTeams = async (hackathonId: number): Promise<TeamList> => {
     }
     const isFullyConfirmed = team.members.every(
       (member) =>
-        member.application?.status.name === ApplicationStatusEnum.confirmed
+        member.application?.status.name === ApplicationStatusEnum.confirmed ||
+        member.application?.status.name === ApplicationStatusEnum.attended
     );
     if (isFullyConfirmed) {
       fullyConfirmedTeams.push({
@@ -88,7 +89,8 @@ const getConfirmedTeams = async (hackathonId: number): Promise<TeamList> => {
 
     const isPartiallyConfirmed = team.members.some(
       (member) =>
-        member.application?.status.name === ApplicationStatusEnum.confirmed
+        member.application?.status.name === ApplicationStatusEnum.confirmed ||
+        member.application?.status.name === ApplicationStatusEnum.attended
     );
 
     if (isPartiallyConfirmed) {
