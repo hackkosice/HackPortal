@@ -8,6 +8,7 @@ import TeamRow from "@/scenes/Dashboard/scenes/TablesManager/components/TeamRow"
 import getTableList from "@/server/getters/dashboard/tables/getTableList";
 import NewTableDialog from "@/scenes/Dashboard/scenes/TablesManager/components/NewTableDialog";
 import getChallengeList from "@/server/getters/dashboard/tables/getChallengeList";
+import DownloadTablesTeam from "@/scenes/Dashboard/scenes/TablesManager/components/DownloadTablesTeam";
 
 type TablesManagerProps = {
   hackathonId: number;
@@ -48,9 +49,15 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
   const fullyConfirmedTeams = fullyConfirmedTeamsUnsorted.sort(
     sortTeamsByTableCodeCallback
   );
+
+  const dataForExport = fullyConfirmedTeams.map((team) => ({
+    name: team.name,
+    tableCode: team.tableCode ?? "NONE",
+    challenges: team.challenges.map((challenge) => challenge.title).join(", "),
+  }));
   return (
     <Card className="md:w-[70vw] mx-auto">
-      <CardContent className="pt-5">
+      <CardContent className="pt-5 mb-20">
         <div className="flex flex-row flex-wrap md:flex-nowrap">
           <div className="w-[90vw] lg:w-full">
             <div>
@@ -86,6 +93,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
             </div>
           </div>
         </div>
+        <DownloadTablesTeam data={dataForExport} />
       </CardContent>
     </Card>
   );
