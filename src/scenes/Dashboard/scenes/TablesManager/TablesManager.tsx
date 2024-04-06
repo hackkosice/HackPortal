@@ -1,7 +1,9 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import getConfirmedTeams from "@/server/getters/dashboard/tables/getConfirmedTeams";
+import getConfirmedTeams, {
+  TeamAndTable,
+} from "@/server/getters/dashboard/tables/getConfirmedTeams";
 import TeamRow from "@/scenes/Dashboard/scenes/TablesManager/components/TeamRow";
 import getTableList from "@/server/getters/dashboard/tables/getTableList";
 import NewTableDialog from "@/scenes/Dashboard/scenes/TablesManager/components/NewTableDialog";
@@ -10,16 +12,47 @@ import getChallengeList from "@/server/getters/dashboard/tables/getChallengeList
 type TablesManagerProps = {
   hackathonId: number;
 };
+const sortTeamsByTableCodeCallback = (a: TeamAndTable, b: TeamAndTable) => {
+  // Extract the letter and numeric parts of each string
+  const tableCodeA = a.tableCode ?? "";
+  const tableCodeB = b.tableCode ?? "";
+  const matchA = tableCodeA.match(/([A-Z])(\d+)/);
+  const matchB = tableCodeB.match(/([A-Z])(\d+)/);
+
+  // If either team has no table code, sort it last
+  if (!matchA) return 1;
+  if (!matchB) return -1;
+
+  // Extracted letter parts
+  const letterA = matchA[1];
+  const letterB = matchB[1];
+
+  // Compare the letter parts
+  if (letterA < letterB) return -1;
+  if (letterA > letterB) return 1;
+
+  // If letters are equal, convert numeric parts to numbers and compare them
+  const numberA = parseInt(matchA[2], 10);
+  const numberB = parseInt(matchB[2], 10);
+
+  return numberA - numberB;
+};
 const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
-  const { fullyConfirmedTeams, partiallyConfirmedTeams } =
-    await getConfirmedTeams(hackathonId);
+  const {
+    fullyConfirmedTeams: fullyConfirmedTeamsUnsorted,
+    partiallyConfirmedTeams,
+  } = await getConfirmedTeams(hackathonId);
   const { tables } = await getTableList(hackathonId);
   const { challenges } = await getChallengeList(hackathonId);
+
+  const fullyConfirmedTeams = fullyConfirmedTeamsUnsorted.sort(
+    sortTeamsByTableCodeCallback
+  );
   return (
     <Card className="md:w-[70vw] mx-auto">
       <CardContent className="pt-5">
-        <div className="flex flex-row">
-          <div className="w-full">
+        <div className="flex flex-row flex-wrap md:flex-nowrap">
+          <div className="w-[90vw] lg:w-full">
             <div>
               <Heading size="small">
                 Fully confirmed teams ({fullyConfirmedTeams.length})
