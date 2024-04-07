@@ -21,45 +21,55 @@ const JudgingManagerJudgeTimesheet = ({
 }: JudgingManagerJudgeTimesheetProps) => {
   return (
     <div className="mt-5">
-      {judge.teamJudgings.map((teamJudging) => (
-        <div
-          key={teamJudging.judgingSlot.id}
-          className="flex flex-row items-center gap-1"
-        >
-          <span>
-            {dateToTimeString(teamJudging.judgingSlot.startTime)} -{" "}
-            {dateToTimeString(teamJudging.judgingSlot.endTime)}
-          </span>
-          {teamJudging.team ? (
-            <>
-              <span>{teamJudging.team.name}</span>
-              <ConfirmationDialog
-                question="Are you sure you want to unassign this team?"
-                onAnswer={async (answer) => {
-                  if (answer) {
-                    await callServerAction(deleteTeamJudging, {
-                      teamJudgingId: teamJudging.team?.teamJudgingId as number,
-                    });
-                  }
-                }}
-              >
-                <Button variant="ghost" className="text-red-500 p-0">
-                  <X className="h-4 w-4" />
-                </Button>
-              </ConfirmationDialog>
-            </>
-          ) : (
-            <NewTeamJudgingDialog
-              judgingSlotId={teamJudging.judgingSlot.id}
-              organizerId={judge.id}
-              teamOptions={teamsForJudging.map((team) => ({
-                value: team.teamId.toString(),
-                label: team.nameAndTable,
-              }))}
-            />
-          )}
-        </div>
-      ))}
+      {judge.teamJudgings
+        .sort((teamJudgingA, teamJudgingB) => {
+          return (
+            teamJudgingA.judgingSlot.startTime.getTime() -
+            teamJudgingB.judgingSlot.startTime.getTime()
+          );
+        })
+        .map((teamJudging) => (
+          <div
+            key={teamJudging.judgingSlot.id}
+            className="flex flex-row items-center gap-1"
+          >
+            <span>
+              {dateToTimeString(teamJudging.judgingSlot.startTime)} -{" "}
+              {dateToTimeString(teamJudging.judgingSlot.endTime)}
+            </span>
+            {teamJudging.team ? (
+              <>
+                <span>{teamJudging.team.name}</span>
+                {" - "}
+                <span>{teamJudging.team.tableCode}</span>
+                <ConfirmationDialog
+                  question="Are you sure you want to unassign this team?"
+                  onAnswer={async (answer) => {
+                    if (answer) {
+                      await callServerAction(deleteTeamJudging, {
+                        teamJudgingId: teamJudging.team
+                          ?.teamJudgingId as number,
+                      });
+                    }
+                  }}
+                >
+                  <Button variant="ghost" className="text-red-500 p-0">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </ConfirmationDialog>
+              </>
+            ) : (
+              <NewTeamJudgingDialog
+                judgingSlotId={teamJudging.judgingSlot.id}
+                organizerId={judge.id}
+                teamOptions={teamsForJudging.map((team) => ({
+                  value: team.teamId.toString(),
+                  label: team.nameAndTable,
+                }))}
+              />
+            )}
+          </div>
+        ))}
     </div>
   );
 };
