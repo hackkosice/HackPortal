@@ -31,7 +31,7 @@ const computeJudgingResults = (
   // that is they need to be created on the day of the judging
   const timeThreshold = new Date();
   timeThreshold.setHours(12);
-  timeThreshold.setMinutes(45);
+  timeThreshold.setMinutes(50);
   timeThreshold.setSeconds(0);
   timeThreshold.setMilliseconds(0);
 
