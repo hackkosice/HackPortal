@@ -55,18 +55,83 @@ const computeJudgingResults = (
       timeThreshold.getTime()
   );
 
-  return processOneGroup(firtsGroup, 1).concat(processOneGroup(secondGroup, 2));
+  return processOneGroup(firtsGroup).concat(processOneGroup(secondGroup));
 };
 
 const processOneGroup = (
   teamsWithJudgings: TeamsWithJudgings,
-  score: number // Score is here just for debugging purposes, later will be calculated from the verdicts
 ): TeamForResult[] => {
+  // Define a dictionary of teams and their final scores
+  const teamScores: Record<number, number> = {};
+
+  // Create a set of all organizer ids
+  const organizerIds = new Set(
+    teamsWithJudgings.flatMap((team) =>
+      team.judgingVerdicts.map((judging) => judging.organizerId)
+    )
+  );
+
+  organizerIds.forEach((organizerId) => {
+    // Calculate the number of verdicts made by this organizer
+    const numberOfVerdicts = teamsWithJudgings.reduce((acc, team) => {
+      return (
+        acc +
+        team.judgingVerdicts.filter(
+          (judging) => judging.organizerId === organizerId
+        ).length
+      );
+    }, 0);
+
+    // Count the total number of points awarded by the organizer in the verdicts
+    const totalPoints = teamsWithJudgings.reduce((acc, team) => {
+      return (
+        acc +
+        team.judgingVerdicts
+          .filter((judging) => judging.organizerId === organizerId)
+          .reduce((acc, judging) => {
+            return (
+              acc +
+              Object.values(judging.verdict).reduce(
+                (acc, value) => acc + value,
+                0
+              )
+            );
+          }, 0)
+      );
+    }, 0);
+
+    // For each team, calculate the proportion of the score given by the particular organizer
+    // multiplied by the number of their verdicts and add it to the team's score
+    teamsWithJudgings.forEach((team) => {
+      const points = team.judgingVerdicts
+        .filter((judging) => judging.organizerId === organizerId)
+        .reduce((acc, judging) => {
+          return (
+            acc +
+            Object.values(judging.verdict).reduce(
+              (acc, value) => acc + value,
+              0
+            )
+          );
+        }, 0);
+
+      if (points === 0) {
+        return;
+      }
+
+      if (!teamScores[team.teamId]) {
+        teamScores[team.teamId] = 0;
+      }
+
+      teamScores[team.teamId] += (points / totalPoints) * numberOfVerdicts;
+    });
+  });
+
   return teamsWithJudgings.map((team) => ({
     id: team.teamId,
     name: team.teamName,
     tableCode: team.tableCode,
-    score: score,
+    score: teamScores[team.teamId] || 0,
   }));
 };
 
