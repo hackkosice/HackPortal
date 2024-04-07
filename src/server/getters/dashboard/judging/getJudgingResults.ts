@@ -130,7 +130,7 @@ const processOneGroup = (
     id: team.teamId,
     name: team.teamName,
     tableCode: team.tableCode,
-    score: teamScores[team.teamId] || 0,
+    score: (teamScores[team.teamId] || 0) / team.judgingVerdicts.length,
   }));
 };
 
