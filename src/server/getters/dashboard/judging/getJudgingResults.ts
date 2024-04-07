@@ -1,6 +1,5 @@
 import getConfirmedTeams from "@/server/getters/dashboard/tables/getConfirmedTeams";
 import { prisma } from "@/services/prisma";
-import { time } from "console";
 
 export type TeamForResult = {
   id: number;
@@ -59,7 +58,7 @@ const computeJudgingResults = (
 };
 
 const processOneGroup = (
-  teamsWithJudgings: TeamsWithJudgings,
+  teamsWithJudgings: TeamsWithJudgings
 ): TeamForResult[] => {
   // Define a dictionary of teams and their final scores
   const teamScores: Record<number, number> = {};
