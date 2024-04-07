@@ -24,7 +24,7 @@ type TeamsWithJudgings = {
 const computeJudgingResults = (
   teamsWithJudgings: TeamsWithJudgings
 ): TeamForResult[] => {
-  // Define the time equal to 12:45:00
+  // Define the time equal to 12:50:00
   // Hack Kosice 2024 specific time, used to split the teams into two groups
   // The comparisons will only work if the judging slots are in the same day,
   // that is they need to be created on the day of the judging
