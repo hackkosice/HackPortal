@@ -55,18 +55,18 @@ const ApplicationDetailCard = async ({ applicationId, hackathonId }: Props) => {
                 <>
                   <Heading size="small">Application score:</Heading>
                   <div
-                    className={`w-[80px] h-[80px] rounded-[40px] border-4 flex justify-center items-center`}
+                    className={`w-[90px] h-[90px] rounded-[45px] border-4 flex justify-center items-center`}
                     style={{
                       borderColor: applicationScore.relevance.color,
                     }}
                   >
                     <Text
-                      className={`text-[1.7rem] font-bold`}
+                      className={`text-[1.5rem] font-bold`}
                       style={{
                         color: applicationScore.relevance.color,
                       }}
                     >
-                      {applicationScore.score}
+                      {applicationScore.score.toFixed(2)}
                     </Text>
                   </div>
                   <Text
