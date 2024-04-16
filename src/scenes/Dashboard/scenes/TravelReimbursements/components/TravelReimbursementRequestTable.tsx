@@ -214,7 +214,28 @@ const TravelReimbursementRequestTable = ({
       ] as ColumnDef<TravelReimbursementRequest>[],
     [params, actionType]
   );
-  return <DataTable columns={columns} data={requests} />;
+
+  const totalAmount = useMemo(
+    () =>
+      requests.reduce(
+        (accum, request) => accum + (request.approvedAmount ?? 0),
+        0
+      ),
+    [requests]
+  );
+
+  return (
+    <>
+      <p>
+        Total Amount:{" "}
+        {new Intl.NumberFormat("sk-SK", {
+          style: "currency",
+          currency: "EUR",
+        }).format(totalAmount)}
+      </p>
+      <DataTable columns={columns} data={requests} />
+    </>
+  );
 };
 
 export default TravelReimbursementRequestTable;
