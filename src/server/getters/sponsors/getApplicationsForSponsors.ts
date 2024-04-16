@@ -37,7 +37,16 @@ const getApplicationsForSponsors = async (
     },
   });
 
-  if (!confirmedStatusId) {
+  const attendedStatusId = await prisma.applicationStatus.findUnique({
+    select: {
+      id: true,
+    },
+    where: {
+      name: ApplicationStatusEnum.attended,
+    },
+  });
+
+  if (!confirmedStatusId || !attendedStatusId) {
     throw new Error("Confirmed status not found");
   }
 
@@ -46,6 +55,11 @@ const getApplicationsForSponsors = async (
       id: true,
       hacker: {
         select: {
+          team: {
+            select: {
+              name: true,
+            },
+          },
           user: {
             select: {
               email: true,
@@ -76,7 +90,9 @@ const getApplicationsForSponsors = async (
       },
     },
     where: {
-      statusId: confirmedStatusId.id,
+      statusId: {
+        in: [confirmedStatusId.id, attendedStatusId.id],
+      },
     },
   });
 
@@ -113,6 +129,7 @@ const getApplicationsForSponsors = async (
     properties: {
       id: application.id,
       email: application.hacker.user.email,
+      team: application.hacker.team?.name ?? "",
       ...createFormValuesObject(application.formValues, formFields),
     },
   }));
