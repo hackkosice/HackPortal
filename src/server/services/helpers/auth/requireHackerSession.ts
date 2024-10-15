@@ -21,15 +21,12 @@ const requireHackerSession = async ({
     throw new Error("User email not verified");
   }
 
-  const hackathonId = await getActiveHackathonId(prisma);
-  if (!hackathonId) {
-    return null;
-  }
-
   const hacker = await prisma.hacker.findFirst({
     where: {
       userId: session.id,
-      hackathonId: hackathonId,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
