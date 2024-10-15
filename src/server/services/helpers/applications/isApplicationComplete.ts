@@ -41,7 +41,36 @@ const isApplicationComplete = async (
     },
   });
 
+  const application = await prisma.application.findUnique({
+    where: {
+      id: applicationId,
+    },
+    select: {
+      id: true,
+      hacker: {
+        select: {
+          hackathonId: true,
+        },
+      },
+      formValues: {
+        select: {
+          fieldId: true,
+          value: true,
+        },
+      },
+    },
+  });
+
+  if (!application || !application.hacker) {
+    throw new Error("Application or hacker not found");
+  }
+
+  const { hackathonId } = application.hacker;
+
   const stepsDb = await prisma.applicationFormStep.findMany({
+    where: {
+      hackathonId,
+    },
     select: {
       formFields: {
         select: {

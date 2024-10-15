@@ -21,7 +21,8 @@ export type ApplicationFormStepData = {
 };
 
 const getApplicationFormStep = async (
-  stepId: number
+  stepId: number,
+  hackathonId: number
 ): Promise<ApplicationFormStepData> => {
   const session = await getServerSession(authOptions);
 
@@ -38,9 +39,10 @@ const getApplicationFormStep = async (
     };
   }
 
-  const hacker = await prisma.hacker.findUnique({
+  const hacker = await prisma.hacker.findFirst({
     where: {
       userId: session.id,
+      hackathonId: hackathonId,
     },
   });
 

@@ -3,6 +3,8 @@ import ApplicationFormStep from "@/scenes/ApplicationFormStep/ApplicationFormSte
 import getApplicationFormStep from "@/server/getters/application/applicationFormStep";
 import { Metadata } from "next";
 import requireNonOrganizer from "@/services/helpers/requireNonOrganizer";
+import getActiveHackathonId from "@/server/getters/getActiveHackathonId";
+import { prisma } from "@/services/prisma";
 
 export const metadata: Metadata = {
   title: "Application Form",
@@ -14,8 +16,14 @@ const ApplicationFormStepPage = async ({
   params: { stepId: string };
 }) => {
   await requireNonOrganizer();
+  const hackathonId = await getActiveHackathonId(prisma);
+  if (!hackathonId) {
+    return null;
+  }
+
   const applicationFormStepData = await getApplicationFormStep(
-    Number(params.stepId)
+    Number(params.stepId),
+    hackathonId
   );
   return (
     <ApplicationFormStep
