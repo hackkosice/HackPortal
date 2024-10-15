@@ -80,6 +80,7 @@ model Hacker {
   createdAt                  DateTime                    @default(now())
   updatedAt                  DateTime                    @updatedAt
   travelReimbursementRequest TravelReimbursementRequest?
+  @@unique([userId, hackathonId], name: "hackerApplication")
 }
 
 model Team {

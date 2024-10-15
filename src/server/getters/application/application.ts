@@ -155,6 +155,7 @@ const getApplicationData = async ({
               },
             },
           },
+          hackathonId: true,
         },
       },
     },
@@ -185,7 +186,8 @@ const getApplicationData = async ({
     steps.every((step) => step.isCompleted) && session.emailVerified;
 
   // Get list of all free tables if user doesn't have table assigned
-  const tableCode = user.hacker?.team?.table?.code;
+  const hacker = user.hacker.find((h) => h.hackathonId === hackathonId);
+  const tableCode = hacker?.team?.table?.code;
   let freeTables = [] as string[];
   if (!tableCode) {
     const tables = await prisma.table.findMany({
@@ -217,7 +219,8 @@ const getApplicationData = async ({
       steps,
       canSubmit,
       hackathonName: hackathon.name,
-      tableCode: user.hacker?.team?.table?.code,
+      tableCode: user.hacker.find((h) => h.hackathonId === hackathonId)?.team
+        ?.table?.code,
       freeTables,
     },
   };
