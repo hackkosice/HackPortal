@@ -51,10 +51,28 @@ const getApplicationIdForReview = async (
   });
 
   if (currentApplicationForReviewId) {
-    return {
-      totalApplicationsLeftToReviewCount: applications.length,
-      applicationId: currentApplicationForReviewId,
-    };
+    // Fetch the current application for review
+    const currentApplicationForReview = await prisma.application.findUnique({
+      where: {
+        id: currentApplicationForReviewId,
+      },
+      select: {
+        hacker: {
+          select: {
+            hackathonId: true,
+          },
+        },
+      },
+    });
+    if (
+      currentApplicationForReview &&
+      currentApplicationForReview.hacker.hackathonId === hackathonId
+    ) {
+      return {
+        totalApplicationsLeftToReviewCount: applications.length,
+        applicationId: currentApplicationForReviewId,
+      };
+    }
   }
 
   if (applications.length === 0) {
