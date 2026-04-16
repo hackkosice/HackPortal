@@ -93,6 +93,9 @@ const getApplicationsForSponsors = async (
       statusId: {
         in: [confirmedStatusId.id, attendedStatusId.id],
       },
+      hacker: {
+        hackathonId,
+      },
     },
   });
 
