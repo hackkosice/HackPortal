@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 import getApplicationStatistics from "@/server/getters/dashboard/statistics/getApplicationStatistics";
-import { ApplicationStatus } from "@/services/types/applicationStatus";
+import {
+  ApplicationStatus,
+  ApplicationStatusEnum,
+} from "@/services/types/applicationStatus";
 
 export async function GET(
   request: NextRequest,
@@ -9,16 +12,23 @@ export async function GET(
 ) {
   try {
     await requireOrganizerSession();
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const searchParams = request.nextUrl.searchParams;
-    const status = (searchParams.get("status") || "all") as
-      | ApplicationStatus
-      | "all";
+  const hackathonId = Number(params.hackathonId);
+  if (isNaN(hackathonId)) {
+    return NextResponse.json({ error: "Invalid hackathonId" }, { status: 400 });
+  }
 
-    const hackathonId = Number(params.hackathonId);
+  const rawStatus = request.nextUrl.searchParams.get("status") ?? "all";
+  const validStatuses: string[] = [...Object.values(ApplicationStatusEnum), "all"];
+  const status = validStatuses.includes(rawStatus)
+    ? (rawStatus as ApplicationStatus | "all")
+    : "all";
 
+  try {
     const data = await getApplicationStatistics(hackathonId, status);
-
     return NextResponse.json(data);
   } catch (error) {
     console.error("Statistics API error:", error);

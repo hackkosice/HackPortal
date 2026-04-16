@@ -4,10 +4,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Stack } from "@/components/ui/stack";
 import { Text } from "@/components/ui/text";
-import {
-  ApplicationStatisticsData,
-  FieldStatistic,
-} from "@/server/getters/dashboard/statistics/getApplicationStatistics";
+import { ApplicationStatisticsData } from "@/server/getters/dashboard/statistics/getApplicationStatistics";
 import { ApplicationStatus } from "@/services/types/applicationStatus";
 
 type StatisticsProps = {

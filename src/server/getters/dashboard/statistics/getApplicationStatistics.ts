@@ -1,8 +1,6 @@
 import { prisma } from "@/services/prisma";
-import {
-  ApplicationStatus,
-  ApplicationStatusEnum,
-} from "@/services/types/applicationStatus";
+import { ApplicationStatus } from "@/services/types/applicationStatus";
+import { FormFieldTypesWithOptions } from "@/services/types/formFields";
 import { Prisma } from ".prisma/client";
 import SortOrder = Prisma.SortOrder;
 
@@ -107,7 +105,7 @@ const getApplicationStatistics = async (
         {
           type: {
             value: {
-              in: ["select", "multi_select"],
+              in: FormFieldTypesWithOptions,
             },
           },
         },

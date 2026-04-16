@@ -82,7 +82,6 @@ const getApplicationsForSponsors = async (
           },
           file: {
             select: {
-              id: true,
               name: true,
               path: true,
             },
