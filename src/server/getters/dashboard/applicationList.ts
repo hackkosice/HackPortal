@@ -66,6 +66,12 @@ const getApplicationsList = async (
               value: true,
             },
           },
+          file: {
+            select: {
+              name: true,
+              path: true,
+            },
+          },
         },
       },
       votes: {

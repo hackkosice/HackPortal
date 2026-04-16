@@ -1,18 +1,18 @@
-import React from "react";
 import Statistics from "@/scenes/Dashboard/scenes/Statistics/Statistics";
+import requireAdmin from "@/services/helpers/requireAdmin";
 import { disallowVolunteer } from "@/services/helpers/disallowVolunteer";
 import getApplicationStatistics from "@/server/getters/dashboard/statistics/getApplicationStatistics";
-
-export const metadata = {
-  title: "Statistics",
-};
 
 const StatisticsPage = async ({
   params: { hackathonId },
 }: {
-  params: { hackathonId: string };
+  params: {
+    hackathonId: string;
+  };
 }) => {
   await disallowVolunteer(hackathonId);
+  await requireAdmin();
+
   const initialData = await getApplicationStatistics(Number(hackathonId), "all");
 
   return (

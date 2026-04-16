@@ -61,6 +61,24 @@ const SponsorsApplicationsTable = ({
   hackathonId,
   applicationProperties,
 }: ApplicationsTableProps) => {
+  // Search state
+  const [searchEmail, setSearchEmail] = React.useState<string>("");
+  const [searchName, setSearchName] = React.useState<string>("");
+
+  // Filter applications based on email and name search
+  const filteredApplications = useMemo(() => {
+    return applicationProperties.filter((app) => {
+      const emailMatch = app.email
+        .toLowerCase()
+        .includes(searchEmail.toLowerCase());
+      const teamStr = typeof app.team === "string" ? app.team : "";
+      const nameMatch = teamStr
+        .toLowerCase()
+        .includes(searchName.toLowerCase());
+      return emailMatch && nameMatch;
+    });
+  }, [applicationProperties, searchEmail, searchName]);
+
   const columns: ColumnDef<ApplicationPropertySponsorList>[] = useMemo(
     () => [
       ...Object.keys(applicationProperties[0] ?? {}).map((key) => ({
@@ -102,11 +120,10 @@ const SponsorsApplicationsTable = ({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [filterValue, setFilterValue] = React.useState<string>("all");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const table = useReactTable({
-    data: applicationProperties,
+    data: filteredApplications,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -150,42 +167,68 @@ const SponsorsApplicationsTable = ({
 
   return (
     <>
-      <Stack justify="between" className="w-full">
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
-                <ChevronDownIcon className="ml-2 w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <ScrollArea className="max-w-[70vw] md:max-w-[400px] max-h-[400px]">
-                {table
-                  .getAllColumns()
-                  .filter(
-                    (column) => column.getCanHide() && column.id !== "Actions"
-                  )
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize cursor-pointer"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) => {
-                          column.toggleVisibility(value);
-                          saveColumnVisibility(column.id, value);
-                        }}
-                        onSelect={(event) => event.preventDefault()}
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    );
-                  })}
-              </ScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+      <Stack direction="column" className="w-full gap-4">
+        <Stack justify="between" className="w-full gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
+            <div>
+              <label className="text-sm font-medium">Search by Email:</label>
+              <input
+                type="text"
+                placeholder="Email..."
+                value={searchEmail}
+                onChange={(e) => setSearchEmail(e.target.value)}
+                className="mt-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Search by Team Name:</label>
+              <input
+                type="text"
+                placeholder="Team name..."
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                className="mt-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+              />
+            </div>
+          </div>
+        </Stack>
+        <Stack justify="between" className="w-full">
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                  <ChevronDownIcon className="ml-2 w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <ScrollArea className="max-w-[70vw] md:max-w-[400px] max-h-[400px]">
+                  {table
+                    .getAllColumns()
+                    .filter(
+                      (column) => column.getCanHide() && column.id !== "Actions"
+                    )
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize cursor-pointer"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) => {
+                            column.toggleVisibility(value);
+                            saveColumnVisibility(column.id, value);
+                          }}
+                          onSelect={(event) => event.preventDefault()}
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      );
+                    })}
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </Stack>
       </Stack>
       <ScrollArea className="max-h-[600px] w-[85vw] md:max-w-[81vw] xl:max-w-[61vw]">
         <div className="rounded-md border">
@@ -240,23 +283,39 @@ const SponsorsApplicationsTable = ({
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="small"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="small"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between space-x-2 py-4">
+        <div className="flex items-center space-x-2">
+          <label className="text-sm font-medium">Rows per page:</label>
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+          >
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="small"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="small"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </>
   );

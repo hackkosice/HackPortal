@@ -1,8 +1,12 @@
 import { prisma } from "@/services/prisma";
-import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
-import { ApplicationStatus } from "@/services/types/applicationStatus";
+import {
+  ApplicationStatus,
+  ApplicationStatusEnum,
+} from "@/services/types/applicationStatus";
+import { Prisma } from ".prisma/client";
+import SortOrder = Prisma.SortOrder;
 
-export type FieldOptionStatistic = {
+export type OptionCount = {
   optionValue: string;
   count: number;
   percentage: number;
@@ -11,11 +15,12 @@ export type FieldOptionStatistic = {
 export type FieldStatistic = {
   fieldId: number;
   fieldLabel: string;
+  fieldType: string;
+  options: OptionCount[];
   totalResponses: number;
-  options: FieldOptionStatistic[];
 };
 
-export type StepStatistic = {
+export type StepStatistics = {
   stepId: number;
   stepTitle: string;
   fields: FieldStatistic[];
@@ -23,134 +28,160 @@ export type StepStatistic = {
 
 export type ApplicationStatisticsData = {
   totalApplications: number;
-  stepStatistics: StepStatistic[];
+  stepStatistics: StepStatistics[];
 };
 
 const getApplicationStatistics = async (
   hackathonId: number,
-  status?: ApplicationStatus | "all"
+  statusFilter: ApplicationStatus | "all"
 ): Promise<ApplicationStatisticsData> => {
-  await requireOrganizerSession();
-
-  const whereStatus =
-    status && status !== "all"
-      ? {
-          status: {
-            name: status,
-          },
-        }
-      : {};
-
-  const totalApplications = await prisma.application.count({
-    where: {
-      hacker: {
-        hackathonId,
-      },
-      ...whereStatus,
+  // Fetch applications with their form values
+  const whereClause: Prisma.ApplicationWhereInput = {
+    hacker: {
+      hackathonId,
     },
-  });
+  };
 
-  // Get all form steps with their dropdown fields (fields that have an optionList)
-  const steps = await prisma.applicationFormStep.findMany({
+  if (statusFilter !== "all") {
+    const status = await prisma.applicationStatus.findUnique({
+      where: { name: statusFilter },
+      select: { id: true },
+    });
+    if (status) {
+      whereClause.statusId = status.id;
+    }
+  }
+
+  const applications = await prisma.application.findMany({
     select: {
       id: true,
-      title: true,
-      formFields: {
+      formValues: {
         select: {
-          id: true,
-          label: true,
-          optionList: {
+          field: {
             select: {
-              options: {
+              id: true,
+              label: true,
+              type: {
                 select: {
-                  id: true,
                   value: true,
                 },
               },
             },
           },
-        },
-        where: {
-          optionListId: {
-            not: null,
+          option: {
+            select: {
+              value: true,
+            },
           },
         },
-        orderBy: {
-          position: "asc",
+      },
+    },
+    where: whereClause,
+  });
+
+  // Get all form fields that are select/dropdown types, grouped by step
+  const formFields = await prisma.formField.findMany({
+    select: {
+      id: true,
+      label: true,
+      type: {
+        select: {
+          value: true,
+        },
+      },
+      step: {
+        select: {
+          id: true,
+          title: true,
+          position: true,
         },
       },
     },
     where: {
-      hackathonId,
+      AND: [
+        {
+          step: {
+            hackathonId,
+          },
+        },
+        {
+          type: {
+            value: {
+              in: ["select", "multi_select"],
+            },
+          },
+        },
+      ],
     },
-    orderBy: {
-      position: "asc",
-    },
+    orderBy: [
+      {
+        step: {
+          position: SortOrder.asc,
+        },
+      },
+      {
+        position: SortOrder.asc,
+      },
+    ],
   });
 
-  const stepStatistics: StepStatistic[] = [];
+  // Group fields by step
+  const stepMap = new Map<number, { title: string; fields: FieldStatistic[] }>();
 
-  for (const step of steps) {
-    if (step.formFields.length === 0) continue;
+  for (const field of formFields) {
+    const optionMap = new Map<string, number>();
+    let totalResponses = 0;
 
-    const fields: FieldStatistic[] = [];
-
-    for (const field of step.formFields) {
-      if (!field.optionList) continue;
-
-      const allOptions = field.optionList.options;
-
-      // Count responses for each option
-      const optionCounts = await Promise.all(
-        allOptions.map(async (option) => {
-          const count = await prisma.applicationFormFieldValue.count({
-            where: {
-              fieldId: field.id,
-              optionId: option.id,
-              application: {
-                hacker: {
-                  hackathonId,
-                },
-                ...whereStatus,
-              },
-            },
-          });
-          return { optionValue: option.value, count };
-        })
+    for (const application of applications) {
+      const fieldValue = application.formValues.find(
+        (fv) => fv.field.id === field.id
       );
-
-      const totalResponses = optionCounts.reduce((sum, o) => sum + o.count, 0);
-
-      const options: FieldOptionStatistic[] = optionCounts
-        .filter((o) => o.count > 0)
-        .map((o) => ({
-          optionValue: o.optionValue,
-          count: o.count,
-          percentage: totalResponses > 0 ? (o.count / totalResponses) * 100 : 0,
-        }))
-        .sort((a, b) => b.count - a.count);
-
-      if (totalResponses > 0) {
-        fields.push({
-          fieldId: field.id,
-          fieldLabel: field.label,
-          totalResponses,
-          options,
-        });
+      if (fieldValue && fieldValue.option) {
+        const optionValue = fieldValue.option.value;
+        optionMap.set(optionValue, (optionMap.get(optionValue) ?? 0) + 1);
+        totalResponses++;
       }
     }
 
-    if (fields.length > 0) {
-      stepStatistics.push({
-        stepId: step.id,
-        stepTitle: step.title,
-        fields,
-      });
+    if (totalResponses > 0) {
+      const options: OptionCount[] = Array.from(optionMap.entries())
+        .map(([optionValue, count]) => ({
+          optionValue,
+          count,
+          percentage: (count / totalResponses) * 100,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      const fieldStatistic: FieldStatistic = {
+        fieldId: field.id,
+        fieldLabel: field.label,
+        fieldType: field.type.value,
+        options,
+        totalResponses,
+      };
+
+      if (!stepMap.has(field.step.id)) {
+        stepMap.set(field.step.id, {
+          title: field.step.title,
+          fields: [],
+        });
+      }
+
+      stepMap.get(field.step.id)!.fields.push(fieldStatistic);
     }
   }
 
+  // Convert map to array, preserving order
+  const stepStatistics: StepStatistics[] = Array.from(stepMap.entries()).map(
+    ([stepId, data]) => ({
+      stepId,
+      stepTitle: data.title,
+      fields: data.fields,
+    })
+  );
+
   return {
-    totalApplications,
+    totalApplications: applications.length,
     stepStatistics,
   };
 };

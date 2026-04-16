@@ -1,6 +1,7 @@
 type FormValues = {
   value: string | null;
   option: { value: string } | null;
+  file: { name: string; path: string } | null;
   field: { id: number };
 }[];
 
@@ -23,7 +24,15 @@ const createFormValuesObject = (
       (formValue) => formValue.field.id === formField.id
     );
     if (formValue) {
-      const value = formValue.option?.value ?? formValue.value;
+      // Handle option, file, then fallback to value (same logic as getFormFieldValue)
+      let value: string | null = null;
+      if (formValue.option) {
+        value = formValue.option.value;
+      } else if (formValue.file) {
+        value = formValue.file.name;
+      } else {
+        value = formValue.value;
+      }
       result[formField.label] = value ?? "";
     } else {
       result[formField.label] = null;
