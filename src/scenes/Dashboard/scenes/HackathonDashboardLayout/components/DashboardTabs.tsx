@@ -35,7 +35,8 @@ const getTabValue = (
   if (path.startsWith(`/dashboard/${hackathonId}/check-in`)) return "checkin";
   if (path.startsWith(`/dashboard/${hackathonId}/tables`)) return "tables";
   if (path.startsWith(`/dashboard/${hackathonId}/judging`)) return "judging";
-  if (path.startsWith(`/dashboard/${hackathonId}/statistics`)) return "statistics";
+  if (path.startsWith(`/dashboard/${hackathonId}/statistics`))
+    return "statistics";
   return undefined;
 };
 

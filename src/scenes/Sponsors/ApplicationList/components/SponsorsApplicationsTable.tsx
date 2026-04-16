@@ -183,7 +183,9 @@ const SponsorsApplicationsTable = ({
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Search by Team Name:</label>
+              <label className="text-sm font-medium">
+                Search by Team Name:
+              </label>
               <input
                 type="text"
                 placeholder="Team name..."

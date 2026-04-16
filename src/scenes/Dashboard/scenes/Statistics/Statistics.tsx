@@ -56,7 +56,9 @@ const Statistics = ({ initialData, hackathonId }: StatisticsProps) => {
             <label className="font-medium">Filter by status:</label>
             <select
               value={statusFilter}
-              onChange={(e) => handleFilterChange(e.target.value as FilterOption)}
+              onChange={(e) =>
+                handleFilterChange(e.target.value as FilterOption)
+              }
               disabled={loading}
               className="px-3 py-2 border border-gray-300 rounded-md"
             >

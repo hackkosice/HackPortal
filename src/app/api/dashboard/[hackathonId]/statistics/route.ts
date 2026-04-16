@@ -22,7 +22,10 @@ export async function GET(
   }
 
   const rawStatus = request.nextUrl.searchParams.get("status") ?? "all";
-  const validStatuses: string[] = [...Object.values(ApplicationStatusEnum), "all"];
+  const validStatuses: string[] = [
+    ...Object.values(ApplicationStatusEnum),
+    "all",
+  ];
   const status = validStatuses.includes(rawStatus)
     ? (rawStatus as ApplicationStatus | "all")
     : "all";

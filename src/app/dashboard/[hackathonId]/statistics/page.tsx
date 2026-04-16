@@ -22,10 +22,7 @@ const StatisticsPage = async ({
   const initialData = await getApplicationStatistics(hackathonIdNum, "all");
 
   return (
-    <Statistics
-      initialData={initialData}
-      hackathonId={hackathonIdNum}
-    />
+    <Statistics initialData={initialData} hackathonId={hackathonIdNum} />
   );
 };
 

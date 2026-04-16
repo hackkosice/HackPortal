@@ -112,7 +112,10 @@ const getApplicationStatistics = async (
   });
 
   // Group fields by step
-  const stepMap = new Map<number, { title: string; fields: FieldStatistic[] }>();
+  const stepMap = new Map<
+    number,
+    { title: string; fields: FieldStatistic[] }
+  >();
 
   for (const field of formFields) {
     const optionMap = new Map<string, number>();
@@ -153,7 +156,10 @@ const getApplicationStatistics = async (
         });
       }
 
-      stepMap.get(field.step.id)!.fields.push(fieldStatistic);
+      const stepEntry = stepMap.get(field.step.id);
+      if (stepEntry) {
+        stepEntry.fields.push(fieldStatistic);
+      }
     }
   }
 
