@@ -18,10 +18,11 @@ const Statistics = ({ initialData, hackathonId }: StatisticsProps) => {
   const [statusFilter, setStatusFilter] = useState<FilterOption>("all");
   const [data, setData] = useState<ApplicationStatisticsData>(initialData);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const handleFilterChange = async (newStatus: FilterOption) => {
-    setStatusFilter(newStatus);
     setLoading(true);
+    setFetchError(null);
 
     try {
       const response = await fetch(
@@ -34,9 +35,13 @@ const Statistics = ({ initialData, hackathonId }: StatisticsProps) => {
       if (response.ok) {
         const newData = await response.json();
         setData(newData);
+        setStatusFilter(newStatus);
+      } else {
+        setFetchError("Failed to load statistics. Please try again.");
       }
     } catch (error) {
       console.error("Failed to fetch statistics:", error);
+      setFetchError("Failed to load statistics. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -62,7 +67,13 @@ const Statistics = ({ initialData, hackathonId }: StatisticsProps) => {
               <option value="attended">Attended</option>
               <option value="rejected">Rejected</option>
             </select>
+            {loading && (
+              <span className="text-sm text-gray-500">Loading...</span>
+            )}
           </Stack>
+          {fetchError && (
+            <p className="text-sm text-red-500 mt-1">{fetchError}</p>
+          )}
         </CardHeader>
 
         <CardContent>

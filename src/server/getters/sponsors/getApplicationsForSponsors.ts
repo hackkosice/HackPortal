@@ -26,7 +26,11 @@ export type ApplicationListDataSponsorList = {
 const getApplicationsForSponsors = async (
   hackathonId: number
 ): Promise<ApplicationListDataSponsorList> => {
-  await requireSponsorSession();
+  const sponsor = await requireSponsorSession();
+
+  if (sponsor.hackathonId !== hackathonId) {
+    throw new Error("Sponsor does not have access to this hackathon");
+  }
 
   const confirmedStatusId = await prisma.applicationStatus.findUnique({
     select: {
@@ -46,8 +50,11 @@ const getApplicationsForSponsors = async (
     },
   });
 
-  if (!confirmedStatusId || !attendedStatusId) {
-    throw new Error("Confirmed status not found");
+  if (!confirmedStatusId) {
+    throw new Error("Application status 'confirmed' not found in DB");
+  }
+  if (!attendedStatusId) {
+    throw new Error("Application status 'attended' not found in DB");
   }
 
   const applicationsDb = await prisma.application.findMany({
@@ -130,10 +137,10 @@ const getApplicationsForSponsors = async (
 
   const applications = applicationsDb.map((application) => ({
     properties: {
+      ...createFormValuesObject(application.formValues, formFields),
       id: application.id,
       email: application.hacker.user.email,
       team: application.hacker.team?.name ?? "",
-      ...createFormValuesObject(application.formValues, formFields),
     },
   }));
 

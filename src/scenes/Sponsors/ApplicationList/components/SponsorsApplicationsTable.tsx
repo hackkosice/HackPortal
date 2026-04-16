@@ -139,31 +139,33 @@ const SponsorsApplicationsTable = ({
     onColumnVisibilityChange: setColumnVisibility,
   });
 
+  const localStorageKey = `hackathon-sponsors-${hackathonId}-column-visibility`;
+
   const saveColumnVisibility = (columnName: string, visibility: boolean) => {
-    const oldColumnVisibility =
-      localStorage.getItem(
-        `hackathon-sponsors-${hackathonId}-column-visibility`
-      ) ?? "{}";
-    const oldColumnVisibilityObject = JSON.parse(oldColumnVisibility);
-    const newColumnVisibilityObject = {
-      ...oldColumnVisibilityObject,
-      [columnName]: visibility,
-    };
-    localStorage.setItem(
-      `hackathon-sponsors-${hackathonId}-column-visibility`,
-      JSON.stringify(newColumnVisibilityObject)
-    );
+    try {
+      const raw = localStorage.getItem(localStorageKey) ?? "{}";
+      const existing = JSON.parse(raw);
+      localStorage.setItem(
+        localStorageKey,
+        JSON.stringify({ ...existing, [columnName]: visibility })
+      );
+    } catch {
+      localStorage.removeItem(localStorageKey);
+    }
   };
 
   useEffect(() => {
     table.setPageSize(20);
-    const savedColumnVisibility = localStorage.getItem(
-      `hackathon-sponsors-${hackathonId}-column-visibility`
-    );
-    if (savedColumnVisibility) {
-      setColumnVisibility(JSON.parse(savedColumnVisibility));
+    const saved = localStorage.getItem(localStorageKey);
+    if (saved) {
+      try {
+        setColumnVisibility(JSON.parse(saved));
+      } catch {
+        localStorage.removeItem(localStorageKey);
+      }
     }
-  }, [hackathonId, table]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hackathonId]);
 
   return (
     <>

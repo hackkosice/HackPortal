@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Statistics from "@/scenes/Dashboard/scenes/Statistics/Statistics";
 import requireAdmin from "@/services/helpers/requireAdmin";
 import { disallowVolunteer } from "@/services/helpers/disallowVolunteer";
@@ -10,15 +11,20 @@ const StatisticsPage = async ({
     hackathonId: string;
   };
 }) => {
+  const hackathonIdNum = Number(hackathonId);
+  if (isNaN(hackathonIdNum)) {
+    notFound();
+  }
+
   await disallowVolunteer(hackathonId);
   await requireAdmin();
 
-  const initialData = await getApplicationStatistics(Number(hackathonId), "all");
+  const initialData = await getApplicationStatistics(hackathonIdNum, "all");
 
   return (
     <Statistics
       initialData={initialData}
-      hackathonId={Number(hackathonId)}
+      hackathonId={hackathonIdNum}
     />
   );
 };

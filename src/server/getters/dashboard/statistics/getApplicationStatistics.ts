@@ -33,22 +33,10 @@ const getApplicationStatistics = async (
   hackathonId: number,
   statusFilter: ApplicationStatus | "all"
 ): Promise<ApplicationStatisticsData> => {
-  // Fetch applications with their form values
   const whereClause: Prisma.ApplicationWhereInput = {
-    hacker: {
-      hackathonId,
-    },
+    hacker: { hackathonId },
+    ...(statusFilter !== "all" ? { status: { name: statusFilter } } : {}),
   };
-
-  if (statusFilter !== "all") {
-    const status = await prisma.applicationStatus.findUnique({
-      where: { name: statusFilter },
-      select: { id: true },
-    });
-    if (status) {
-      whereClause.statusId = status.id;
-    }
-  }
 
   const applications = await prisma.application.findMany({
     select: {

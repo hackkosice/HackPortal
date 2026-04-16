@@ -124,10 +124,10 @@ const getApplicationsList = async (
 
   const applications = applicationsDb.map((application) => ({
     properties: {
+      ...createFormValuesObject(application.formValues, formFields),
       id: application.id,
       hackerId: application.hacker.id,
       email: application.hacker.user.email,
-      ...createFormValuesObject(application.formValues, formFields),
       score: calculateApplicationScore({ votes: application.votes }),
       team: application.hacker.team?.name ?? "",
       status: application.status.name as ApplicationStatus,
