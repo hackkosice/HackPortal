@@ -21,9 +21,7 @@ const StatisticsPage = async ({
 
   const initialData = await getApplicationStatistics(hackathonIdNum, "all");
 
-  return (
-    <Statistics initialData={initialData} hackathonId={hackathonIdNum} />
-  );
+  return <Statistics initialData={initialData} hackathonId={hackathonIdNum} />;
 };
 
 export default StatisticsPage;
