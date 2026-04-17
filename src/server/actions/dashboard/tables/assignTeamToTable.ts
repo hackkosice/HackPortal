@@ -15,25 +15,9 @@ const assignTeamToTable = async ({
 }: AssignTeamToTableInput) => {
   await requireAdminSession();
 
-  const table = await prisma.table.findFirst({
-    where: {
-      code: tableCode,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!table) {
-    throw new ExpectedServerActionError("Table not found");
-  }
-
-  const { members } = await prisma.team.update({
+  const team = await prisma.team.findFirst({
     where: {
       id: teamId,
-    },
-    data: {
-      tableId: table.id,
     },
     select: {
       members: {
@@ -44,11 +28,36 @@ const assignTeamToTable = async ({
     },
   });
 
-  if (members.length === 0) {
+  if (!team || team.members.length === 0) {
     throw new ExpectedServerActionError("Team not found");
   }
 
-  revalidatePath(`/dashboard/${members[0].hackathonId}/tables`);
+  const hackathonId = team.members[0].hackathonId;
+
+  const table = await prisma.table.findFirst({
+    where: {
+      code: tableCode,
+      hackathonId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!table) {
+    throw new ExpectedServerActionError("Table not found");
+  }
+
+  await prisma.team.update({
+    where: {
+      id: teamId,
+    },
+    data: {
+      tableId: table.id,
+    },
+  });
+
+  revalidatePath(`/dashboard/${hackathonId}/tables`);
 };
 
 export default assignTeamToTable;
