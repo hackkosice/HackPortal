@@ -192,6 +192,7 @@ const getApplicationData = async ({
   if (!tableCode) {
     const tables = await prisma.table.findMany({
       where: {
+        hackathonId,
         teams: {
           none: {},
         },
