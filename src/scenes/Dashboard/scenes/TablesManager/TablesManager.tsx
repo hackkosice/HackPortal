@@ -74,11 +74,11 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
               <Heading size="small">
                 Partially confirmed teams ({partiallyConfirmedTeams.length})
               </Heading>
-              <ul>
+              <div className="flex flex-col gap-1">
                 {partiallyConfirmedTeams.map((team) => (
-                  <li key={team.name}>{team.name}</li>
+                  <TeamRow team={team} key={team.id} challenges={challenges} />
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
           <div className="pr-20">
