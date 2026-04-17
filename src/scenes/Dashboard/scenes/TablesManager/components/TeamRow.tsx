@@ -9,8 +9,9 @@ import ChallengeCell from "@/scenes/Dashboard/scenes/TablesManager/components/Ch
 type TeamRowProps = {
   team: TeamAndTable;
   challenges: Challenge[];
+  hackathonId: number;
 };
-const TeamRow = ({ team, challenges }: TeamRowProps) => {
+const TeamRow = ({ team, challenges, hackathonId }: TeamRowProps) => {
   const canAssignChallenge = team.challenges.length < challenges.length;
   return (
     <div className="flex flex-row items-center">
@@ -18,7 +19,7 @@ const TeamRow = ({ team, challenges }: TeamRowProps) => {
       {team.tableCode ? (
         <UnassignTableButton teamId={team.id} />
       ) : (
-        <AssignTableDialog teamId={team.id} />
+        <AssignTableDialog teamId={team.id} hackathonId={hackathonId} />
       )}
       {team.challenges.map((challenge) => (
         <ChallengeCell

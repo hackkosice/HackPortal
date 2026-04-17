@@ -34,9 +34,10 @@ type AssignTableForm = z.infer<typeof assignTableFormSchema>;
 
 type AssignTableDialogProps = {
   teamId: number;
+  hackathonId: number;
 };
 
-const AssignTableDialog = ({ teamId }: AssignTableDialogProps) => {
+const AssignTableDialog = ({ teamId, hackathonId }: AssignTableDialogProps) => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isOpened, setIsOpened] = useState(false);
   const form = useForm<AssignTableForm>({
@@ -50,6 +51,7 @@ const AssignTableDialog = ({ teamId }: AssignTableDialogProps) => {
     const res = await callServerAction(assignTeamToTable, {
       teamId,
       tableCode: data.code,
+      hackathonId,
     });
     if (!res.success) {
       setSubmitError(res.message);

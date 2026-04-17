@@ -8,16 +8,19 @@ import { ExpectedServerActionError } from "@/services/types/serverErrors";
 type AssignTeamToTableInput = {
   tableCode: string;
   teamId: number;
+  hackathonId: number;
 };
 const assignTeamToTable = async ({
   tableCode,
   teamId,
+  hackathonId,
 }: AssignTeamToTableInput) => {
   await requireAdminSession();
 
   const table = await prisma.table.findFirst({
     where: {
       code: tableCode,
+      hackathonId,
     },
     select: {
       id: true,

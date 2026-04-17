@@ -66,7 +66,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
               </Heading>
               <div className="flex flex-col gap-1">
                 {fullyConfirmedTeams.map((team) => (
-                  <TeamRow team={team} key={team.id} challenges={challenges} />
+                  <TeamRow team={team} key={team.id} challenges={challenges} hackathonId={hackathonId} />
                 ))}
               </div>
             </div>
@@ -76,7 +76,7 @@ const TablesManager = async ({ hackathonId }: TablesManagerProps) => {
               </Heading>
               <div className="flex flex-col gap-1">
                 {partiallyConfirmedTeams.map((team) => (
-                  <TeamRow team={team} key={team.id} challenges={challenges} />
+                  <TeamRow team={team} key={team.id} challenges={challenges} hackathonId={hackathonId} />
                 ))}
               </div>
             </div>
