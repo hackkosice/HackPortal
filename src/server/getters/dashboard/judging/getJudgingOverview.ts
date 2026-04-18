@@ -25,6 +25,7 @@ export type JudgingOverviewJudge = {
 };
 
 export type ChallengeStats = {
+  id: number;
   title: string;
   teamCount: number;
   teams: { name: string; tableCode?: string }[];
@@ -80,6 +81,7 @@ const getJudgingOverview = async (
     prisma.challenge.findMany({
       where: { sponsor: { hackathonId } },
       select: {
+        id: true,
         title: true,
         teams: {
           where: {
@@ -114,7 +116,7 @@ const getJudgingOverview = async (
 
   const judges: JudgingOverviewJudge[] = organizers.map((org) => ({
     id: org.id,
-    name: org.user.name ?? org.user.email,
+    name: org.user.name || org.user.email,
     assignments: slots.map((slot) => {
       const assignment = org.teamJudgings.find(
         (tj) => tj.judgingSlotId === slot.id
@@ -135,6 +137,7 @@ const getJudgingOverview = async (
   }));
 
   const challengeStats: ChallengeStats[] = challenges.map((challenge) => ({
+    id: challenge.id,
     title: challenge.title,
     teamCount: challenge.teams.length,
     teams: challenge.teams.map((team) => ({

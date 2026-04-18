@@ -58,7 +58,16 @@ const ReassignJudgeDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(val) => {
+        setOpen(val);
+        if (!val) {
+          setSelectedId("");
+          setError(null);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <button className="text-xs underline opacity-60 hover:opacity-100 mt-1">
           Reassign

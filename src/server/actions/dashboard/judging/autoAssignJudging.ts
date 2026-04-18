@@ -3,6 +3,7 @@
 import { prisma } from "@/services/prisma";
 import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { revalidatePath } from "next/cache";
+import { ExpectedServerActionError } from "@/services/types/serverErrors";
 
 const autoAssignJudging = async (hackathonId: number) => {
   await requireAdminSession();
@@ -28,22 +29,34 @@ const autoAssignJudging = async (hackathonId: number) => {
     }),
   ]);
 
-  if (slots.length === 0 || organizers.length === 0 || teams.length === 0) {
-    return;
+  if (slots.length === 0) {
+    throw new ExpectedServerActionError("No judging slots found for this hackathon");
+  }
+  if (organizers.length === 0) {
+    throw new ExpectedServerActionError("No judges found");
+  }
+  if (teams.length === 0) {
+    throw new ExpectedServerActionError("No teams with tables found");
   }
 
-  // Track assignments per slot, per judge, and per team (counts)
-  const slotTeams = new Map<number, Set<number>>();
-  const judgeTeams = new Map<number, Set<number>>();
+  // Track state with O(1) lookups
+  // judgeSlots: judge already assigned in a given slot
+  const judgeSlots = new Map<number, Set<number>>(); // organizerId → Set<slotId>
+  const slotTeams = new Map<number, Set<number>>();   // slotId → Set<teamId>
+  const judgeTeams = new Map<number, Set<number>>();  // organizerId → Set<teamId>
   const teamAssignmentCount = new Map<number, number>();
 
   for (const slot of slots) slotTeams.set(slot.id, new Set());
-  for (const org of organizers) judgeTeams.set(org.id, new Set());
+  for (const org of organizers) {
+    judgeTeams.set(org.id, new Set());
+    judgeSlots.set(org.id, new Set());
+  }
   for (const team of teams) teamAssignmentCount.set(team.id, 0);
 
   for (const a of existingAssignments) {
     slotTeams.get(a.judgingSlotId)?.add(a.teamId);
     judgeTeams.get(a.organizerId)?.add(a.teamId);
+    judgeSlots.get(a.organizerId)?.add(a.judgingSlotId);
     teamAssignmentCount.set(
       a.teamId,
       (teamAssignmentCount.get(a.teamId) ?? 0) + 1
@@ -54,15 +67,10 @@ const autoAssignJudging = async (hackathonId: number) => {
 
   for (const slot of slots) {
     for (const org of organizers) {
-      // Skip if judge already has a team in this slot
-      const judgeAlreadyAssigned = existingAssignments.some(
-        (a) => a.judgingSlotId === slot.id && a.organizerId === org.id
-      ) || toCreate.some(
-        (a) => a.judgingSlotId === slot.id && a.organizerId === org.id
-      );
-      if (judgeAlreadyAssigned) continue;
+      // O(1) check: judge already has a team in this slot
+      if (judgeSlots.get(org.id)?.has(slot.id)) continue;
 
-      // Find eligible team: not in this slot, not already with this judge, fewest assignments
+      // Find eligible teams: not already in this slot, not already with this judge
       const eligible = teams.filter(
         (team) =>
           !slotTeams.get(slot.id)?.has(team.id) &&
@@ -80,16 +88,21 @@ const autoAssignJudging = async (hackathonId: number) => {
 
       toCreate.push({ judgingSlotId: slot.id, organizerId: org.id, teamId: best.id });
 
-      // Update tracking for subsequent iterations
+      // Update tracking maps for subsequent iterations
       slotTeams.get(slot.id)?.add(best.id);
       judgeTeams.get(org.id)?.add(best.id);
+      judgeSlots.get(org.id)?.add(slot.id);
       teamAssignmentCount.set(best.id, (teamAssignmentCount.get(best.id) ?? 0) + 1);
     }
   }
 
-  for (const data of toCreate) {
-    await prisma.teamJudging.create({ data });
+  if (toCreate.length === 0) {
+    throw new ExpectedServerActionError("All slots are already assigned");
   }
+
+  await prisma.$transaction(
+    toCreate.map((data) => prisma.teamJudging.create({ data }))
+  );
 
   revalidatePath(`/dashboard/${hackathonId}/judging/overview`, "page");
   revalidatePath(`/dashboard/${hackathonId}/judging/manage`, "page");

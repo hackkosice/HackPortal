@@ -255,7 +255,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           ) : (
             <div className="flex flex-col gap-4">
               {challengeStats.map((challenge) => (
-                <div key={challenge.title}>
+                <div key={challenge.id}>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-medium">{challenge.title}</span>
                     <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
