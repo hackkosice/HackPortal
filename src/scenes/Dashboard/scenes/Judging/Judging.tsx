@@ -5,14 +5,27 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
 import getMyJudgings from "@/server/getters/dashboard/judging/getMyJudgings";
-import JudgingSwitcher from "@/scenes/Dashboard/scenes/Judging/components/JudgingSwitcher";
+import JudgingList from "@/scenes/Dashboard/scenes/Judging/components/JudgingList";
+import getOrganizersForJudgingSelector from "@/server/getters/dashboard/judging/getOrganizersForJudgingSelector";
+import JudgeSelector from "@/scenes/Dashboard/scenes/Judging/components/JudgeSelector";
+import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
 
-type JudgingManagerProps = {
+type JudgingProps = {
   hackathonId: number;
+  forOrganizerId?: number;
 };
-const Judging = async ({ hackathonId }: JudgingManagerProps) => {
+
+const Judging = async ({ hackathonId, forOrganizerId }: JudgingProps) => {
   const session = await getServerSession(authOptions);
-  const { judgings, nextJudgingIndex } = await getMyJudgings(hackathonId);
+  const currentOrganizer = await requireOrganizerSession();
+  const { judgings } = await getMyJudgings(hackathonId, forOrganizerId);
+
+  const organizers = session?.isAdmin
+    ? await getOrganizersForJudgingSelector()
+    : [];
+
+  const activeOrganizerId = forOrganizerId ?? currentOrganizer.id;
+
   return (
     <Card className="md:w-[70vw] mx-auto mb-20 md:[mb-0]">
       <CardHeader>
@@ -20,28 +33,34 @@ const Judging = async ({ hackathonId }: JudgingManagerProps) => {
       </CardHeader>
       <CardContent>
         {session?.isAdmin && (
-          <div className="flex flex-row gap-1 flex-wrap mb-4">
-            <Button>
-              <Link href={`/dashboard/${hackathonId}/judging/manage`}>
-                Judging manager
-              </Link>
-            </Button>
-            <Button>
-              <Link href={`/dashboard/${hackathonId}/judging/overview`}>
-                Judging overview
-              </Link>
-            </Button>
-            <Button>
-              <Link href={`/dashboard/${hackathonId}/judging/results`}>
-                Judging results
-              </Link>
-            </Button>
-          </div>
+          <>
+            <div className="flex flex-row gap-1 flex-wrap mb-4">
+              <Button>
+                <Link href={`/dashboard/${hackathonId}/judging/manage`}>
+                  Judging manager
+                </Link>
+              </Button>
+              <Button>
+                <Link href={`/dashboard/${hackathonId}/judging/overview`}>
+                  Judging overview
+                </Link>
+              </Button>
+              <Button>
+                <Link href={`/dashboard/${hackathonId}/judging/results`}>
+                  Judging results
+                </Link>
+              </Button>
+            </div>
+            {organizers.length > 0 && activeOrganizerId !== undefined && (
+              <JudgeSelector
+                organizers={organizers}
+                currentOrganizerId={activeOrganizerId}
+                basePath={`/dashboard/${hackathonId}/judging`}
+              />
+            )}
+          </>
         )}
-        <JudgingSwitcher
-          judgings={judgings}
-          initialJudgingIndex={nextJudgingIndex}
-        />
+        <JudgingList judgings={judgings} />
       </CardContent>
     </Card>
   );

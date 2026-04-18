@@ -12,7 +12,7 @@ const addVerdictToTeamJudging = async ({
   teamJudgingId,
   judgingVerdict,
 }: AddVerdictToTeamJudgingInput) => {
-  const { id } = await requireOrganizerSession();
+  const organizer = await requireOrganizerSession();
 
   const teamJudging = await prisma.teamJudging.findUnique({
     where: {
@@ -32,7 +32,7 @@ const addVerdictToTeamJudging = async ({
     throw new Error("Team judging not found");
   }
 
-  if (teamJudging.organizerId !== id) {
+  if (!organizer.isAdmin && teamJudging.organizerId !== organizer.id) {
     throw new Error("Not authorized to add verdict to this team judging");
   }
 
