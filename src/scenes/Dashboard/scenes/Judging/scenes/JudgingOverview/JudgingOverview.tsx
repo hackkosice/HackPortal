@@ -15,6 +15,19 @@ type JudgingOverviewProps = {
 const formatTime = (date: Date) =>
   new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
+type TeamJudgingRow = {
+  teamId: number;
+  teamName: string;
+  tableCode?: string;
+  judgeAssignments: {
+    judgeName: string;
+    slotStart: Date;
+    slotEnd: Date;
+    hasVerdict: boolean;
+    teamJudgingId?: number;
+  }[];
+};
+
 const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
   const { slots, judges, challengeStats, teamStats } = data;
 
@@ -24,6 +37,35 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
   const totalVerdicts = judges.flatMap((j) =>
     j.assignments.filter((a) => a.hasVerdict)
   ).length;
+
+  // Pivot judge×slot grid into team-centric rows
+  const slotById = new Map(slots.map((s) => [s.id, s]));
+  const teamRowsMap = new Map<number, TeamJudgingRow>();
+  for (const judge of judges) {
+    for (const assignment of judge.assignments) {
+      if (!assignment.team) continue;
+      const slot = slotById.get(assignment.slotId);
+      if (!slot) continue;
+      if (!teamRowsMap.has(assignment.team.id)) {
+        teamRowsMap.set(assignment.team.id, {
+          teamId: assignment.team.id,
+          teamName: assignment.team.name,
+          tableCode: assignment.team.tableCode,
+          judgeAssignments: [],
+        });
+      }
+      teamRowsMap.get(assignment.team.id)!.judgeAssignments.push({
+        judgeName: judge.name,
+        slotStart: slot.startTime,
+        slotEnd: slot.endTime,
+        hasVerdict: assignment.hasVerdict,
+        teamJudgingId: assignment.teamJudgingId,
+      });
+    }
+  }
+  const teamRows = Array.from(teamRowsMap.values()).sort((a, b) =>
+    a.teamName.localeCompare(b.teamName)
+  );
 
   return (
     <Stack direction="column" className="md:w-[90vw] mx-auto mb-20 gap-6">
@@ -146,6 +188,88 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
               Not assigned yet
             </span>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Judging by team */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Judging by team</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {teamRows.length === 0 ? (
+            <p className="text-muted-foreground text-sm">No assignments yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="text-sm border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="text-left p-2 border border-border bg-muted font-medium min-w-[140px]">
+                      Team
+                    </th>
+                    <th className="text-left p-2 border border-border bg-muted font-medium">
+                      Table
+                    </th>
+                    <th className="text-left p-2 border border-border bg-muted font-medium">
+                      Judges & slots
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teamRows.map((row) => (
+                    <tr key={row.teamId}>
+                      <td className="p-2 border border-border font-medium align-top">
+                        {row.teamName}
+                      </td>
+                      <td className="p-2 border border-border text-muted-foreground align-top">
+                        {row.tableCode ?? "—"}
+                      </td>
+                      <td className="p-2 border border-border">
+                        <div className="flex flex-col gap-1">
+                          {row.judgeAssignments
+                            .sort(
+                              (a, b) =>
+                                new Date(a.slotStart).getTime() -
+                                new Date(b.slotStart).getTime()
+                            )
+                            .map((ja, i) => (
+                              <div
+                                key={i}
+                                className={`flex items-center gap-2 text-xs px-2 py-1 rounded ${
+                                  ja.hasVerdict
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                                }`}
+                              >
+                                <span className="font-medium">
+                                  {formatTime(ja.slotStart)}–
+                                  {formatTime(ja.slotEnd)}
+                                </span>
+                                <span>{ja.judgeName}</span>
+                                <span>{ja.hasVerdict ? "✓" : "pending"}</span>
+                                {ja.teamJudgingId && (
+                                  <ReassignJudgeDialog
+                                    teamJudgingId={ja.teamJudgingId}
+                                    currentJudgeId={
+                                      judges.find((j) => j.name === ja.judgeName)
+                                        ?.id ?? 0
+                                    }
+                                    judges={judges.map((j) => ({
+                                      id: j.id,
+                                      name: j.name,
+                                    }))}
+                                  />
+                                )}
+                              </div>
+                            ))}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
