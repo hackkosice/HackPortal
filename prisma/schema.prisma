@@ -84,16 +84,17 @@ model Hacker {
 }
 
 model Team {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  code         String        @unique
-  ownerId      Int           @unique
-  owner        Hacker        @relation(name: "TeamOwner", fields: [ownerId], references: [id])
-  tableId      Int?
-  table        Table?        @relation(fields: [tableId], references: [id])
-  challenges   Challenge[]
-  members      Hacker[]
-  teamJudgings TeamJudging[]
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  code            String           @unique
+  ownerId         Int              @unique
+  owner           Hacker           @relation(name: "TeamOwner", fields: [ownerId], references: [id])
+  tableId         Int?
+  table           Table?           @relation(fields: [tableId], references: [id])
+  challenges      Challenge[]
+  members         Hacker[]
+  teamJudgings    TeamJudging[]
+  sponsorJudgings SponsorJudging[]
 }
 
 model Organizer {
@@ -110,15 +111,16 @@ model Organizer {
 }
 
 model Sponsor {
-  id          Int        @id @default(autoincrement())
-  company     String
-  user        User       @relation(fields: [userId], references: [id])
-  userId      Int        @unique
-  hackathon   Hackathon  @relation(fields: [hackathonId], references: [id])
-  hackathonId Int
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  challenge   Challenge?
+  id              Int              @id @default(autoincrement())
+  company         String
+  user            User             @relation(fields: [userId], references: [id])
+  userId          Int              @unique
+  hackathon       Hackathon        @relation(fields: [hackathonId], references: [id])
+  hackathonId     Int
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  challenge       Challenge?
+  sponsorJudgings SponsorJudging[]
 }
 
 model Challenge {
@@ -319,12 +321,13 @@ model Table {
 }
 
 model JudgingSlot {
-  id           Int           @id @default(autoincrement())
-  startTime    DateTime
-  endTime      DateTime
-  hackathonId  Int
-  hackathon    Hackathon     @relation(fields: [hackathonId], references: [id])
-  teamJudgings TeamJudging[]
+  id              Int              @id @default(autoincrement())
+  startTime       DateTime
+  endTime         DateTime
+  hackathonId     Int
+  hackathon       Hackathon        @relation(fields: [hackathonId], references: [id])
+  teamJudgings    TeamJudging[]
+  sponsorJudgings SponsorJudging[]
 }
 
 model TeamJudging {
@@ -336,4 +339,17 @@ model TeamJudging {
   team           Team        @relation(fields: [teamId], references: [id])
   judgingSlotId  Int
   judgingSlot    JudgingSlot @relation(fields: [judgingSlotId], references: [id])
+}
+
+model SponsorJudging {
+  id             Int         @id @default(autoincrement())
+  judgingVerdict String?
+  sponsorId      Int
+  sponsor        Sponsor     @relation(fields: [sponsorId], references: [id])
+  teamId         Int
+  team           Team        @relation(fields: [teamId], references: [id])
+  judgingSlotId  Int
+  judgingSlot    JudgingSlot @relation(fields: [judgingSlotId], references: [id])
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }

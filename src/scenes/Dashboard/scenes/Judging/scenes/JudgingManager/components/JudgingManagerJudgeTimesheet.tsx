@@ -64,7 +64,9 @@ const JudgingManagerJudgeTimesheet = ({
                 organizerId={judge.id}
                 teamOptions={teamsForJudging.map((team) => ({
                   value: team.teamId.toString(),
-                  label: team.nameAndTable,
+                  label: team.hasCheckedInMember
+                    ? team.nameAndTable
+                    : `${team.nameAndTable} (not checked in)`,
                 }))}
               />
             )}
