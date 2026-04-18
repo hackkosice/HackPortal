@@ -86,7 +86,7 @@ const ReassignJudgeDialog = ({
           <SelectTrigger>
             <SelectValue placeholder="Select a judge" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[300px] overflow-y-auto">
             {otherJudges.map((judge) => (
               <SelectItem key={judge.id} value={String(judge.id)}>
                 {judge.name}
