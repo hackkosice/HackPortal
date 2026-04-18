@@ -65,6 +65,8 @@ const autoAssignJudging = async (hackathonId: number) => {
     );
   }
 
+  const MAX_ASSIGNMENTS_PER_TEAM = 3;
+
   const toCreate: {
     judgingSlotId: number;
     organizerId: number;
@@ -76,11 +78,12 @@ const autoAssignJudging = async (hackathonId: number) => {
       // O(1) check: judge already has a team in this slot
       if (judgeSlots.get(org.id)?.has(slot.id)) continue;
 
-      // Find eligible teams: not already in this slot, not already with this judge
+      // Find eligible teams: not already in this slot, not already with this judge, under cap
       const eligible = teams.filter(
         (team) =>
           !slotTeams.get(slot.id)?.has(team.id) &&
-          !judgeTeams.get(org.id)?.has(team.id)
+          !judgeTeams.get(org.id)?.has(team.id) &&
+          (teamAssignmentCount.get(team.id) ?? 0) < MAX_ASSIGNMENTS_PER_TEAM
       );
 
       if (eligible.length === 0) continue;

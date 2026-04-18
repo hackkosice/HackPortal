@@ -85,9 +85,7 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
 
   for (const slot of slots) {
     for (const sponsor of sponsorsWithTeams) {
-      // Each sponsor gets at most 1 slot total
       const sponsorAssigned = sponsorSlots.get(sponsor.id);
-      if (sponsorAssigned && sponsorAssigned.size > 0) continue;
 
       // Skip if sponsor already assigned in this slot
       if (sponsorAssigned?.has(slot.id)) continue;

@@ -11,11 +11,18 @@ export type TeamMemberData = {
   applicationStatus: ApplicationStatus;
 };
 
+export type TeamChallengeData = {
+  id: number;
+  title: string;
+  sponsorName: string;
+};
+
 export type TeamData = {
   id: number;
   name: string;
   code: string;
   members: TeamMemberData[];
+  challenges: TeamChallengeData[];
 };
 export type GetTeamData =
   | {
@@ -80,6 +87,15 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
               },
             },
           },
+          challenges: {
+            select: {
+              id: true,
+              title: true,
+              sponsor: {
+                select: { company: true },
+              },
+            },
+          },
         },
       },
     },
@@ -113,6 +129,11 @@ const getTeam = async ({ hackerId }: GetTeamInput): Promise<GetTeamData> => {
       isOwner: member.id === ownerId,
       isCurrentUser: member.id === hacker.id,
       applicationStatus: member.application?.status.name as ApplicationStatus,
+    })),
+    challenges: hacker.team.challenges.map((c) => ({
+      id: c.id,
+      title: c.title,
+      sponsorName: c.sponsor.company,
     })),
   };
 

@@ -10,6 +10,7 @@ import AutoAssignSponsorButton from "./AutoAssignSponsorButton";
 import ReassignJudgeDialog from "./ReassignJudgeDialog";
 import DeleteTeamJudgingButton from "./DeleteTeamJudgingButton";
 import ExternalJudgeManager from "./ExternalJudgeManager";
+import AssignTeamDialog from "./AssignTeamDialog";
 
 type JudgingOverviewProps = {
   hackathonId: number;
@@ -382,7 +383,15 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                       let cellClass =
                         "p-2 border border-border text-center text-xs";
                       let label = (
-                        <span className="text-muted-foreground">—</span>
+                        <AssignTeamDialog
+                          judgeId={judge.id}
+                          slotId={assignment.slotId}
+                          teams={teamStats.map((t) => ({
+                            id: t.id,
+                            name: t.name,
+                            tableCode: t.tableCode,
+                          }))}
+                        />
                       );
 
                       if (assignment.team && assignment.teamJudgingId) {
