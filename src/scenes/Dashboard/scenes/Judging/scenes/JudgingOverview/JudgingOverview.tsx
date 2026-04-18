@@ -4,6 +4,8 @@ import { Stack } from "@/components/ui/stack";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { JudgingOverviewData } from "@/server/getters/dashboard/judging/getJudgingOverview";
+import AutoAssignButton from "./AutoAssignButton";
+import ReassignJudgeDialog from "./ReassignJudgeDialog";
 
 type JudgingOverviewProps = {
   hackathonId: number;
@@ -14,7 +16,7 @@ const formatTime = (date: Date) =>
   new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
 const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
-  const { slots, judges, challengeStats } = data;
+  const { slots, judges, challengeStats, teamStats } = data;
 
   const totalAssignments = judges.flatMap((j) =>
     j.assignments.filter((a) => a.team)
@@ -41,7 +43,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           <CardTitle>Judging progress</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-row gap-8 text-sm">
+          <div className="flex flex-row gap-8 text-sm mb-4">
             <div>
               <span className="font-semibold text-2xl">{totalVerdicts}</span>
               <span className="text-muted-foreground ml-1">
@@ -56,6 +58,93 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
               <span className="font-semibold text-2xl">{slots.length}</span>
               <span className="text-muted-foreground ml-1">slots</span>
             </div>
+            <div>
+              <span className="font-semibold text-2xl">{teamStats.length}</span>
+              <span className="text-muted-foreground ml-1">teams with tables</span>
+            </div>
+          </div>
+          <AutoAssignButton hackathonId={hackathonId} />
+          <p className="text-xs text-muted-foreground mt-1">
+            Fills empty judge slots evenly across teams. Existing assignments are
+            not changed.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Team coverage */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Team judging coverage</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {teamStats.length === 0 ? (
+            <p className="text-muted-foreground text-sm">
+              No teams with tables found.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="text-sm border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="text-left p-2 border border-border bg-muted font-medium">
+                      Team
+                    </th>
+                    <th className="text-left p-2 border border-border bg-muted font-medium">
+                      Table
+                    </th>
+                    <th className="text-center p-2 border border-border bg-muted font-medium">
+                      Assigned
+                    </th>
+                    <th className="text-center p-2 border border-border bg-muted font-medium">
+                      Verdicts
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teamStats.map((team) => {
+                    const allDone =
+                      team.assignmentCount > 0 &&
+                      team.verdictCount === team.assignmentCount;
+                    const noneAssigned = team.assignmentCount === 0;
+                    const rowClass = noneAssigned
+                      ? "bg-red-50"
+                      : allDone
+                      ? "bg-green-50"
+                      : "bg-yellow-50";
+                    return (
+                      <tr key={team.id} className={rowClass}>
+                        <td className="p-2 border border-border font-medium">
+                          {team.name}
+                        </td>
+                        <td className="p-2 border border-border text-muted-foreground">
+                          {team.tableCode ?? "—"}
+                        </td>
+                        <td className="p-2 border border-border text-center">
+                          {team.assignmentCount}
+                        </td>
+                        <td className="p-2 border border-border text-center">
+                          {team.verdictCount} / {team.assignmentCount}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded bg-green-100 border border-green-300" />
+              All verdicts in
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded bg-yellow-100 border border-yellow-300" />
+              Partially judged
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded bg-red-100 border border-red-300" />
+              Not assigned yet
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -96,7 +185,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                         <span className="text-muted-foreground">—</span>
                       );
 
-                      if (assignment.team) {
+                      if (assignment.team && assignment.teamJudgingId) {
                         if (assignment.hasVerdict) {
                           cellClass += " bg-green-100 text-green-800";
                         } else {
@@ -115,6 +204,14 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                             <div className="mt-0.5">
                               {assignment.hasVerdict ? "✓ done" : "pending"}
                             </div>
+                            <ReassignJudgeDialog
+                              teamJudgingId={assignment.teamJudgingId}
+                              currentJudgeId={judge.id}
+                              judges={judges.map((j) => ({
+                                id: j.id,
+                                name: j.name,
+                              }))}
+                            />
                           </div>
                         );
                       }

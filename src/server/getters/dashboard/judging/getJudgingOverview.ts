@@ -9,6 +9,7 @@ export type JudgingOverviewSlot = {
 
 export type JudgingOverviewAssignment = {
   slotId: number;
+  teamJudgingId?: number;
   team?: {
     id: number;
     name: string;
@@ -29,10 +30,19 @@ export type ChallengeStats = {
   teams: { name: string; tableCode?: string }[];
 };
 
+export type TeamJudgingStats = {
+  id: number;
+  name: string;
+  tableCode?: string;
+  assignmentCount: number;
+  verdictCount: number;
+};
+
 export type JudgingOverviewData = {
   slots: JudgingOverviewSlot[];
   judges: JudgingOverviewJudge[];
   challengeStats: ChallengeStats[];
+  teamStats: TeamJudgingStats[];
 };
 
 const getJudgingOverview = async (
@@ -40,7 +50,7 @@ const getJudgingOverview = async (
 ): Promise<JudgingOverviewData> => {
   await requireAdminSession();
 
-  const [slots, organizers, challenges] = await Promise.all([
+  const [slots, organizers, challenges, teams] = await Promise.all([
     prisma.judgingSlot.findMany({
       where: { hackathonId },
       orderBy: { startTime: "asc" },
@@ -52,6 +62,7 @@ const getJudgingOverview = async (
         teamJudgings: {
           where: { judgingSlot: { hackathonId } },
           select: {
+            id: true,
             judgingSlotId: true,
             judgingVerdict: true,
             team: {
@@ -83,6 +94,22 @@ const getJudgingOverview = async (
       },
       orderBy: { title: "asc" },
     }),
+    prisma.team.findMany({
+      where: {
+        members: { some: { hackathonId } },
+        table: { hackathonId },
+      },
+      select: {
+        id: true,
+        name: true,
+        table: { select: { code: true } },
+        teamJudgings: {
+          where: { judgingSlot: { hackathonId } },
+          select: { judgingVerdict: true },
+        },
+      },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   const judges: JudgingOverviewJudge[] = organizers.map((org) => ({
@@ -94,6 +121,7 @@ const getJudgingOverview = async (
       );
       return {
         slotId: slot.id,
+        teamJudgingId: assignment?.id,
         team: assignment?.team
           ? {
               id: assignment.team.id,
@@ -115,7 +143,15 @@ const getJudgingOverview = async (
     })),
   }));
 
-  return { slots, judges, challengeStats };
+  const teamStats: TeamJudgingStats[] = teams.map((team) => ({
+    id: team.id,
+    name: team.name,
+    tableCode: team.table?.code,
+    assignmentCount: team.teamJudgings.length,
+    verdictCount: team.teamJudgings.filter((tj) => tj.judgingVerdict).length,
+  }));
+
+  return { slots, judges, challengeStats, teamStats };
 };
 
 export default getJudgingOverview;
