@@ -1,5 +1,5 @@
 import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
-import getConfirmedTeams from "@/server/getters/dashboard/tables/getConfirmedTeams";
+import { prisma } from "@/services/prisma";
 
 export type TeamForJudging = {
   nameAndTable: string;
@@ -11,10 +11,33 @@ const getTeamsForJudging = async (
 ): Promise<TeamForJudging[]> => {
   await requireAdminSession();
 
-  const { fullyConfirmedTeams } = await getConfirmedTeams(hackathonId);
+  const teams = await prisma.team.findMany({
+    where: {
+      members: {
+        some: {
+          hackathonId,
+        },
+      },
+      table: {
+        hackathonId,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      table: {
+        select: {
+          code: true,
+        },
+      },
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
 
-  return fullyConfirmedTeams.map((team) => ({
-    nameAndTable: `${team.name}${team.tableCode ? ` (${team.tableCode})` : ""}`,
+  return teams.map((team) => ({
+    nameAndTable: `${team.name}${team.table ? ` (${team.table.code})` : ""}`,
     teamId: team.id,
   }));
 };
