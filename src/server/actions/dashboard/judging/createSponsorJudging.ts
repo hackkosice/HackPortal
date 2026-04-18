@@ -38,6 +38,17 @@ const createSponsorJudging = async ({
     );
   }
 
+  const existingForTeam = await prisma.sponsorJudging.findFirst({
+    where: { sponsorId, teamId },
+    select: { id: true },
+  });
+
+  if (existingForTeam) {
+    throw new ExpectedServerActionError(
+      "Sponsor is already assigned to judge this team"
+    );
+  }
+
   await prisma.sponsorJudging.create({
     data: { sponsorId, teamId, judgingSlotId },
   });
