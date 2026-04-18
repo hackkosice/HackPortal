@@ -14,7 +14,7 @@ const SponsorJudgingPage = async ({
 }) => {
   await requireSponsor(Number(hackathonId));
 
-  return <SponsorJudging hackathonId={Number(hackathonId)} />;
+  return <SponsorJudging />;
 };
 
 export default SponsorJudgingPage;

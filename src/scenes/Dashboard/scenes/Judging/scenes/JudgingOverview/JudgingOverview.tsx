@@ -62,7 +62,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           judgeAssignments: [],
         });
       }
-      teamRowsMap.get(assignment.team.id)!.judgeAssignments.push({
+      teamRowsMap.get(assignment.team.id)?.judgeAssignments.push({
         label: judge.name,
         slotStart: slot.startTime,
         slotEnd: slot.endTime,
@@ -86,7 +86,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           judgeAssignments: [],
         });
       }
-      teamRowsMap.get(assignment.team.id)!.judgeAssignments.push({
+      teamRowsMap.get(assignment.team.id)?.judgeAssignments.push({
         label: `${sponsor.name} (sponsor)`,
         slotStart: slot.startTime,
         slotEnd: slot.endTime,
@@ -314,19 +314,20 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                                 </span>
                                 <span>{ja.label}</span>
                                 <span>{ja.hasVerdict ? "✓" : "pending"}</span>
-                                {ja.type === "organizer" && ja.teamJudgingId && (
-                                  <ReassignJudgeDialog
-                                    teamJudgingId={ja.teamJudgingId}
-                                    currentJudgeId={
-                                      judges.find((j) => j.name === ja.label)
-                                        ?.id ?? 0
-                                    }
-                                    judges={judges.map((j) => ({
-                                      id: j.id,
-                                      name: j.name,
-                                    }))}
-                                  />
-                                )}
+                                {ja.type === "organizer" &&
+                                  ja.teamJudgingId && (
+                                    <ReassignJudgeDialog
+                                      teamJudgingId={ja.teamJudgingId}
+                                      currentJudgeId={
+                                        judges.find((j) => j.name === ja.label)
+                                          ?.id ?? 0
+                                      }
+                                      judges={judges.map((j) => ({
+                                        id: j.id,
+                                        name: j.name,
+                                      }))}
+                                    />
+                                  )}
                               </div>
                             ))}
                         </div>
@@ -534,7 +535,9 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
         </CardHeader>
         <CardContent>
           {challengeStats.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No challenges found.</p>
+            <p className="text-muted-foreground text-sm">
+              No challenges found.
+            </p>
           ) : (
             <div className="flex flex-col gap-4">
               {challengeStats.map((challenge) => (

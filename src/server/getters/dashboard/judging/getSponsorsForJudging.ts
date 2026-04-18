@@ -25,7 +25,9 @@ const getSponsorsForJudging = async (
 
   return sponsors.map((sponsor) => ({
     id: sponsor.id,
-    nameAndCompany: `${sponsor.company} (${sponsor.user.name || sponsor.user.email})`,
+    nameAndCompany: `${sponsor.company} (${
+      sponsor.user.name || sponsor.user.email
+    })`,
   }));
 };
 

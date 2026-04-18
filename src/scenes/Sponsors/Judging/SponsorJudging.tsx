@@ -3,13 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import getSponsorJudgings from "@/server/getters/sponsors/getSponsorJudgings";
 import SponsorJudgingSwitcher from "./SponsorJudgingSwitcher";
 
-type SponsorJudgingProps = {
-  hackathonId: number;
-};
-
-const SponsorJudging = async ({
-  hackathonId: _hackathonId,
-}: SponsorJudgingProps) => {
+const SponsorJudging = async () => {
   const { judgings, nextJudgingIndex } = await getSponsorJudgings();
 
   return (

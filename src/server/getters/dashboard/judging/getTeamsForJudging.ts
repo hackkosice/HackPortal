@@ -1,9 +1,11 @@
 import requireAdminSession from "@/server/services/helpers/auth/requireAdminSession";
 import { prisma } from "@/services/prisma";
+import { ApplicationStatusEnum } from "@/services/types/applicationStatus";
 
 export type TeamForJudging = {
   nameAndTable: string;
   teamId: number;
+  hasCheckedInMember: boolean;
 };
 
 const getTeamsForJudging = async (
@@ -30,16 +32,33 @@ const getTeamsForJudging = async (
           code: true,
         },
       },
+      members: {
+        select: {
+          application: {
+            select: {
+              status: { select: { name: true } },
+            },
+          },
+        },
+      },
     },
     orderBy: {
       name: "asc",
     },
   });
 
-  return teams.map((team) => ({
+  const mapped = teams.map((team) => ({
     nameAndTable: `${team.name}${team.table ? ` (${team.table.code})` : ""}`,
     teamId: team.id,
+    hasCheckedInMember: team.members.some(
+      (m) => m.application?.status.name === ApplicationStatusEnum.attended
+    ),
   }));
+
+  return [
+    ...mapped.filter((t) => t.hasCheckedInMember),
+    ...mapped.filter((t) => !t.hasCheckedInMember),
+  ];
 };
 
 export default getTeamsForJudging;

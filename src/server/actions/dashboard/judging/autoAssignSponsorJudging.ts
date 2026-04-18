@@ -61,12 +61,10 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
   for (const sponsor of sponsorsWithTeams) {
     sponsorSlots.set(sponsor.id, new Set());
   }
-  for (const slot of slots) {
-    for (const sponsor of sponsorsWithTeams) {
-      if (sponsor.challenge) {
-        for (const team of sponsor.challenge.teams) {
-          teamAssignmentCount.set(team.id, 0);
-        }
+  for (const sponsor of sponsorsWithTeams) {
+    if (sponsor.challenge) {
+      for (const team of sponsor.challenge.teams) {
+        teamAssignmentCount.set(team.id, 0);
       }
     }
   }
@@ -90,7 +88,7 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
       // Skip if sponsor already assigned in this slot
       if (sponsorSlots.get(sponsor.id)?.has(slot.id)) continue;
 
-      const challengeTeams = sponsor.challenge!.teams;
+      const challengeTeams = sponsor.challenge?.teams ?? [];
 
       // Find the challenge team with fewest assignments not already assigned to this sponsor in this slot
       const existingAssignmentsForSponsorSlot = existingAssignments.filter(
@@ -102,7 +100,10 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
 
       // Also exclude teams already queued in toCreate for this sponsor+slot
       for (const pending of toCreate) {
-        if (pending.sponsorId === sponsor.id && pending.judgingSlotId === slot.id) {
+        if (
+          pending.sponsorId === sponsor.id &&
+          pending.judgingSlotId === slot.id
+        ) {
           alreadyAssignedTeamIds.add(pending.teamId);
         }
       }
@@ -136,7 +137,9 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
   }
 
   if (toCreate.length === 0) {
-    throw new ExpectedServerActionError("All sponsor slots are already assigned");
+    throw new ExpectedServerActionError(
+      "All sponsor slots are already assigned"
+    );
   }
 
   await prisma.$transaction(

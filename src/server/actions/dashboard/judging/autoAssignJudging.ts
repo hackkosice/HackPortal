@@ -30,7 +30,9 @@ const autoAssignJudging = async (hackathonId: number) => {
   ]);
 
   if (slots.length === 0) {
-    throw new ExpectedServerActionError("No judging slots found for this hackathon");
+    throw new ExpectedServerActionError(
+      "No judging slots found for this hackathon"
+    );
   }
   if (organizers.length === 0) {
     throw new ExpectedServerActionError("No judges found");
@@ -42,8 +44,8 @@ const autoAssignJudging = async (hackathonId: number) => {
   // Track state with O(1) lookups
   // judgeSlots: judge already assigned in a given slot
   const judgeSlots = new Map<number, Set<number>>(); // organizerId → Set<slotId>
-  const slotTeams = new Map<number, Set<number>>();   // slotId → Set<teamId>
-  const judgeTeams = new Map<number, Set<number>>();  // organizerId → Set<teamId>
+  const slotTeams = new Map<number, Set<number>>(); // slotId → Set<teamId>
+  const judgeTeams = new Map<number, Set<number>>(); // organizerId → Set<teamId>
   const teamAssignmentCount = new Map<number, number>();
 
   for (const slot of slots) slotTeams.set(slot.id, new Set());
@@ -63,7 +65,11 @@ const autoAssignJudging = async (hackathonId: number) => {
     );
   }
 
-  const toCreate: { judgingSlotId: number; organizerId: number; teamId: number }[] = [];
+  const toCreate: {
+    judgingSlotId: number;
+    organizerId: number;
+    teamId: number;
+  }[] = [];
 
   for (const slot of slots) {
     for (const org of organizers) {
@@ -86,13 +92,20 @@ const autoAssignJudging = async (hackathonId: number) => {
           : b
       );
 
-      toCreate.push({ judgingSlotId: slot.id, organizerId: org.id, teamId: best.id });
+      toCreate.push({
+        judgingSlotId: slot.id,
+        organizerId: org.id,
+        teamId: best.id,
+      });
 
       // Update tracking maps for subsequent iterations
       slotTeams.get(slot.id)?.add(best.id);
       judgeTeams.get(org.id)?.add(best.id);
       judgeSlots.get(org.id)?.add(slot.id);
-      teamAssignmentCount.set(best.id, (teamAssignmentCount.get(best.id) ?? 0) + 1);
+      teamAssignmentCount.set(
+        best.id,
+        (teamAssignmentCount.get(best.id) ?? 0) + 1
+      );
     }
   }
 
