@@ -329,8 +329,9 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                                       <ReassignJudgeDialog
                                         teamJudgingId={ja.teamJudgingId}
                                         currentJudgeId={
-                                          judges.find((j) => j.name === ja.label)
-                                            ?.id ?? 0
+                                          judges.find(
+                                            (j) => j.name === ja.label
+                                          )?.id ?? 0
                                         }
                                         judges={judges.map((j) => ({
                                           id: j.id,
