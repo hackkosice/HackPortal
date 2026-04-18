@@ -93,7 +93,7 @@ const getTeamMembersColumns = (
   return columns;
 };
 const TeamInfo = ({
-  team: { name, code, members },
+  team: { name, code, members, challenges },
   isOwnerSession,
   maxTeamSize,
 }: TeamInfoProps) => {
@@ -147,6 +147,21 @@ const TeamInfo = ({
             </TooltipBase>
           </TooltipProvider>
         </Stack>
+        {challenges.length > 0 && (
+          <div className="mt-1">
+            <Text>Challenge{challenges.length > 1 ? "s" : ""}:</Text>
+            <ul className="mt-1 flex flex-col gap-1">
+              {challenges.map((c) => (
+                <li key={c.id} className="text-sm">
+                  <span className="font-semibold">{c.title}</span>
+                  <span className="text-muted-foreground ml-1">
+                    by {c.sponsorName}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Text>
           Team members ({members.length}/{maxTeamSize}):
         </Text>
