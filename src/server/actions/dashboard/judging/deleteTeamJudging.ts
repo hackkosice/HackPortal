@@ -26,6 +26,7 @@ const deleteTeamJudging = async ({ teamJudgingId }: DeleteTeamJudgingInput) => {
   });
 
   revalidatePath(`/dashboard/${hackathonId}/judging/manage`, "page");
+  revalidatePath(`/dashboard/${hackathonId}/judging/overview`, "page");
 };
 
 export default deleteTeamJudging;

@@ -7,6 +7,7 @@ import { JudgingOverviewData } from "@/server/getters/dashboard/judging/getJudgi
 import AutoAssignButton from "./AutoAssignButton";
 import AutoAssignSponsorButton from "./AutoAssignSponsorButton";
 import ReassignJudgeDialog from "./ReassignJudgeDialog";
+import DeleteTeamJudgingButton from "./DeleteTeamJudgingButton";
 
 type JudgingOverviewProps = {
   hackathonId: number;
@@ -396,14 +397,19 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                             <div className="mt-0.5">
                               {assignment.hasVerdict ? "✓ done" : "pending"}
                             </div>
-                            <ReassignJudgeDialog
-                              teamJudgingId={assignment.teamJudgingId}
-                              currentJudgeId={judge.id}
-                              judges={judges.map((j) => ({
-                                id: j.id,
-                                name: j.name,
-                              }))}
-                            />
+                            <div className="flex items-center justify-center gap-1 mt-0.5">
+                              <ReassignJudgeDialog
+                                teamJudgingId={assignment.teamJudgingId}
+                                currentJudgeId={judge.id}
+                                judges={judges.map((j) => ({
+                                  id: j.id,
+                                  name: j.name,
+                                }))}
+                              />
+                              <DeleteTeamJudgingButton
+                                teamJudgingId={assignment.teamJudgingId}
+                              />
+                            </div>
                           </div>
                         );
                       }
