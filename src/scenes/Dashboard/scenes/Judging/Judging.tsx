@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
 import getMyJudgings from "@/server/getters/dashboard/judging/getMyJudgings";
-import JudgingSwitcher from "@/scenes/Dashboard/scenes/Judging/components/JudgingSwitcher";
+import JudgingList from "@/scenes/Dashboard/scenes/Judging/components/JudgingList";
 import getOrganizersForJudgingSelector from "@/server/getters/dashboard/judging/getOrganizersForJudgingSelector";
 import JudgeSelector from "@/scenes/Dashboard/scenes/Judging/components/JudgeSelector";
 import requireOrganizerSession from "@/server/services/helpers/auth/requireOrganizerSession";
@@ -18,10 +18,7 @@ type JudgingProps = {
 const Judging = async ({ hackathonId, forOrganizerId }: JudgingProps) => {
   const session = await getServerSession(authOptions);
   const currentOrganizer = await requireOrganizerSession();
-  const { judgings, nextJudgingIndex } = await getMyJudgings(
-    hackathonId,
-    forOrganizerId
-  );
+  const { judgings } = await getMyJudgings(hackathonId, forOrganizerId);
 
   const organizers = session?.isAdmin
     ? await getOrganizersForJudgingSelector()
@@ -63,10 +60,7 @@ const Judging = async ({ hackathonId, forOrganizerId }: JudgingProps) => {
             )}
           </>
         )}
-        <JudgingSwitcher
-          judgings={judgings}
-          initialJudgingIndex={nextJudgingIndex}
-        />
+        <JudgingList judgings={judgings} />
       </CardContent>
     </Card>
   );
