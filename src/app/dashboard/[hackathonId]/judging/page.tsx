@@ -10,12 +10,22 @@ export const metadata: Metadata = {
 
 const Page = async ({
   params: { hackathonId },
+  searchParams,
 }: {
   params: { hackathonId: string };
+  searchParams: { forOrganizer?: string };
 }) => {
   await disallowVolunteer(hackathonId);
   await requireOrganizer();
-  return <Judging hackathonId={Number(hackathonId)} />;
+  const forOrganizerId = searchParams.forOrganizer
+    ? Number(searchParams.forOrganizer)
+    : undefined;
+  return (
+    <Judging
+      hackathonId={Number(hackathonId)}
+      forOrganizerId={forOrganizerId}
+    />
+  );
 };
 
 export default Page;

@@ -18,8 +18,19 @@ type MyJudgings = {
   nextJudgingIndex: number;
 };
 
-const getMyJudgings = async (hackathonId: number): Promise<MyJudgings> => {
-  const { id: organizerId } = await requireOrganizerSession();
+const getMyJudgings = async (
+  hackathonId: number,
+  forOrganizerId?: number
+): Promise<MyJudgings> => {
+  const organizer = await requireOrganizerSession();
+
+  let organizerId = organizer.id;
+  if (forOrganizerId !== undefined) {
+    if (!organizer.isAdmin) {
+      throw new Error("Only admins can view other organizer judgings");
+    }
+    organizerId = forOrganizerId;
+  }
   const judgingsDb = await prisma.teamJudging.findMany({
     where: {
       AND: [
