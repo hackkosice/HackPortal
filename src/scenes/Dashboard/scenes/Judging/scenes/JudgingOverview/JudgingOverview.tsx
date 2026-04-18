@@ -5,6 +5,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { JudgingOverviewData } from "@/server/getters/dashboard/judging/getJudgingOverview";
 import AutoAssignButton from "./AutoAssignButton";
+import AutoAssignSponsorButton from "./AutoAssignSponsorButton";
 import ReassignJudgeDialog from "./ReassignJudgeDialog";
 
 type JudgingOverviewProps = {
@@ -20,16 +21,17 @@ type TeamJudgingRow = {
   teamName: string;
   tableCode?: string;
   judgeAssignments: {
-    judgeName: string;
+    label: string;
     slotStart: Date;
     slotEnd: Date;
     hasVerdict: boolean;
     teamJudgingId?: number;
+    type: "organizer" | "sponsor";
   }[];
 };
 
 const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
-  const { slots, judges, challengeStats, teamStats } = data;
+  const { slots, judges, sponsors, challengeStats, teamStats } = data;
 
   const totalAssignments = judges.flatMap((j) =>
     j.assignments.filter((a) => a.team)
@@ -38,9 +40,15 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
     j.assignments.filter((a) => a.hasVerdict)
   ).length;
 
+  const totalSponsorAssignments = sponsors.flatMap((s) => s.assignments).length;
+  const totalSponsorVerdicts = sponsors
+    .flatMap((s) => s.assignments)
+    .filter((a) => a.hasVerdict).length;
+
   // Pivot judge×slot grid into team-centric rows
   const slotById = new Map(slots.map((s) => [s.id, s]));
   const teamRowsMap = new Map<number, TeamJudgingRow>();
+
   for (const judge of judges) {
     for (const assignment of judge.assignments) {
       if (!assignment.team) continue;
@@ -55,14 +63,39 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
         });
       }
       teamRowsMap.get(assignment.team.id)!.judgeAssignments.push({
-        judgeName: judge.name,
+        label: judge.name,
         slotStart: slot.startTime,
         slotEnd: slot.endTime,
         hasVerdict: assignment.hasVerdict,
         teamJudgingId: assignment.teamJudgingId,
+        type: "organizer",
       });
     }
   }
+
+  for (const sponsor of sponsors) {
+    for (const assignment of sponsor.assignments) {
+      if (!assignment.team) continue;
+      const slot = slotById.get(assignment.slotId);
+      if (!slot) continue;
+      if (!teamRowsMap.has(assignment.team.id)) {
+        teamRowsMap.set(assignment.team.id, {
+          teamId: assignment.team.id,
+          teamName: assignment.team.name,
+          tableCode: assignment.team.tableCode,
+          judgeAssignments: [],
+        });
+      }
+      teamRowsMap.get(assignment.team.id)!.judgeAssignments.push({
+        label: `${sponsor.name} (sponsor)`,
+        slotStart: slot.startTime,
+        slotEnd: slot.endTime,
+        hasVerdict: assignment.hasVerdict,
+        type: "sponsor",
+      });
+    }
+  }
+
   const teamRows = Array.from(teamRowsMap.values()).sort((a, b) =>
     a.teamName.localeCompare(b.teamName)
   );
@@ -89,7 +122,15 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
             <div>
               <span className="font-semibold text-2xl">{totalVerdicts}</span>
               <span className="text-muted-foreground ml-1">
-                / {totalAssignments} verdicts submitted
+                / {totalAssignments} organizer verdicts
+              </span>
+            </div>
+            <div>
+              <span className="font-semibold text-2xl">
+                {totalSponsorVerdicts}
+              </span>
+              <span className="text-muted-foreground ml-1">
+                / {totalSponsorAssignments} sponsor verdicts
               </span>
             </div>
             <div>
@@ -102,14 +143,27 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
             </div>
             <div>
               <span className="font-semibold text-2xl">{teamStats.length}</span>
-              <span className="text-muted-foreground ml-1">teams with tables</span>
+              <span className="text-muted-foreground ml-1">
+                teams with tables
+              </span>
             </div>
           </div>
-          <AutoAssignButton hackathonId={hackathonId} />
-          <p className="text-xs text-muted-foreground mt-1">
-            Fills empty judge slots evenly across teams. Existing assignments are
-            not changed.
-          </p>
+          <div className="flex flex-col gap-3">
+            <div>
+              <AutoAssignButton hackathonId={hackathonId} />
+              <p className="text-xs text-muted-foreground mt-1">
+                Fills empty judge slots evenly across teams. Existing
+                assignments are not changed.
+              </p>
+            </div>
+            <div>
+              <AutoAssignSponsorButton hackathonId={hackathonId} />
+              <p className="text-xs text-muted-foreground mt-1">
+                Assigns sponsor challenge teams to sponsors for each slot.
+                Existing assignments are not changed.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -140,6 +194,12 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                     <th className="text-center p-2 border border-border bg-muted font-medium">
                       Verdicts
                     </th>
+                    <th className="text-center p-2 border border-border bg-muted font-medium">
+                      Sponsor Assigned
+                    </th>
+                    <th className="text-center p-2 border border-border bg-muted font-medium">
+                      Sponsor Verdicts
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -166,6 +226,13 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                         </td>
                         <td className="p-2 border border-border text-center">
                           {team.verdictCount} / {team.assignmentCount}
+                        </td>
+                        <td className="p-2 border border-border text-center">
+                          {team.sponsorAssignmentCount}
+                        </td>
+                        <td className="p-2 border border-border text-center">
+                          {team.sponsorVerdictCount} /{" "}
+                          {team.sponsorAssignmentCount}
                         </td>
                       </tr>
                     );
@@ -245,13 +312,13 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                                   {formatTime(ja.slotStart)}–
                                   {formatTime(ja.slotEnd)}
                                 </span>
-                                <span>{ja.judgeName}</span>
+                                <span>{ja.label}</span>
                                 <span>{ja.hasVerdict ? "✓" : "pending"}</span>
-                                {ja.teamJudgingId && (
+                                {ja.type === "organizer" && ja.teamJudgingId && (
                                   <ReassignJudgeDialog
                                     teamJudgingId={ja.teamJudgingId}
                                     currentJudgeId={
-                                      judges.find((j) => j.name === ja.judgeName)
+                                      judges.find((j) => j.name === ja.label)
                                         ?.id ?? 0
                                     }
                                     judges={judges.map((j) => ({
@@ -367,6 +434,98 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Sponsor × Slot grid */}
+      {sponsors.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Sponsor assignments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="text-sm border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="text-left p-2 border border-border bg-muted font-medium min-w-[140px]">
+                      Sponsor
+                    </th>
+                    {slots.map((slot) => (
+                      <th
+                        key={slot.id}
+                        className="text-center p-2 border border-border bg-muted font-medium min-w-[120px]"
+                      >
+                        {formatTime(slot.startTime)}–{formatTime(slot.endTime)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sponsors.map((sponsor) => (
+                    <tr key={sponsor.id}>
+                      <td className="p-2 border border-border font-medium">
+                        {sponsor.name}
+                      </td>
+                      {slots.map((slot) => {
+                        const assignment = sponsor.assignments.find(
+                          (a) => a.slotId === slot.id
+                        );
+                        let cellClass =
+                          "p-2 border border-border text-center text-xs";
+                        let label = (
+                          <span className="text-muted-foreground">—</span>
+                        );
+
+                        if (assignment?.team) {
+                          if (assignment.hasVerdict) {
+                            cellClass += " bg-green-100 text-green-800";
+                          } else {
+                            cellClass += " bg-yellow-100 text-yellow-800";
+                          }
+                          label = (
+                            <div>
+                              <div className="font-medium">
+                                {assignment.team.name}
+                              </div>
+                              {assignment.team.tableCode && (
+                                <div className="opacity-70">
+                                  {assignment.team.tableCode}
+                                </div>
+                              )}
+                              <div className="mt-0.5">
+                                {assignment.hasVerdict ? "✓ done" : "pending"}
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <td key={slot.id} className={cellClass}>
+                            {label}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-3 h-3 rounded bg-green-100 border border-green-300" />
+                Verdict submitted
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-3 h-3 rounded bg-yellow-100 border border-yellow-300" />
+                Assigned, pending
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-3 h-3 rounded bg-background border border-border" />
+                Unassigned
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Challenge breakdown */}
       <Card>
