@@ -56,6 +56,10 @@ const createTeamJudging = async ({
     `/dashboard/${judgingSlot.hackathonId}/judging/manage`,
     "page"
   );
+  revalidatePath(
+    `/dashboard/${judgingSlot.hackathonId}/judging/overview`,
+    "page"
+  );
 };
 
 export default createTeamJudging;
