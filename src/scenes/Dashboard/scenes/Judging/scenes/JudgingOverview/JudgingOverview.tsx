@@ -4,10 +4,12 @@ import { Stack } from "@/components/ui/stack";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { JudgingOverviewData } from "@/server/getters/dashboard/judging/getJudgingOverview";
+import { headers } from "next/headers";
 import AutoAssignButton from "./AutoAssignButton";
 import AutoAssignSponsorButton from "./AutoAssignSponsorButton";
 import ReassignJudgeDialog from "./ReassignJudgeDialog";
 import DeleteTeamJudgingButton from "./DeleteTeamJudgingButton";
+import ExternalJudgeManager from "./ExternalJudgeManager";
 
 type JudgingOverviewProps = {
   hackathonId: number;
@@ -32,7 +34,12 @@ type TeamJudgingRow = {
 };
 
 const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
-  const { slots, judges, sponsors, challengeStats, teamStats } = data;
+  const { slots, judges, sponsors, externalJudges, challengeStats, teamStats } =
+    data;
+  const headersList = headers();
+  const host = headersList.get("host") ?? "";
+  const proto = headersList.get("x-forwarded-proto") ?? "https";
+  const baseUrl = `${proto}://${host}`;
 
   const totalAssignments = judges.flatMap((j) =>
     j.assignments.filter((a) => a.team)
@@ -533,6 +540,21 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
           </CardContent>
         </Card>
       )}
+
+      {/* External judges */}
+      <Card>
+        <CardHeader>
+          <CardTitle>External judges</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ExternalJudgeManager
+            hackathonId={hackathonId}
+            externalJudges={externalJudges}
+            slots={slots}
+            baseUrl={baseUrl}
+          />
+        </CardContent>
+      </Card>
 
       {/* Challenge breakdown */}
       <Card>
