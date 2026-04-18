@@ -325,17 +325,23 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                                 <span>{ja.hasVerdict ? "✓" : "pending"}</span>
                                 {ja.type === "organizer" &&
                                   ja.teamJudgingId && (
-                                    <ReassignJudgeDialog
-                                      teamJudgingId={ja.teamJudgingId}
-                                      currentJudgeId={
-                                        judges.find((j) => j.name === ja.label)
-                                          ?.id ?? 0
-                                      }
-                                      judges={judges.map((j) => ({
-                                        id: j.id,
-                                        name: j.name,
-                                      }))}
-                                    />
+                                    <>
+                                      <ReassignJudgeDialog
+                                        teamJudgingId={ja.teamJudgingId}
+                                        currentJudgeId={
+                                          judges.find(
+                                            (j) => j.name === ja.label
+                                          )?.id ?? 0
+                                        }
+                                        judges={judges.map((j) => ({
+                                          id: j.id,
+                                          name: j.name,
+                                        }))}
+                                      />
+                                      <DeleteTeamJudgingButton
+                                        teamJudgingId={ja.teamJudgingId}
+                                      />
+                                    </>
                                   )}
                               </div>
                             ))}
