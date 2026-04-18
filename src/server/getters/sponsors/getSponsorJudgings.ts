@@ -70,7 +70,7 @@ const getSponsorJudgings = async (): Promise<MySponsorJudgings> => {
     judgingVerdict: judging.judgingVerdict ?? undefined,
   }));
 
-  let nextJudgingIndex = 0;
+  let nextJudgingIndex = judgings.length;
   for (let i = 0; i < judgings.length; i++) {
     if (!judgings[i].judgingVerdict) {
       nextJudgingIndex = i;
