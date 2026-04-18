@@ -85,28 +85,20 @@ const autoAssignSponsorJudging = async (hackathonId: number) => {
 
   for (const slot of slots) {
     for (const sponsor of sponsorsWithTeams) {
+      // Each sponsor gets at most 1 slot total
+      const sponsorAssigned = sponsorSlots.get(sponsor.id);
+      if (sponsorAssigned && sponsorAssigned.size > 0) continue;
+
       // Skip if sponsor already assigned in this slot
-      if (sponsorSlots.get(sponsor.id)?.has(slot.id)) continue;
+      if (sponsorAssigned?.has(slot.id)) continue;
 
       const challengeTeams = sponsor.challenge?.teams ?? [];
 
-      // Find the challenge team with fewest assignments not already assigned to this sponsor in this slot
-      const existingAssignmentsForSponsorSlot = existingAssignments.filter(
-        (a) => a.sponsorId === sponsor.id && a.judgingSlotId === slot.id
-      );
       const alreadyAssignedTeamIds = new Set(
-        existingAssignmentsForSponsorSlot.map((a) => a.teamId)
+        existingAssignments
+          .filter((a) => a.sponsorId === sponsor.id)
+          .map((a) => a.teamId)
       );
-
-      // Also exclude teams already queued in toCreate for this sponsor+slot
-      for (const pending of toCreate) {
-        if (
-          pending.sponsorId === sponsor.id &&
-          pending.judgingSlotId === slot.id
-        ) {
-          alreadyAssignedTeamIds.add(pending.teamId);
-        }
-      }
 
       const eligible = challengeTeams.filter(
         (team) => !alreadyAssignedTeamIds.has(team.id)
