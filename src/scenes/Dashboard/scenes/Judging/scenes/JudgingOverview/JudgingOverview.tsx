@@ -9,6 +9,7 @@ import AutoAssignButton from "./AutoAssignButton";
 import AutoAssignSponsorButton from "./AutoAssignSponsorButton";
 import ReassignJudgeDialog from "./ReassignJudgeDialog";
 import DeleteTeamJudgingButton from "./DeleteTeamJudgingButton";
+import DeleteSponsorJudgingButton from "./DeleteSponsorJudgingButton";
 import ExternalJudgeManager from "./ExternalJudgeManager";
 import AssignTeamDialog from "./AssignTeamDialog";
 
@@ -30,6 +31,7 @@ type TeamJudgingRow = {
     slotEnd: Date;
     hasVerdict: boolean;
     teamJudgingId?: number;
+    sponsorJudgingId?: number;
     type: "organizer" | "sponsor";
   }[];
 };
@@ -100,6 +102,7 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
         slotStart: slot.startTime,
         slotEnd: slot.endTime,
         hasVerdict: assignment.hasVerdict,
+        sponsorJudgingId: assignment.sponsorJudgingId,
         type: "sponsor",
       });
     }
@@ -323,6 +326,12 @@ const JudgingOverview = ({ hackathonId, data }: JudgingOverviewProps) => {
                                 </span>
                                 <span>{ja.label}</span>
                                 <span>{ja.hasVerdict ? "✓" : "pending"}</span>
+                                {ja.type === "sponsor" &&
+                                  ja.sponsorJudgingId && (
+                                    <DeleteSponsorJudgingButton
+                                      sponsorJudgingId={ja.sponsorJudgingId}
+                                    />
+                                  )}
                                 {ja.type === "organizer" &&
                                   ja.teamJudgingId && (
                                     <>
