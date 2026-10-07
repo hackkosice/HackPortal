@@ -12,7 +12,7 @@ type ApplicationsListProps = {
   hackathonId: number;
 };
 const ApplicationsList = async ({ hackathonId }: ApplicationsListProps) => {
-  const { applications } = await getApplicationsList(hackathonId);
+  const { applications, filters } = await getApplicationsList(hackathonId);
   const applicationStats = await getApplicationStats(hackathonId);
   return (
     <Card className="w-fit m-auto">
@@ -51,6 +51,7 @@ const ApplicationsList = async ({ hackathonId }: ApplicationsListProps) => {
             {applications.length > 0 ? (
               <ApplicationsTable
                 hackathonId={hackathonId}
+                filters={filters}
                 applicationProperties={applications.map(
                   (application) => application.properties
                 )}
